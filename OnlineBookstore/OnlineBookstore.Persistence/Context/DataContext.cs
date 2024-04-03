@@ -24,4 +24,11 @@ public class DataContext : IdentityDbContext<User, Role, string>
     public virtual DbSet<OrderDetail> OrderDetails { get; set; }
     
     public virtual DbSet<Publisher> Publishers { get; set; }
+    
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        DbInitializer.SeedData(builder);
+    }
 }

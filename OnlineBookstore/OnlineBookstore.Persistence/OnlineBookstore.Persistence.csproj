@@ -13,6 +13,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\OnlineBookstore.Domain\OnlineBookstore.Domain.csproj" />
+      <ProjectReference Include="..\OnlineBookstore.Features\OnlineBookstore.Features.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Repositories\Configs\" />
     </ItemGroup>
 
 </Project>
