@@ -1,0 +1,12 @@
+using OnlineBookstore.Domain.Common;
+
+namespace OnlineBookstore.Domain.Entities;
+
+public class Author : BaseEntity
+{
+    public string FirstName { get; set; } = null!;
+
+    public string LastName { get; set; } = null!;
+
+    public string Email { get; set; } = null!;
+}
