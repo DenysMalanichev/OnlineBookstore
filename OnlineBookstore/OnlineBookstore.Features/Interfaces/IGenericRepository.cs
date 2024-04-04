@@ -1,15 +1,19 @@
+using OnlineBookstore.Domain.Common;
+
 namespace OnlineBookstore.Features.Interfaces;
 
 public interface IGenericRepository<T>
-    where T : class
+    where T : class, IBaseEntity
 {
-    Task<T>? GetByIdAsync(int id);
-
     Task<IEnumerable<T>> GetAllAsync();
+    
+    Task<T>? GetByIdAsync(int id, bool noTracking = false);
 
-    Task<T> AddAsync(T entity);
+    Task AddAsync(T entity);
 
-    Task<T> UpdateAsync(int id, T entity);
+    Task AddRangeAsync(IList<T> entities);
 
-    Task<T>? DeleteAsync(int id);
+    Task UpdateAsync(T entity);
+
+    Task DeleteAsync(T entity);
 }

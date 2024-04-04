@@ -6,59 +6,50 @@ using OnlineBookstore.Persistence.Context;
 namespace OnlineBookstore.Persistence.Repositories.RepoImplementations;
 
 public class GenericRepository<T> : IGenericRepository<T>
-    where T : BaseEntity
+    where T : class, IBaseEntity
 {
-    private readonly DataContext _context;
-
-    private readonly DbSet<T> _table;
+    private readonly DataContext _dbContext;
+    private readonly DbSet<T> _dbSet;
 
     protected GenericRepository(DataContext context)
     {
-        _context = context;
-        _table = _context.Set<T>();
-    }
-
-    public async Task<T>? GetByIdAsync(int id)
-    {
-        return (await _table.FirstOrDefaultAsync(g => g.Id == id))!;
+        _dbContext = context;
+        _dbSet = _dbContext.Set<T>();
     }
 
     public async Task<IEnumerable<T>> GetAllAsync()
     {
-        return await _table.ToListAsync();
+        return await _dbSet.ToListAsync();
     }
 
-    public async Task<T> AddAsync(T entity)
+    public async Task<T> GetByIdAsync(int id, bool noTracking = false)
     {
-        var added = await _table.AddAsync(entity);
-
-        return added.Entity;
+        return (noTracking
+            ? await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id)
+            : (await _dbSet.FindAsync(id))!)!;
     }
 
-    public async Task<T> UpdateAsync(int id, T entity)
+    public async Task AddAsync(T entity)
     {
-        var dbEntity = await GetByIdAsync(id)!;
-
-        if (dbEntity is not null)
-        {
-            entity.Id = dbEntity.Id;
-            _context.Entry(dbEntity).CurrentValues.SetValues(entity);
-        }
-
-        return dbEntity;
+        _dbSet.Add(entity);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<T>? DeleteAsync(int id)
+    public async Task UpdateAsync(T entity)
     {
-        var entity = await GetByIdAsync(id)!;
+        _dbSet.Update(entity);
+        await _dbContext.SaveChangesAsync();
+    }
 
-        if (entity is null)
-        {
-            return null!;
-        }
+    public async Task DeleteAsync(T entity)
+    {
+        _dbSet.Remove(entity);
+        await _dbContext.SaveChangesAsync();
+    }
 
-        _table.Remove(entity);
-
-        return entity;
+    public async Task AddRangeAsync(IList<T> entities)
+    {
+        await _dbSet.AddRangeAsync(entities);
+        await _dbContext.SaveChangesAsync();
     }
 }

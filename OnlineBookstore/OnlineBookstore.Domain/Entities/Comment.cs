@@ -3,7 +3,7 @@ using OnlineBookstore.Domain.Common;
 
 namespace OnlineBookstore.Domain.Entities;
 
-public class Comment : BaseEntity
+public class Comment : IBaseEntity
 {
     public string Title { get; set; } = null!;
 
@@ -15,4 +15,6 @@ public class Comment : BaseEntity
     public virtual Book Book { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;
+    
+    public int Id { get; set; }
 }

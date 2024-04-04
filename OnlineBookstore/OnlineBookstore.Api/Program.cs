@@ -1,11 +1,18 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using OnlineBookstore.Application.Configs;
 using OnlineBookstore.Domain.Entities;
+using OnlineBookstore.Features.Mapper;
+using OnlineBookstore.Middleware;
 using OnlineBookstore.Persistence.Context;
+using OnlineBookstore.Persistence.Repositories.Configs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+builder.Services.AddUnitOfWork();
+builder.Services.AddCustomServices();
 
 builder.Services.AddControllers();
 
@@ -23,6 +30,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

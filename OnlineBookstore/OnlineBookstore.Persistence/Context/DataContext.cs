@@ -30,5 +30,9 @@ public class DataContext : IdentityDbContext<User, Role, string>
         base.OnModelCreating(builder);
 
         DbInitializer.SeedData(builder);
+        
+        builder.Entity<Book>()
+            .Navigation(g => g.Genres)
+            .AutoInclude();
     }
 }
