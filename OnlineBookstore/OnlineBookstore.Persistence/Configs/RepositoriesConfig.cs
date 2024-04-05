@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
-using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Features.Interfaces;
+using OnlineBookstore.Persistence.Repositories;
 using OnlineBookstore.Persistence.Repositories.RepoImplementations;
 
-namespace OnlineBookstore.Persistence.Repositories.Configs;
+namespace OnlineBookstore.Persistence.Configs;
 
 public static class RepositoriesConfig
 {

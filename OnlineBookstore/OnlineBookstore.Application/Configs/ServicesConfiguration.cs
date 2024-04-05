@@ -15,5 +15,6 @@ public static class ServicesConfiguration
         services.AddScoped<ICommentService, CommentService>();
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<IOrderDetailService, OrderDetailService>();
+        services.AddScoped<IUserService, UserService>();
     }
 }

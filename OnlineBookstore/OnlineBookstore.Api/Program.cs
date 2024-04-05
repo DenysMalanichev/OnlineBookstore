@@ -3,15 +3,17 @@ using Microsoft.EntityFrameworkCore;
 using OnlineBookstore.Application.Configs;
 using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Features.Mapper;
+using OnlineBookstore.Features.UserFeatures.Options;
 using OnlineBookstore.Middleware;
+using OnlineBookstore.Persistence.Configs;
 using OnlineBookstore.Persistence.Context;
-using OnlineBookstore.Persistence.Repositories.Configs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 builder.Services.AddUnitOfWork();
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JWT"));
 builder.Services.AddCustomServices();
 
 builder.Services.AddControllers();
@@ -33,6 +35,8 @@ var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
+RolesDbInitializer.SeedRolesToDbAsync(app).Wait();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -42,6 +46,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

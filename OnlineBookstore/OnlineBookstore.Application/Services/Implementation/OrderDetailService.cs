@@ -36,7 +36,7 @@ public class OrderDetailService : IOrderDetailService
         await _unitOfWork.CommitAsync();
     }
 
-    public async Task<GetOrderDetailDto> GetOrderDetailAsync(int orderDetailId)
+    public async Task<GetOrderDetailDto> GetOrderDetailByIdAsync(int orderDetailId)
     {
         var orderDetail = await _unitOfWork.OrderDetailRepository.GetByIdAsync(orderDetailId)!
                           ?? throw new EntityNotFoundException($"No Order Detail with Id '{orderDetailId}'");

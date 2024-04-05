@@ -6,6 +6,7 @@ using OnlineBookstore.Features.CommentFeatures;
 using OnlineBookstore.Features.GenreFeatures;
 using OnlineBookstore.Features.OrderFeatures;
 using OnlineBookstore.Features.PublisherFeatures;
+using OnlineBookstore.Features.UserFeatures;
 
 namespace OnlineBookstore.Features.Mapper;
 
@@ -37,5 +38,10 @@ public class AutoMapperProfile : Profile
         
         CreateMap<CreateOrderDto, Order>().ReverseMap();
         CreateMap<GetOrderDto, Order>().ReverseMap();
+        
+        CreateMap<RegisterUserDto, User>()
+            .ForMember(dest => dest.UserName,
+                opt =>opt.MapFrom(src => src.FirstName + src.LastName))
+            .ReverseMap();
     }
 }
