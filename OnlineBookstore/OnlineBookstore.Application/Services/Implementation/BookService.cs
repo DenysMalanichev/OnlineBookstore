@@ -1,14 +1,22 @@
 using AutoMapper;
+using LinqKit;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using OnlineBookstore.Application.Exceptions;
 using OnlineBookstore.Application.Services.Interfaces;
 using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Features.BookFeatures;
+using OnlineBookstore.Features.BookFeatures.BooksSpecifications;
+using OnlineBookstore.Features.BookFeatures.BooksSpecifications.PriceSpecifications;
 using OnlineBookstore.Features.Interfaces;
+using OnlineBookstore.Features.Paging;
 
 namespace OnlineBookstore.Application.Services.Implementation;
 
 public class BookService : IBookService
 {
+    private const int DefaultBooksOnPage = 10;
+    
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
@@ -78,6 +86,30 @@ public class BookService : IBookService
         return _mapper.Map<GetBookDto>(book);
     }
 
+    public async Task<GenericPagingDto<GetBookDto>> GetBooksUsingFiltersAsync(GetFilteredBooksDto filteredBooksDto)
+    {
+        var predicate = GenerateFilteringPredicate(filteredBooksDto);
+
+        var entitiesQuery = _unitOfWork.BookRepository.GetItemsByPredicate(predicate, filteredBooksDto.IsDescending);
+
+        var itemsOnPage = filteredBooksDto.ItemsOnPage ?? DefaultBooksOnPage;
+        
+        var entities = await entitiesQuery.Skip(((filteredBooksDto.Page ?? 1) - 1) * itemsOnPage)
+            .Take(itemsOnPage)
+            .ToListAsync();
+
+        var entityDtos = _mapper.Map<IEnumerable<GetBookDto>>(entities);
+
+        var totalPages = entitiesQuery.Count();
+        
+        return new GenericPagingDto<GetBookDto>
+        {
+            CurrentPage = filteredBooksDto.Page ?? 1,
+            Entities = entityDtos,
+            TotalPages = (totalPages / itemsOnPage) + (totalPages % itemsOnPage > 0 ? 1 : 0),
+        };
+    }
+
     public async Task DeleteBookAsync(int bookId)
     {
         var bookToDelete = await _unitOfWork.BookRepository.GetByIdAsync(bookId)!
@@ -85,5 +117,57 @@ public class BookService : IBookService
 
         await _unitOfWork.BookRepository.DeleteAsync(bookToDelete);
         await _unitOfWork.CommitAsync();
+    }
+
+    private static ExpressionStarter<Book> GenerateFilteringPredicate(GetFilteredBooksDto filteredBooksDto)
+    {
+        var specifications = new List<ISpecification<Book>>();
+        
+        if (filteredBooksDto.Genres is not null)
+        {
+            specifications.Add(new GenresSpecification(filteredBooksDto.Genres));
+        }
+        
+        if (filteredBooksDto.PublisherId is not null)
+        {
+            specifications.Add(new PublisherSpecification((int)filteredBooksDto.PublisherId));
+        }
+
+        if (!filteredBooksDto.Name.IsNullOrEmpty() && filteredBooksDto.Name.Length >= 3)
+        {
+            specifications.Add(new NameSpecification(filteredBooksDto.Name));
+        }
+
+        if (!filteredBooksDto.AuthorName.IsNullOrEmpty() && filteredBooksDto.AuthorName.Length >= 3)
+        {
+            specifications.Add(new AuthorNameSpecification(filteredBooksDto.AuthorName));
+        }
+        
+        if (filteredBooksDto.MinPrice is not null && filteredBooksDto.MaxPrice is not null)
+        {
+            if (filteredBooksDto.MinPrice > filteredBooksDto.MaxPrice)
+            {
+                throw new ArgumentException("Lower bound of price cannot be bigger than Upper one");
+            }
+
+            specifications.Add(new PriceSpecification((decimal)filteredBooksDto.MinPrice, (decimal)filteredBooksDto.MaxPrice));
+        }
+        else
+        {
+            if (filteredBooksDto.MinPrice is not null)
+            {
+                specifications.Add(new MinPriceSpecification((decimal)filteredBooksDto.MinPrice));
+            }
+
+            if (filteredBooksDto.MaxPrice is not null)
+            {
+                specifications.Add(new MaxPriceSpecification((decimal)filteredBooksDto.MaxPrice));
+            }
+        }
+        
+        var predicate = PredicateBuilder.New<Book>(true);
+        return specifications.Aggregate(
+            predicate,
+            (current, specification) => current.And(specification.Criteria));
     }
 }

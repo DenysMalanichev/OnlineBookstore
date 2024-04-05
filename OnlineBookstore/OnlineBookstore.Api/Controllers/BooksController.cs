@@ -39,6 +39,14 @@ public class BooksController : ControllerBase
         return Ok(bookDto);
     }
     
+    [HttpGet("get-filtered-books")]
+    public async Task<IActionResult> GetFilteredBooksAsync([FromQuery] GetFilteredBooksDto filteredBooksDto)
+    {
+        var pagedBooksResult = await _bookService.GetBooksUsingFiltersAsync(filteredBooksDto);
+
+        return Ok(pagedBooksResult);
+    }
+    
     [HttpDelete]
     public async Task<IActionResult> DeleteBookAsync(int bookId)
     {
