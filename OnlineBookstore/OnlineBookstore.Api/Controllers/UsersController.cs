@@ -5,7 +5,7 @@ using OnlineBookstore.Features.UserFeatures;
 namespace OnlineBookstore.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;

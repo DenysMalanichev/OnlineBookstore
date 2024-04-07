@@ -13,5 +13,5 @@ public class PublisherSpecification : ISpecification<Book>
     }
 
     public Expression<Func<Book, bool>> Criteria =>
-        book => _publishersId == book.PublisherId;
+        book => _publishersId == book.Publisher.Id;
 }

@@ -10,7 +10,7 @@ public class GetFilteredBooksDto
 
     public int? PublisherId { get; set; }
 
-    public bool IsDescending { get; set; }
+    public bool? IsDescending { get; set; }
     
     [Range(0, int.MaxValue)]
     public decimal? MinPrice { get; set; }

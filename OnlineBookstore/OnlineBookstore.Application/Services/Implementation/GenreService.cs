@@ -1,5 +1,4 @@
 using AutoMapper;
-using Microsoft.Identity.Client;
 using OnlineBookstore.Application.Exceptions;
 using OnlineBookstore.Application.Services.Interfaces;
 using OnlineBookstore.Domain.Entities;
@@ -46,6 +45,15 @@ public class GenreService : IGenreService
                    ?? throw new EntityNotFoundException($"No Genre with Id '{genreId}'");
 
         return _mapper.Map<GetGenreDto>(genre);
+    }
+
+    public async Task<IEnumerable<GetBriefGenreDto>> GetAllGenresAsync()
+    {
+        var genres = await _unitOfWork.GenreRepository.GetAllAsync();
+
+        var genresDtos = _mapper.Map<IEnumerable<GetBriefGenreDto>>(genres);
+
+        return genresDtos;
     }
 
     public async Task DeleteGenreAsync(int genreId)

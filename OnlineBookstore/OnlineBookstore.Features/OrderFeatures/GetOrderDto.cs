@@ -8,7 +8,7 @@ public class GetOrderDto
 
     public string ShipCity { get; set; } = null!;
 
-    public IEnumerable<GetOrderDetailDto> OrderDetails { get; set; }
+    public IEnumerable<GetOrderDetailDto> OrderDetails { get; set; } = null!;
 
     public int Id { get; set; }
 }

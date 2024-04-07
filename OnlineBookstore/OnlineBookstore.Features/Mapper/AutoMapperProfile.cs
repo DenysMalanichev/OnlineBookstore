@@ -16,6 +16,10 @@ public class AutoMapperProfile : Profile
     {
         CreateMap<CreateBookDto, Book>().ReverseMap();
         CreateMap<UpdateBookDto, Book>().ReverseMap();
+        CreateMap<Book, GetBriefBookDto>()
+            .ForMember(gb => gb.AuthorName, 
+                opt => opt.MapFrom(src => src.Author.FirstName + src.Author.LastName))
+            .ReverseMap();
         CreateMap<Book, GetBookDto>()
             .ForMember(gb => gb.GenreIds, 
                 opt => opt.MapFrom(src => src.Genres.Select(g => g.Id)))
@@ -24,10 +28,12 @@ public class AutoMapperProfile : Profile
         CreateMap<CreateGenreDto, Genre>().ReverseMap();
         CreateMap<UpdateGenreDto, Genre>().ReverseMap();
         CreateMap<GetGenreDto, Genre>().ReverseMap();
+        CreateMap<GetBriefGenreDto, Genre>().ReverseMap();
 
         CreateMap<CreatePublisherDto, Publisher>().ReverseMap();
         CreateMap<UpdatePublisherDto, Publisher>().ReverseMap();
         CreateMap<GetPublisherDto, Publisher>().ReverseMap();
+        CreateMap<GetBriefPublisherDto, Publisher>().ReverseMap();
         
         CreateMap<CreateAuthorDto, Author>().ReverseMap();
         CreateMap<UpdateAuthorDto, Author>().ReverseMap();

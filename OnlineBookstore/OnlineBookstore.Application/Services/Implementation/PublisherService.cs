@@ -47,6 +47,15 @@ public class PublisherService : IPublisherService
         return _mapper.Map<GetPublisherDto>(publisher);
     }
 
+    public async Task<IEnumerable<GetBriefPublisherDto>> GetAllPublishersAsync()
+    {
+        var publishers = await _unitOfWork.PublisherRepository.GetAllAsync();
+
+        var publishersDto = _mapper.Map<IEnumerable<GetBriefPublisherDto>>(publishers);
+
+        return publishersDto;
+    }
+
     public async Task DeletePublisherAsync(int publisherId)
     {
         var publisherToDelete = await _unitOfWork.PublisherRepository.GetByIdAsync(publisherId)!

@@ -5,7 +5,7 @@ using OnlineBookstore.Features.GenreFeatures;
 namespace OnlineBookstore.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class GenresController : ControllerBase
 {
     private readonly IGenreService _genreService;
@@ -31,12 +31,20 @@ public class GenresController : ControllerBase
         return Ok();
     }
     
-    [HttpGet]
+    [HttpGet("{genreId:int}")]
     public async Task<IActionResult> GetGenreAsync(int genreId)
     {
         var genreDto = await _genreService.GetGenreByIdAsync(genreId);
 
         return Ok(genreDto);
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetAllGenresAsync()
+    {
+        var genresDto = await _genreService.GetAllGenresAsync();
+
+        return Ok(genresDto);
     }
     
     [HttpDelete]

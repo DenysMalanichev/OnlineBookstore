@@ -5,7 +5,7 @@ using OnlineBookstore.Features.CommentFeatures;
 namespace OnlineBookstore.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class CommentsController : ControllerBase
 {
     private readonly ICommentService _commentService;

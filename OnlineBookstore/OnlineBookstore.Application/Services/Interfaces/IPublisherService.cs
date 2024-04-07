@@ -9,6 +9,8 @@ public interface IPublisherService
     Task UpdatePublisherAsync(UpdatePublisherDto updatePublisherDto);
 
     Task<GetPublisherDto> GetPublisherByIdAsync(int publisherId);
+    
+    Task<IEnumerable<GetBriefPublisherDto>> GetAllPublishersAsync();
 
     Task DeletePublisherAsync(int publisherId);
 }

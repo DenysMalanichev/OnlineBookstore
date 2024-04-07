@@ -5,7 +5,7 @@ using OnlineBookstore.Features.AuthorFeatures;
 namespace OnlineBookstore.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class AuthorController : ControllerBase
 {
     private readonly IAuthorService _authorService;

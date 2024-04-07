@@ -9,5 +9,5 @@ public class CreateAuthorDto
     public string LastName { get; set; } = null!;
 
     [EmailAddress]
-    public string Email { get; set; } = null!;
+    public string? Email { get; set; } = null!;
 }

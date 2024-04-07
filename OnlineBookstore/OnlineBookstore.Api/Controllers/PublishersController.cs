@@ -5,7 +5,7 @@ using OnlineBookstore.Features.PublisherFeatures;
 namespace OnlineBookstore.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class PublishersController : ControllerBase
 {
     private readonly IPublisherService _publisherService;
@@ -15,12 +15,20 @@ public class PublishersController : ControllerBase
         _publisherService = publisherService;
     }
 
-    [HttpGet]
+    [HttpGet("{publisherId:int}")]
     public async Task<IActionResult> GetPublisherByIdAsync(int publisherId)
     {
         var publisher = await _publisherService.GetPublisherByIdAsync(publisherId);
 
         return Ok(publisher);
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetAllPublishersAsync()
+    {
+        var publishersDto = await _publisherService.GetAllPublishersAsync();
+
+        return Ok(publishersDto);
     }
     
     [HttpPost]

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OnlineBookstore.Application.Configs;
+using OnlineBookstore.Configs;
 using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Features.Mapper;
 using OnlineBookstore.Features.UserFeatures.Options;
@@ -8,7 +9,11 @@ using OnlineBookstore.Middleware;
 using OnlineBookstore.Persistence.Configs;
 using OnlineBookstore.Persistence.Context;
 
+const string allowFrontEndSpecificOrigins = "_frontEndSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddCorsPolicy(allowFrontEndSpecificOrigins);
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
@@ -45,6 +50,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(allowFrontEndSpecificOrigins);
 
 app.UseAuthentication();
 app.UseAuthorization();

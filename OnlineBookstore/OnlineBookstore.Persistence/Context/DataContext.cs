@@ -34,5 +34,13 @@ public class DataContext : IdentityDbContext<User, Role, string>
         builder.Entity<Book>()
             .Navigation(g => g.Genres)
             .AutoInclude();
+        
+        builder.Entity<Book>()
+            .Navigation(g => g.Author)
+            .AutoInclude();
+        
+        builder.Entity<Book>()
+            .Navigation(g => g.Publisher)
+            .AutoInclude();
     }
 }

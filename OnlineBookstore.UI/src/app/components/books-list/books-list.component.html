@@ -1,0 +1,7 @@
+<div>
+    <mat-grid-list [cols]="cols" style=" width: 100%; height: 100%;">
+        <mat-grid-tile *ngFor='let book of books'>
+            <book-card [book]="book" class="book-card"></book-card>
+        </mat-grid-tile>
+    </mat-grid-list> 
+</div>

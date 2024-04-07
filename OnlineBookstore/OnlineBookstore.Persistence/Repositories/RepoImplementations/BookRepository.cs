@@ -24,7 +24,7 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
             .Where(predicate);
     
         return sortDescending
-            ? query.OrderDescending() 
+            ? query.OrderByDescending(b => b.Price) 
             : query;
     }
 }

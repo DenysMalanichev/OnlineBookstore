@@ -6,7 +6,7 @@ using OnlineBookstore.Features.OrderFeatures.OrderDetailFeatures;
 namespace OnlineBookstore.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class OrdersController : ControllerBase
 {
     private readonly IOrderService _orderService;

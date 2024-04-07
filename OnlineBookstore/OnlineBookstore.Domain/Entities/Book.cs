@@ -12,14 +12,20 @@ public class Book : IBaseEntity
     [Column(TypeName = "decimal(5, 2)")]
     public decimal Price { get; set; }
 
+    [ForeignKey(nameof(Author))]
     public int AuthorId { get; set; }
-
+    
     public Author Author { get; set; } = null!;
 
+    [ForeignKey(nameof(PublisherId))]
     public int PublisherId { get; set; }
     
     public Publisher Publisher { get; set; } = null!;
 
+    [NotMapped]
+    [ForeignKey(nameof(Genres))]
+    public int[] GenreIds { get; set; } = null!;
+    
     public IList<Genre> Genres { get; set; } = null!;
     
     public int Id { get; set; }

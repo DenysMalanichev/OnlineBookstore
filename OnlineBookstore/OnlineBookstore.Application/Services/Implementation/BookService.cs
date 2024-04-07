@@ -86,11 +86,11 @@ public class BookService : IBookService
         return _mapper.Map<GetBookDto>(book);
     }
 
-    public async Task<GenericPagingDto<GetBookDto>> GetBooksUsingFiltersAsync(GetFilteredBooksDto filteredBooksDto)
+    public async Task<GenericPagingDto<GetBriefBookDto>> GetBooksUsingFiltersAsync(GetFilteredBooksDto filteredBooksDto)
     {
         var predicate = GenerateFilteringPredicate(filteredBooksDto);
 
-        var entitiesQuery = _unitOfWork.BookRepository.GetItemsByPredicate(predicate, filteredBooksDto.IsDescending);
+        var entitiesQuery = _unitOfWork.BookRepository.GetItemsByPredicate(predicate, filteredBooksDto.IsDescending ?? false);
 
         var itemsOnPage = filteredBooksDto.ItemsOnPage ?? DefaultBooksOnPage;
         
@@ -98,11 +98,11 @@ public class BookService : IBookService
             .Take(itemsOnPage)
             .ToListAsync();
 
-        var entityDtos = _mapper.Map<IEnumerable<GetBookDto>>(entities);
+        var entityDtos = _mapper.Map<IEnumerable<GetBriefBookDto>>(entities);
 
         var totalPages = entitiesQuery.Count();
         
-        return new GenericPagingDto<GetBookDto>
+        return new GenericPagingDto<GetBriefBookDto>
         {
             CurrentPage = filteredBooksDto.Page ?? 1,
             Entities = entityDtos,
@@ -133,12 +133,12 @@ public class BookService : IBookService
             specifications.Add(new PublisherSpecification((int)filteredBooksDto.PublisherId));
         }
 
-        if (!filteredBooksDto.Name.IsNullOrEmpty() && filteredBooksDto.Name.Length >= 3)
+        if (!filteredBooksDto.Name.IsNullOrEmpty() && filteredBooksDto.Name!.Length >= 3)
         {
             specifications.Add(new NameSpecification(filteredBooksDto.Name));
         }
 
-        if (!filteredBooksDto.AuthorName.IsNullOrEmpty() && filteredBooksDto.AuthorName.Length >= 3)
+        if (!filteredBooksDto.AuthorName.IsNullOrEmpty() && filteredBooksDto.AuthorName!.Length >= 3)
         {
             specifications.Add(new AuthorNameSpecification(filteredBooksDto.AuthorName));
         }
