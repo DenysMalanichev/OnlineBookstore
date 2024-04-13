@@ -110,6 +110,20 @@ public class BookService : IBookService
         };
     }
 
+    public GenericPagingDto<GetBriefBookDto> GetBooksByAuthor(int authorId, int? page, int itemsOnPage = 10)
+    {
+        var books = _unitOfWork.BookRepository.GetBooksByAuthorAsync(authorId, page ?? 1, itemsOnPage);
+
+        var bookDtos = _mapper.Map<IEnumerable<GetBriefBookDto>>(books.booksOnPage);
+
+        return new GenericPagingDto<GetBriefBookDto>
+        {
+            CurrentPage = page ?? 1,
+            Entities = bookDtos,
+            TotalPages = books.totalItems,
+        };
+    }
+
     public async Task DeleteBookAsync(int bookId)
     {
         var bookToDelete = await _unitOfWork.BookRepository.GetByIdAsync(bookId)!

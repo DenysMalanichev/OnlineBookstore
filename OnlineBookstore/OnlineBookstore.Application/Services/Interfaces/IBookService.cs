@@ -13,5 +13,7 @@ public interface IBookService
 
     Task<GenericPagingDto<GetBriefBookDto>> GetBooksUsingFiltersAsync(GetFilteredBooksDto filteredBooksDto);
 
+    GenericPagingDto<GetBriefBookDto> GetBooksByAuthor(int authorId, int? page, int itemsOnPage = 10);
+
     Task DeleteBookAsync(int bookId);
 }

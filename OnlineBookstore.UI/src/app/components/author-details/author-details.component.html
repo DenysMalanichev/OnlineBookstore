@@ -1,0 +1,14 @@
+<div class="author-container">
+    <div class="author-info">
+        <h1 class="author-name">{{ author.firstName + author.lastName }}</h1>
+        <p class="author-email">{{ author.email }}</p>
+    </div>
+    <generic-list title="Authored Books">
+        <a *ngFor="let book of authoredBooks">
+            <div class="authors-list-item" >
+                <strong class="author-name">{{ book.name }}</strong>
+                <p>${{ book.price }}</p>    
+            </div>
+        </a>
+    </generic-list>
+</div>

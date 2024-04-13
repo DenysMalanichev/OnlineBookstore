@@ -6,6 +6,7 @@ import { BookFullInfoComponent } from './components/book-full-info/book-full-inf
 import { GenresListComponent } from './components/genres-list/genres-list.component';
 import { AuthorsListComponent } from './components/authors-list/authors-list.component';
 import { PublishersListComponent } from './components/publishers-list/publishers-list.component';
+import { AuthorDetailsComponent } from './components/author-details/author-details.component';
 
 const routes: Routes = [
   {
@@ -31,7 +32,7 @@ const routes: Routes = [
   },
   {
     path: 'author/:id',
-    component: AuthorsListComponent
+    component: AuthorDetailsComponent
   },
   {
     path: 'publishers',

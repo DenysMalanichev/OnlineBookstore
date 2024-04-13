@@ -6,7 +6,8 @@ export const environment = {
         },
         books: {
             booksBasePath: 'books/',
-            getFilteredBooks: 'get-filtered-books/'
+            getFilteredBooks: 'get-filtered-books/',
+            getBookByAuthor: 'by-author/'
         },        
         genres: {
             genresBasePath: 'genres/',

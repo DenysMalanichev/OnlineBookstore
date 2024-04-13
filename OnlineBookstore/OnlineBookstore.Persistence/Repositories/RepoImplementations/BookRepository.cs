@@ -27,4 +27,12 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
             ? query.OrderByDescending(b => b.Price) 
             : query;
     }
+
+    public (IEnumerable<Book>, int) GetBooksByAuthorAsync(int authorId, int page, int itemsOnPage)
+    {
+        return (_dataContext.Books.Where(b => b.AuthorId == authorId)
+            .Skip((page - 1) * itemsOnPage)
+            .Take(itemsOnPage)
+            .ToList(), _dataContext.Books.Count(b => b.AuthorId == authorId));
+    }
 }

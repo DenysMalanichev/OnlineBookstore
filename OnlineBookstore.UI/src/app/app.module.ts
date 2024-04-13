@@ -22,6 +22,7 @@ import { GenresListComponent } from './components/genres-list/genres-list.compon
 import { AuthorsListComponent } from './components/authors-list/authors-list.component';
 import { GenericListComponent } from './components/generic-list/generic-list.component';
 import { PublishersListComponent } from './components/publishers-list/publishers-list.component';
+import { AuthorDetailsComponent } from './components/author-details/author-details.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { PublishersListComponent } from './components/publishers-list/publishers
     GenresListComponent,
     AuthorsListComponent,
     GenericListComponent,
-    PublishersListComponent
+    PublishersListComponent,
+    AuthorDetailsComponent
   ],
   imports: [
     BrowserModule,

@@ -47,6 +47,14 @@ public class BooksController : ControllerBase
         return Ok(pagedBooksResult);
     }
     
+    [HttpGet("by-author")]
+    public IActionResult GetFilteredBooksAsync(int authorId, int? page, int itemsOnPage = 10)
+    {
+        var pagedBooksResult = _bookService.GetBooksByAuthor(authorId, page, itemsOnPage);
+
+        return Ok(pagedBooksResult);
+    }
+    
     [HttpDelete]
     public async Task<IActionResult> DeleteBookAsync(int bookId)
     {
