@@ -10,5 +10,7 @@ public interface IAuthorService
 
     Task<GetAuthorDto> GetAuthorByIdAsync(int authorDto);
 
+    Task<IEnumerable<GetAuthorDto>> GetAllAuthorsAsync();
+
     Task DeleteAuthorAsync(int authorDto);
 }

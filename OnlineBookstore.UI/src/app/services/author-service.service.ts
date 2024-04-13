@@ -12,9 +12,14 @@ export class AuthorService {
   constructor(private http: HttpClient) { }
 
   getAuthorById(id: number): Observable<AuthorModel> {
-    const apiUrl = environment.apiBaseUrl + environment.endpoints.author.authorBasePath;
-    let param = new HttpParams().set('authorId', id);
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.author.authorBasePath + id;
 
-    return this.http.get<AuthorModel>(apiUrl, { params: param });
+    return this.http.get<AuthorModel>(apiUrl);
+  }
+
+  getAllAuthors(): Observable<AuthorModel[]> {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.author.authorBasePath;
+
+    return this.http.get<AuthorModel[]>(apiUrl);
   }
 }

@@ -47,11 +47,11 @@ public class GenreService : IGenreService
         return _mapper.Map<GetGenreDto>(genre);
     }
 
-    public async Task<IEnumerable<GetBriefGenreDto>> GetAllGenresAsync()
+    public async Task<IEnumerable<GetGenreDto>> GetAllGenresAsync()
     {
         var genres = await _unitOfWork.GenreRepository.GetAllAsync();
 
-        var genresDtos = _mapper.Map<IEnumerable<GetBriefGenreDto>>(genres);
+        var genresDtos = _mapper.Map<IEnumerable<GetGenreDto>>(genres);
 
         return genresDtos;
     }

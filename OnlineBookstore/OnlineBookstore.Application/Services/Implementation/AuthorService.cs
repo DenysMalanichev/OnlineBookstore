@@ -47,6 +47,15 @@ public class AuthorService : IAuthorService
         return _mapper.Map<GetAuthorDto>(genre);
     }
 
+    public async Task<IEnumerable<GetAuthorDto>> GetAllAuthorsAsync()
+    {
+        var authors = await _unitOfWork.AuthorRepository.GetAllAsync();
+
+        var authorDtos = _mapper.Map<IEnumerable<GetAuthorDto>>(authors);
+
+        return authorDtos;
+    }
+
     public async Task DeleteAuthorAsync(int authorDto)
     {
         var authorToDelete = await _unitOfWork.AuthorRepository.GetByIdAsync(authorDto)!

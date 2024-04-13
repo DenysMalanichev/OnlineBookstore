@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
+import {MatListModule} from '@angular/material/list';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,6 +18,10 @@ import { BooksFilterComponent } from './components/books-filter/books-filter.com
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './components/header/header.component';
 import { BookFullInfoComponent } from './components/book-full-info/book-full-info.component';
+import { GenresListComponent } from './components/genres-list/genres-list.component';
+import { AuthorsListComponent } from './components/authors-list/authors-list.component';
+import { GenericListComponent } from './components/generic-list/generic-list.component';
+import { PublishersListComponent } from './components/publishers-list/publishers-list.component';
 
 
 @NgModule({
@@ -27,7 +32,11 @@ import { BookFullInfoComponent } from './components/book-full-info/book-full-inf
     BookCardComponent,
     BooksFilterComponent,
     HeaderComponent,
-    BookFullInfoComponent
+    BookFullInfoComponent,
+    GenresListComponent,
+    AuthorsListComponent,
+    GenericListComponent,
+    PublishersListComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +49,8 @@ import { BookFullInfoComponent } from './components/book-full-info/book-full-inf
     FormsModule,
     MatCardModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

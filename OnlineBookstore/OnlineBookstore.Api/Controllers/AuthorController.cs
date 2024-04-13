@@ -31,12 +31,20 @@ public class AuthorController : ControllerBase
         return Ok();
     }
     
-    [HttpGet]
+    [HttpGet("{authorId:int}")]
     public async Task<IActionResult> GetAuthorAsync(int authorId)
     {
-        var bookDto = await _authorService.GetAuthorByIdAsync(authorId);
+        var authorDto = await _authorService.GetAuthorByIdAsync(authorId);
 
-        return Ok(bookDto);
+        return Ok(authorDto);
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetAllAuthorsAsync()
+    {
+        var authorDto = await _authorService.GetAllAuthorsAsync();
+
+        return Ok(authorDto);
     }
     
     [HttpDelete]

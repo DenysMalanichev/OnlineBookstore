@@ -1,0 +1,7 @@
+<generic-list title="Publishers">
+    <a *ngFor="let p of publishers" [routerLink]="['/publisher', p.id]" class="publisher-link">
+        <div class="publisher-list-item" >
+            <strong class="publisher-name">{{ p.companyName }}</strong>
+        </div>
+    </a>    
+</generic-list>
