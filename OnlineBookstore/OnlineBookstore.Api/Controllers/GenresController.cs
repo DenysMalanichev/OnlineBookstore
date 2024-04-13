@@ -39,6 +39,14 @@ public class GenresController : ControllerBase
         return Ok(genreDto);
     }
     
+    [HttpGet("by-book/{bookId:int}")]
+    public async Task<IActionResult> GetGenresByBookAsync(int bookId)
+    {
+        var genreDto = await _genreService.GetGenresByBookAsync(bookId);
+
+        return Ok(genreDto);
+    }
+    
     [HttpGet]
     public async Task<IActionResult> GetAllGenresAsync()
     {

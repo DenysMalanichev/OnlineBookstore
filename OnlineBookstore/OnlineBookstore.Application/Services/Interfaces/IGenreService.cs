@@ -11,6 +11,8 @@ public interface IGenreService
     Task<GetGenreDto> GetGenreByIdAsync(int genreId);
 
     Task<IEnumerable<GetBriefGenreDto>> GetAllGenresAsync();
+    
+    Task<IEnumerable<GetBriefGenreDto>> GetGenresByBookAsync(int bookId);
 
     Task DeleteGenreAsync(int genreId);
 }

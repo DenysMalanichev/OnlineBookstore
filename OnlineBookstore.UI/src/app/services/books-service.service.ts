@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { BriefBookModel } from '../models/book-models/briefBookModel';
 import { environment } from '../../environments/environment.development';
 import { PageableResponse } from '../models/common/pageableResponse';
+import { FullBookModel } from '../models/book-models/fullBookModel';
 
 @Injectable({
   providedIn: 'root'
@@ -32,5 +33,12 @@ export class BooksService {
     });
   
     return this.http.get<PageableResponse<BriefBookModel>>(apiUrl, { params });
+  }
+
+  getBookById(id: number): Observable<FullBookModel> {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.books.booksBasePath;
+    let param = new HttpParams().set('bookId', id.toString());
+
+    return this.http.get<FullBookModel>(apiUrl, { params: param });
   }
 }

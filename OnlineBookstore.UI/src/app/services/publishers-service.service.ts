@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { environment } from 'src/environments/environment.development';
@@ -15,5 +15,11 @@ export class PublishersService {
     const apiUrl = environment.apiBaseUrl + environment.endpoints.publishers.publishersBasePath;
     
     return this.http.get<BriefPublisherModel[]>(apiUrl);
+  }
+
+  getBriefPublisherById(id: number): Observable<BriefPublisherModel> {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.publishers.publishersBasePath + id;
+    
+    return this.http.get<BriefPublisherModel>(apiUrl);
   }
 }

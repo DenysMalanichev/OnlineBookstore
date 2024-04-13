@@ -16,6 +16,7 @@ import { BookCardComponent } from './components/book-card/book-card.component';
 import { BooksFilterComponent } from './components/books-filter/books-filter.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './components/header/header.component';
+import { BookFullInfoComponent } from './components/book-full-info/book-full-info.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { HeaderComponent } from './components/header/header.component';
     PageNotFoundComponent,
     BookCardComponent,
     BooksFilterComponent,
-    HeaderComponent
+    HeaderComponent,
+    BookFullInfoComponent
   ],
   imports: [
     BrowserModule,

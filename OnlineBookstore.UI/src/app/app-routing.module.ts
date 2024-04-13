@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { BooksFilterComponent } from './components/books-filter/books-filter.component';
+import { BookFullInfoComponent } from './components/book-full-info/book-full-info.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,10 @@ const routes: Routes = [
   {
     path: 'books-filters',
     component: BooksFilterComponent
+  },
+  {
+    path: 'book-details/:id',
+    component: BookFullInfoComponent
   },
   {
     path: 'genrs',

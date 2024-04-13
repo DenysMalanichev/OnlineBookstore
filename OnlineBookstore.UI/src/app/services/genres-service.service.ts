@@ -17,4 +17,10 @@ export class GenresService {
     
     return this.http.get<BriefGenreModel[]>(apiUrl);
   }
+
+  getGenresByBook(bookId: number): Observable<BriefGenreModel[]> {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.genres.genresBasePath + environment.endpoints.genres.genresByBook + bookId;
+    
+    return this.http.get<BriefGenreModel[]>(apiUrl);
+  }
 }

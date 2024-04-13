@@ -45,3 +45,15 @@
 .nav-links-container a:last-child:hover {
     background-color: #405cf5; 
 }
+
+.no-underline {
+    text-decoration: none;
+}
+
+.no-underline:hover {
+    text-decoration: none;
+}
+
+.no-underline:checked {
+    text-decoration: none;
+}

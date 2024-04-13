@@ -56,6 +56,16 @@ public class GenreService : IGenreService
         return genresDtos;
     }
 
+    public async Task<IEnumerable<GetBriefGenreDto>> GetGenresByBookAsync(int bookId)
+    {
+        var book = await _unitOfWork.BookRepository.GetByIdAsync(bookId)!
+            ?? throw new EntityNotFoundException("No book with Id '{bookId}' found.");
+
+        var genresDtos = _mapper.Map<IEnumerable<GetBriefGenreDto>>(book.Genres);
+
+        return genresDtos;
+    }
+
     public async Task DeleteGenreAsync(int genreId)
     {
         var genreToDelete = await _unitOfWork.GenreRepository.GetByIdAsync(genreId)!
