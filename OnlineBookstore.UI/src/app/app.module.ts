@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpRequest } from '@angular/common/http';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -9,6 +9,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import {MatListModule} from '@angular/material/list';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import { JwtModule } from "@auth0/angular-jwt";
+import {MatButtonModule} from '@angular/material/button';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,6 +27,9 @@ import { GenericListComponent } from './components/generic-list/generic-list.com
 import { PublishersListComponent } from './components/publishers-list/publishers-list.component';
 import { AuthorDetailsComponent } from './components/author-details/author-details.component';
 import { PublisherDetailsComponent } from './components/publisher-details/publisher-details.component';
+import { LoginComponent } from './components/auth/login/login.component';
+import { RegisterComponent } from './components/auth/register/register.component';
+import { AccountComponent } from './components/auth/account/account.component';
 
 
 
@@ -42,7 +47,10 @@ import { PublisherDetailsComponent } from './components/publisher-details/publis
     GenericListComponent,
     PublishersListComponent,
     AuthorDetailsComponent,
-    PublisherDetailsComponent
+    PublisherDetailsComponent,
+    LoginComponent,
+    RegisterComponent,
+    AccountComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,9 +65,26 @@ import { PublisherDetailsComponent } from './components/publisher-details/publis
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MatListModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatButtonModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: ["localhost"],
+        disallowedRoutes: ["http://your-api-domain.com/api/auth/login"],
+      }
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }
+function tokenGetter(): string {
+  let token = localStorage.getItem('access_token');
+  if (token === null) {
+    throw new Error('No access token');
+  }
+  return token;
+}
+

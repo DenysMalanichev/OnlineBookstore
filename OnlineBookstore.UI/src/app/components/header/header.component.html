@@ -10,6 +10,7 @@
         <a class="nav-link" routerLink="/authors">Authors</a>
         <a class="nav-link" routerLink="/publishers">Publishers</a>      
         
-        <a>LOGIN!</a>
+        <a *ngIf="!isLoggedin()" routerLink="/login">Log In</a>
+        <a *ngIf="isLoggedin()" routerLink="/account">Account</a>
     </div>    
 </div>

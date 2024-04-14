@@ -1,6 +1,12 @@
 export const environment = {
     apiBaseUrl: 'https://localhost:44317/api/',
     endpoints: {
+        users: {
+            usersBasePath: 'users/',
+            loginUserPath: 'login/',
+            registerUserPath: 'register-user/',
+            registerAdminPAth: 'register-admin/'
+        },
         author: {
             authorBasePath: 'author/'
         },

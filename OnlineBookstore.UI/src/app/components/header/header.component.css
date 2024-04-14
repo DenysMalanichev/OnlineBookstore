@@ -43,6 +43,10 @@
 }
 
 .nav-links-container a:last-child:hover {
+    background-color: #004494; 
+}
+
+.nav-links-container a:last-child:hover {
     background-color: #405cf5; 
 }
 

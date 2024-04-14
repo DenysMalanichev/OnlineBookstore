@@ -8,11 +8,14 @@ import { AuthorsListComponent } from './components/authors-list/authors-list.com
 import { PublishersListComponent } from './components/publishers-list/publishers-list.component';
 import { AuthorDetailsComponent } from './components/author-details/author-details.component';
 import { PublisherDetailsComponent } from './components/publisher-details/publisher-details.component';
+import { LoginComponent } from './components/auth/login/login.component';
+import { AccountComponent } from './components/auth/account/account.component';
+import { RegisterComponent } from './components/auth/register/register.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/books-filters',
+    redirectTo: '/login',
     pathMatch: 'full'
   },
   {
@@ -42,6 +45,18 @@ const routes: Routes = [
   {
     path: 'publisher/:id',
     component: PublisherDetailsComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+  {
+    path: 'register',
+    component: RegisterComponent
+  },
+  {
+    path: 'account',
+    component: AccountComponent
   },
   {
     path: '**',

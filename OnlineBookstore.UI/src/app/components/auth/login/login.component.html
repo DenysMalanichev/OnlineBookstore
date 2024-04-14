@@ -1,0 +1,15 @@
+<div class="login-container">
+    <h2>Login</h2>
+    <form action="/submit-your-login-form" method="POST">
+      <div class="form-input">
+        <label for="username">Email</label>
+        <input type="text" id="username" name="username" required [formControl]="email">
+      </div>
+      <div class="form-input">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required [formControl]="password">
+      </div>
+      <button type="submit" class="login-button" (click)="login()">Log In</button>
+      <center style="text-decoration: underline; color: blue; cursor: pointer;" routerLink="/register">No account? Register!</center>
+    </form>
+  </div>
