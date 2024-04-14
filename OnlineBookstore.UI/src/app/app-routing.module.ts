@@ -7,6 +7,7 @@ import { GenresListComponent } from './components/genres-list/genres-list.compon
 import { AuthorsListComponent } from './components/authors-list/authors-list.component';
 import { PublishersListComponent } from './components/publishers-list/publishers-list.component';
 import { AuthorDetailsComponent } from './components/author-details/author-details.component';
+import { PublisherDetailsComponent } from './components/publisher-details/publisher-details.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,10 @@ const routes: Routes = [
   {
     path: 'publishers',
     component: PublishersListComponent
+  },
+  {
+    path: 'publisher/:id',
+    component: PublisherDetailsComponent
   },
   {
     path: '**',

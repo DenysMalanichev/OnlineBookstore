@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { environment } from 'src/environments/environment.development';
 import { BriefPublisherModel } from '../models/publisher-models/briefPublisherModel';
+import { FullPublisherModel } from '../models/publisher-models/fullPublisherModel';
 
 @Injectable({
   providedIn: 'root'
@@ -17,9 +18,9 @@ export class PublishersService {
     return this.http.get<BriefPublisherModel[]>(apiUrl);
   }
 
-  getBriefPublisherById(id: number): Observable<BriefPublisherModel> {
+  getPublisherById(id: number): Observable<FullPublisherModel> {
     const apiUrl = environment.apiBaseUrl + environment.endpoints.publishers.publishersBasePath + id;
     
-    return this.http.get<BriefPublisherModel>(apiUrl);
+    return this.http.get<FullPublisherModel>(apiUrl);
   }
 }

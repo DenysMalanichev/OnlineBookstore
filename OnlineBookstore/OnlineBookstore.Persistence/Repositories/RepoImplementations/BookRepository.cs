@@ -28,11 +28,19 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
             : query;
     }
 
-    public (IEnumerable<Book>, int) GetBooksByAuthorAsync(int authorId, int page, int itemsOnPage)
+    public (IEnumerable<Book> booksOnPage, int totalItems) GetBooksByAuthorAsync(int authorId, int page, int itemsOnPage)
     {
         return (_dataContext.Books.Where(b => b.AuthorId == authorId)
             .Skip((page - 1) * itemsOnPage)
             .Take(itemsOnPage)
             .ToList(), _dataContext.Books.Count(b => b.AuthorId == authorId));
+    }
+
+    public (IEnumerable<Book> booksOnPage, int totalItems) GetBooksByPublisher(int publisherId, int page, int itemsOnPage)
+    {
+        return (_dataContext.Books.Where(b => b.PublisherId == publisherId)
+            .Skip((page - 1) * itemsOnPage)
+            .Take(itemsOnPage)
+            .ToList(), _dataContext.Books.Count(b => b.PublisherId == publisherId));
     }
 }

@@ -52,7 +52,7 @@ export class BookFullInfoComponent implements OnInit {
   }
 
   getPublisher(id: number): void {
-    this.publisherService.getBriefPublisherById(id).subscribe(x => this.publisher = x);
+    this.publisherService.getPublisherById(id).subscribe(x => this.publisher = x);
   }
 
   getGenresByBook(bookId: number): void {

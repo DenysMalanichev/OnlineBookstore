@@ -1,6 +1,6 @@
 .book-container {
     display: flex;
-    align-items: start;
+    align-items: flex-start;
     margin: 20px;
     padding: 20px;
     border: 1px solid #ccc;

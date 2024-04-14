@@ -1,0 +1,15 @@
+<div class="author-container">
+    <div class="author-info">
+        <h1 class="author-name">{{ publisher.companyName }}</h1>
+        <p class="author-email">Contact Name {{ publisher.contactName }}</p>
+        <p class="author-email">Address {{ publisher.address }}</p>
+    </div>
+    <generic-list title="Authored Books">
+        <a *ngFor="let book of publishedBooks" [routerLink]="['/book-details/', book.id]" class="book-link">
+            <div class="authors-list-item" >
+                <strong class="author-name">{{ book.name }}</strong>
+                <p>${{ book.price }}</p>    
+            </div>
+        </a>
+    </generic-list>
+</div>

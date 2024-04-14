@@ -23,6 +23,7 @@ import { AuthorsListComponent } from './components/authors-list/authors-list.com
 import { GenericListComponent } from './components/generic-list/generic-list.component';
 import { PublishersListComponent } from './components/publishers-list/publishers-list.component';
 import { AuthorDetailsComponent } from './components/author-details/author-details.component';
+import { PublisherDetailsComponent } from './components/publisher-details/publisher-details.component';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { AuthorDetailsComponent } from './components/author-details/author-detai
     AuthorsListComponent,
     GenericListComponent,
     PublishersListComponent,
-    AuthorDetailsComponent
+    AuthorDetailsComponent,
+    PublisherDetailsComponent
   ],
   imports: [
     BrowserModule,

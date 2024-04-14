@@ -48,9 +48,17 @@ public class BooksController : ControllerBase
     }
     
     [HttpGet("by-author")]
-    public IActionResult GetFilteredBooksAsync(int authorId, int? page, int itemsOnPage = 10)
+    public IActionResult GetBooksByAuthor(int authorId, int? page, int itemsOnPage = 10)
     {
         var pagedBooksResult = _bookService.GetBooksByAuthor(authorId, page, itemsOnPage);
+
+        return Ok(pagedBooksResult);
+    }
+    
+    [HttpGet("by-publisher")]
+    public IActionResult GetBooksBuPublisher(int publisherId, int? page, int itemsOnPage = 10)
+    {
+        var pagedBooksResult = _bookService.GetBooksByPublisher(publisherId, page, itemsOnPage);
 
         return Ok(pagedBooksResult);
     }

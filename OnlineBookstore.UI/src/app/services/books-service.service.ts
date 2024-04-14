@@ -52,4 +52,15 @@ export class BooksService {
 
     return this.http.get<PageableResponse<BriefBookModel>>(apiUrl, { params: params });
   }
+
+  getBooksByPublisher(publisherId: number, page: number, itemsOnPage = 10): Observable<PageableResponse<BriefBookModel>> {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.books.booksBasePath + environment.endpoints.books.getBookByPublisher;
+
+    let params = new HttpParams()
+      .set('publisherId', publisherId.toString())
+      .set('page', page.toString())
+      .set('itemsOnPage', itemsOnPage.toString());
+
+    return this.http.get<PageableResponse<BriefBookModel>>(apiUrl, { params: params });
+  }
 }

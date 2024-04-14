@@ -16,6 +16,7 @@ export class AuthorDetailsComponent implements OnInit {
   author!: AuthorModel;
 
   page = 1;
+  totalPages?: number;
 
   constructor(
     private authorService: AuthorService,
@@ -39,6 +40,10 @@ export class AuthorDetailsComponent implements OnInit {
   }
   
   getBooksByAuthor(authorId: number, page: number, itemsOnPage = 10): void {
-    this.booksService.getBooksByAuthor(authorId, page, itemsOnPage).subscribe(x => this.authoredBooks = x.entities);
+    this.booksService.getBooksByAuthor(authorId, page, itemsOnPage).subscribe(x => {
+      this.authoredBooks = x.entities;
+      this.totalPages = x.totalPages;
+    },
+    error => console.error('Error fetching books:', error));
   }
 }

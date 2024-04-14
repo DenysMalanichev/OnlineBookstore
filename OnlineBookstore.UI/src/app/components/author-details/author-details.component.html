@@ -4,7 +4,7 @@
         <p class="author-email">{{ author.email }}</p>
     </div>
     <generic-list title="Authored Books">
-        <a *ngFor="let book of authoredBooks">
+        <a *ngFor="let book of authoredBooks" [routerLink]="['/book-details/', book.id]" class="book-link">
             <div class="authors-list-item" >
                 <strong class="author-name">{{ book.name }}</strong>
                 <p>${{ book.price }}</p>    

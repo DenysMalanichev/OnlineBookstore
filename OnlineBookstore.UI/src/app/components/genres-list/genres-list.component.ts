@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { BriefGenreModel } from 'src/app/models/genre-models/briefGenreModel';
 import { FullGenreModel } from 'src/app/models/genre-models/fullGenreModel';
 import { GenresService } from 'src/app/services/genres-service.service';
 
