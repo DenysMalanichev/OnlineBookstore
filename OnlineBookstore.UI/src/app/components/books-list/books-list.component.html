@@ -3,5 +3,16 @@
         <mat-grid-tile *ngFor='let book of books'>
             <book-card [book]="book" class="book-card"></book-card>
         </mat-grid-tile>
-    </mat-grid-list> 
+    </mat-grid-list>
+
+    <mat-paginator #paginator
+               class="paginator"
+               (page)="handlePageEvent($event)"
+               [length]="totalPages * pageSize"
+               [pageSize]="pageSize"
+               [showFirstLastButtons]="true"
+               [pageSizeOptions]="pageSizeOptions"
+               [pageIndex]="currentPage"
+               aria-label="Select page">
+    </mat-paginator>
 </div>

@@ -8,6 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import {MatListModule} from '@angular/material/list';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,6 +25,7 @@ import { GenericListComponent } from './components/generic-list/generic-list.com
 import { PublishersListComponent } from './components/publishers-list/publishers-list.component';
 import { AuthorDetailsComponent } from './components/author-details/author-details.component';
 import { PublisherDetailsComponent } from './components/publisher-details/publisher-details.component';
+
 
 
 @NgModule({
@@ -54,7 +56,8 @@ import { PublisherDetailsComponent } from './components/publisher-details/publis
     MatCardModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    MatListModule
+    MatListModule,
+    MatPaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

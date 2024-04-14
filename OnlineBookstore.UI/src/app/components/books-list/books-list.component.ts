@@ -5,6 +5,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { BriefBookModel } from 'src/app/models/book-models/briefBookModel';
 import { GetFilteredBooksRequest } from 'src/app/models/book-models/getFilteredBooksRequest';
 import { BooksService } from 'src/app/services/books-service.service';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'books-list',
@@ -17,6 +18,9 @@ export class BooksListComponent implements OnInit{
 
   cols = 3;
   totalPages: number = 0;
+  currentPage = 0;
+  pageSize = 12;
+  pageSizeOptions = [8, 12, 16];
   
   getFilteredBooksRequest = new FormGroup({
     name: new FormControl(null),
@@ -25,8 +29,8 @@ export class BooksListComponent implements OnInit{
     isDescending: new FormControl(false),
     minPrice: new FormControl(null),
     maxPrice: new FormControl(null),
-    page: new FormControl(1),
-    itemsOnPage: new FormControl(10),
+    page: new FormControl(this.currentPage),
+    itemsOnPage: new FormControl(this.pageSize),
     genres: new FormControl(null)
   });
 
@@ -65,6 +69,7 @@ export class BooksListComponent implements OnInit{
   private getFilteredBooks() {
     this.booksService.getFilteredBooks(this.prepareFilteredBooksRequest(this.getFilteredBooksRequest.value))
     .subscribe(x => {
+      console.log('in get Books page');
       this.books = x.entities;
       this.totalPages = x.totalPages;
     });
@@ -82,5 +87,19 @@ export class BooksListComponent implements OnInit{
       itemsOnPage: formValue.itemsOnPage || 10,
       genres: formValue.genres
     };
+  }
+
+  handlePageEvent(e: PageEvent) {   
+    this.totalPages = e.length;
+    this.pageSize = e.pageSize;
+    this.currentPage = e.pageIndex;
+
+    console.log(this.currentPage)
+
+    this.getFilteredBooksRequest.patchValue({
+      itemsOnPage: this.pageSize,
+      page: this.currentPage + 1
+    });
+    this.getFilteredBooks();
   }
 }
