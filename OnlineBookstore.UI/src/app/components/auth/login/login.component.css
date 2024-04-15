@@ -50,3 +50,7 @@ h2 {
 .register-link {
     margin-left: 30%;
 }
+
+.error small {
+    color: red;
+}

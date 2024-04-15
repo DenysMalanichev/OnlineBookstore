@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { tap } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
+import { RegisterModel } from '../models/auth-models/registerModel';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,12 @@ export class AuthService {
         localStorage.setItem('access_token', res.token);
       })
     );
+  }
+
+  register(registerModel: RegisterModel) {
+    const registerPathUrl = this.baseAuthUrl + environment.endpoints.users.registerUserPath;
+
+    return this.http.post(registerPathUrl, { ...registerModel });
   }
 
   logout() {

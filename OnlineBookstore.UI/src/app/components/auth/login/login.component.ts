@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -9,18 +10,23 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  email = new FormControl('');
-  password = new FormControl('');
-
+  email = new FormControl('', [
+    Validators.required,
+    Validators.email
+  ]);
+  password = new FormControl('', [
+    Validators.minLength(8)
+  ]);
   constructor(
     private authService: AuthService,
-    private router: Router) { }
+    private router: Router,
+    public dialog: MatDialog) { }
 
   login() {
-    if(this.email.value == null || this.password.value == null) {
-      alert('enter data!');
+    if(!this.email.valid || !this.password.valid) {
       return;
     }
+    
     this.authService.login(this.email.value!, this.password.value!).subscribe({
       next: () => {
         this.router.navigate(['/books-filters']);

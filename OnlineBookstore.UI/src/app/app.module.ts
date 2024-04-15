@@ -11,6 +11,8 @@ import {MatListModule} from '@angular/material/list';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { JwtModule } from "@auth0/angular-jwt";
 import {MatButtonModule} from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -18,7 +20,6 @@ import { BooksListComponent } from './components/books-list/books-list.component
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { BookCardComponent } from './components/book-card/book-card.component';
 import { BooksFilterComponent } from './components/books-filter/books-filter.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './components/header/header.component';
 import { BookFullInfoComponent } from './components/book-full-info/book-full-info.component';
 import { GenresListComponent } from './components/genres-list/genres-list.component';
@@ -30,6 +31,7 @@ import { PublisherDetailsComponent } from './components/publisher-details/publis
 import { LoginComponent } from './components/auth/login/login.component';
 import { RegisterComponent } from './components/auth/register/register.component';
 import { AccountComponent } from './components/auth/account/account.component';
+import { AlertDialogComponent } from './components/alert-dialog/alert-dialog.component';
 
 
 
@@ -51,6 +53,7 @@ import { AccountComponent } from './components/auth/account/account.component';
     LoginComponent,
     RegisterComponent,
     AccountComponent,
+    AlertDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -67,6 +70,7 @@ import { AccountComponent } from './components/auth/account/account.component';
     MatListModule,
     MatPaginatorModule,
     MatButtonModule,
+    MatDialogModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
