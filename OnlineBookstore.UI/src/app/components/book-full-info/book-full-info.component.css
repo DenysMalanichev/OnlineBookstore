@@ -17,6 +17,7 @@
 
 .book-info {
     margin-left: 20px;
+    display: flex;
 }
 
 .book-info h1 {

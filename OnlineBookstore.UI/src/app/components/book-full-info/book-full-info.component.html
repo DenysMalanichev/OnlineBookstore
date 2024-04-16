@@ -1,11 +1,17 @@
 <div class="book-container">
     <div class="img-placeholder"></div>
     <div class="book-info">
-        <h1>{{ book.name }}</h1>
-        <p><strong>Author:</strong> {{ author.firstName + author.lastName }}</p>
-        <p><strong>Price:</strong> ${{ book.price }}</p>
-        <p><strong>Description:</strong> {{ book.description || 'No description available.' }}</p>
-        <p><strong>Publisher ID:</strong> {{ publisher.companyName }}</p>
-        <p><strong>Genres: </strong> <span *ngIf="genres">{{ genreNames }}</span><span *ngIf="!genres">No genres listed.</span></p>
+        <div>
+            <h1>{{ book?.name }}</h1>
+            <p><strong>Author:</strong> {{ author.firstName + author.lastName }}</p>
+            <p><strong>Price:</strong> ${{ book?.price }}</p>
+            <p><strong>Description:</strong> {{ book?.description || 'No description available.' }}</p>
+            <p><strong>Publisher ID:</strong> {{ publisher.companyName }}</p>
+            <p><strong>Genres: </strong> <span *ngIf="genres">{{ genreNames }}</span><span *ngIf="!genres">No genres listed.</span></p>
+        </div>
+        <star-rating [showHalfStars]="true" [rating]="avgRating" [readOnly]="true" [size]="'medium'"></star-rating>
     </div>
+
+    
 </div>
+<comments-container [bookId]="bookId"></comments-container>

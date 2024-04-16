@@ -63,4 +63,11 @@ export class BooksService {
 
     return this.http.get<PageableResponse<BriefBookModel>>(apiUrl, { params: params });
   }
+
+  getBooksAvgRating(bookId: number): Observable<number> {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.books.booksBasePath + environment.endpoints.books.getBooksAvgRating + bookId;
+
+
+    return this.http.get<number>(apiUrl);
+  }
 }

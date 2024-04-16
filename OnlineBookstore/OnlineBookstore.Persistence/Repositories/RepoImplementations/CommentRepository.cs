@@ -23,4 +23,9 @@ public class CommentRepository : GenericRepository<Comment>, ICommentRepository
             .Where(c => c.Book.Id == bookId)
             .ToListAsync();
     }
+
+    public bool IsUserWroteCommentForThisBook(string userId, int bookId)
+    {
+        return _context.Comments.Any(c => c.BookId == bookId && c.UserId == userId);
+    }
 }

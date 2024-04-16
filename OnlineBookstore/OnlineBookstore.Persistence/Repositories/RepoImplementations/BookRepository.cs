@@ -43,4 +43,11 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
             .Take(itemsOnPage)
             .ToList(), _dataContext.Books.Count(b => b.PublisherId == publisherId));
     }
+
+    public double CountAvgRatingForBook(int bookId)
+    {
+        return _dataContext.Comments
+            .Where(c => c.BookId == bookId)
+            .Average(c => c.BookRating);
+    }
 }

@@ -10,11 +10,16 @@ export const environment = {
         author: {
             authorBasePath: 'author/'
         },
+        comments: {
+            commentsBasePath: 'comments/',
+            getCommentsByBookPath: 'comments-by-book/'
+        },
         books: {
             booksBasePath: 'books/',
             getFilteredBooks: 'get-filtered-books/',
             getBookByAuthor: 'by-author/',
-            getBookByPublisher: 'by-publisher/'
+            getBookByPublisher: 'by-publisher/',
+            getBooksAvgRating: 'avg-rating/'
         },        
         genres: {
             genresBasePath: 'genres/',

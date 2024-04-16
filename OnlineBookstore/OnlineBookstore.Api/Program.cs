@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlineBookstore.Application.Configs;
 using OnlineBookstore.Configs;
 using OnlineBookstore.Domain.Entities;
+using OnlineBookstore.Extentions;
 using OnlineBookstore.Features.Mapper;
 using OnlineBookstore.Features.UserFeatures.Options;
 using OnlineBookstore.Middleware;
@@ -14,6 +15,8 @@ const string allowFrontEndSpecificOrigins = "_frontEndSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddCorsPolicy(allowFrontEndSpecificOrigins);
+
+builder.Services.AddAuthConfigurations(builder.Configuration);
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
@@ -27,7 +30,10 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 var connectionString = builder.Configuration.GetConnectionString("ConnStr");
 builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString)
+        .EnableSensitiveDataLogging()
+        .LogTo(Console.WriteLine, LogLevel.Information));
+    
 
 builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<DataContext>()

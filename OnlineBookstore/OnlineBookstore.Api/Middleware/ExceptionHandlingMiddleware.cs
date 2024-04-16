@@ -33,6 +33,7 @@ public class ExceptionHandlingMiddleware
         {
             AuthenticationException => StatusCodes.Status401Unauthorized,
             OrderClosedException => StatusCodes.Status400BadRequest,
+            UserAlreadyWroteCommentForBookException => StatusCodes.Status400BadRequest,
             ArgumentException => StatusCodes.Status400BadRequest,
             ValidationException => StatusCodes.Status400BadRequest,
             EntityNotFoundException => StatusCodes.Status404NotFound,

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule, HttpRequest } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpRequest } from '@angular/common/http';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -32,8 +32,10 @@ import { LoginComponent } from './components/auth/login/login.component';
 import { RegisterComponent } from './components/auth/register/register.component';
 import { AccountComponent } from './components/auth/account/account.component';
 import { AlertDialogComponent } from './components/alert-dialog/alert-dialog.component';
-
-
+import { CommentComponent } from './components/comment/comment.component';
+import { CommentsContainerComponent } from './components/comments-container/comments-container.component';
+import { StarRatingModule } from 'angular-star-rating';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -54,6 +56,8 @@ import { AlertDialogComponent } from './components/alert-dialog/alert-dialog.com
     RegisterComponent,
     AccountComponent,
     AlertDialogComponent,
+    CommentComponent,
+    CommentsContainerComponent
   ],
   imports: [
     BrowserModule,
@@ -71,6 +75,7 @@ import { AlertDialogComponent } from './components/alert-dialog/alert-dialog.com
     MatPaginatorModule,
     MatButtonModule,
     MatDialogModule,
+    StarRatingModule.forRoot(),
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
@@ -79,7 +84,12 @@ import { AlertDialogComponent } from './components/alert-dialog/alert-dialog.com
       }
     })
   ],
-  providers: [],
+  providers: [
+    {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 

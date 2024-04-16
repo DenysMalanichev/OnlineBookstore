@@ -62,7 +62,15 @@ public class BooksController : ControllerBase
 
         return Ok(pagedBooksResult);
     }
-    
+
+    [HttpGet("avg-rating/{bookId:int}")]
+    public IActionResult GetAvgBookRating(int bookId)
+    {
+        var avgRating = _bookService.CountAvgRatingOfBook(bookId);
+
+        return Ok(avgRating);
+    }
+
     [HttpDelete]
     public async Task<IActionResult> DeleteBookAsync(int bookId)
     {

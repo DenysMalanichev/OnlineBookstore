@@ -18,4 +18,6 @@ public interface IBookService
     GenericPagingDto<GetBriefBookDto> GetBooksByPublisher(int publisherId, int? page, int itemsOnPage = 10);
 
     Task DeleteBookAsync(int bookId);
+
+    double CountAvgRatingOfBook(int bookId);
 }

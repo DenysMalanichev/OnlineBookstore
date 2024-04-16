@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineBookstore.Application.Services.Interfaces;
+using OnlineBookstore.Extentions;
 using OnlineBookstore.Features.CommentFeatures;
 
 namespace OnlineBookstore.Controllers;
@@ -16,9 +19,16 @@ public class CommentsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> CreateCommentAsync(CreateCommentDto createCommentDto)
     {
-        await _commentService.AddCommentAsync(createCommentDto);
+        var userId = await this.GetUserIdFromJwtAsync();
+        if (userId is null)
+        {
+            return Unauthorized();
+        }
+        
+        await _commentService.AddCommentAsync(createCommentDto, userId);
 
         return Ok();
     }

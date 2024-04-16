@@ -12,6 +12,4 @@ public class CreateCommentDto
     public int BookRating { get; set; }
 
     public int BookId { get; set; }
-
-    public int UserId { get; set; }
 }

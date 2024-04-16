@@ -17,10 +17,14 @@ import { PublishersService } from 'src/app/services/publishers-service.service';
   styleUrls: ['./book-full-info.component.css']
 })
 export class BookFullInfoComponent implements OnInit {
-  book!: FullBookModel;
+  bookId!: number;
+
+  book?: FullBookModel;
   author!: AuthorModel;
   publisher!: BriefPublisherModel;
   genres!: BriefGenreModel[];
+
+  avgRating!: number;
 
   constructor(
     private booksService: BooksService,
@@ -31,13 +35,14 @@ export class BookFullInfoComponent implements OnInit {
 
   ngOnInit(): void {    
     this.route.params.subscribe((params) => {
-      const id = +params['id'];
-      if (id) {
-        this.getBook(id).subscribe(b => {
+      this.bookId = +params['id'];
+      if (this.bookId) {
+        this.getBook(this.bookId).subscribe(b => {
           this.book = b;
           this.getAuthor(b.authorId);
           this.getPublisher(b.publisherId);
-          this.getGenresByBook(id);
+          this.getGenresByBook(this.bookId);
+          this.getBooksAvgRating(this.bookId);
         });
       }
     });    
@@ -58,6 +63,10 @@ export class BookFullInfoComponent implements OnInit {
   getGenresByBook(bookId: number): void {
     this.genresService.getGenresByBook(bookId).subscribe(x => this.genres = x);
   }
+
+  getBooksAvgRating(bookId: number): void {
+    this.booksService.getBooksAvgRating(bookId).subscribe(x => this.avgRating = x);    
+  } 
 
   get genreNames(): string {
     return this.genres.map(g => g.name).join(', ');

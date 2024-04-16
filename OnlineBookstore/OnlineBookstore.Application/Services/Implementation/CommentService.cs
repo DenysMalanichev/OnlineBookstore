@@ -18,10 +18,16 @@ public class CommentService : ICommentService
         _mapper = mapper;
     }
 
-    public async Task AddCommentAsync(CreateCommentDto createGenreDto)
+    public async Task AddCommentAsync(CreateCommentDto createCommentDto, string userId)
     {
-        var comment = _mapper.Map<Comment>(createGenreDto);
+        var comment = _mapper.Map<Comment>(createCommentDto);
+        comment.UserId = userId;
 
+        if (_unitOfWork.CommentRepository.IsUserWroteCommentForThisBook(userId, createCommentDto.BookId))
+        {
+            throw new UserAlreadyWroteCommentForBookException();
+        }
+        
         await _unitOfWork.CommentRepository.AddAsync(comment);
         await _unitOfWork.CommitAsync();
     }

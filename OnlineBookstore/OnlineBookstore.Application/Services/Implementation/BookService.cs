@@ -147,6 +147,11 @@ public class BookService : IBookService
         await _unitOfWork.CommitAsync();
     }
 
+    public double CountAvgRatingOfBook(int bookId)
+    {
+        return _unitOfWork.BookRepository.CountAvgRatingForBook(bookId);
+    }
+
     private static ExpressionStarter<Book> GenerateFilteringPredicate(GetFilteredBooksDto filteredBooksDto)
     {
         var specifications = new List<ISpecification<Book>>();

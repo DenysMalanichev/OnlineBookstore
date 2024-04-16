@@ -5,7 +5,7 @@ namespace OnlineBookstore.Application.Services.Interfaces;
 
 public interface ICommentService
 {
-    Task AddCommentAsync(CreateCommentDto createGenreDto);
+    Task AddCommentAsync(CreateCommentDto createCommentDto, string userId);
 
     Task<GetCommentDto> GetCommentByIdAsync(int commentId);
     
