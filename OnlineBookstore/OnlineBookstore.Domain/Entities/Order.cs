@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using OnlineBookstore.Domain.Common;
 using OnlineBookstore.Domain.Constants;
 
@@ -12,6 +13,9 @@ public class Order : IBaseEntity
     public OrderStatus OrderStatus { get; set; }
     
     public virtual User User { get; set; } = null!;
+
+    [ForeignKey(nameof(User))]
+    public string UserId { get; set; } = null!;
 
     public virtual IList<OrderDetail> OrderDetails { get; set; } = null!;
     

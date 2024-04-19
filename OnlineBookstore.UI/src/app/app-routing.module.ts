@@ -11,6 +11,8 @@ import { PublisherDetailsComponent } from './components/publisher-details/publis
 import { LoginComponent } from './components/auth/login/login.component';
 import { AccountComponent } from './components/auth/account/account.component';
 import { RegisterComponent } from './components/auth/register/register.component';
+import { BusketComponent } from './components/basket/basket.component';
+import { MakeOrderComponent } from './components/make-order/make-order.component';
 
 const routes: Routes = [
   {
@@ -57,6 +59,10 @@ const routes: Routes = [
   {
     path: 'account',
     component: AccountComponent
+  },
+  {
+    path: 'busket',
+    component: BusketComponent
   },
   {
     path: '**',

@@ -10,6 +10,11 @@
             <p><strong>Genres: </strong> <span *ngIf="genres">{{ genreNames }}</span><span *ngIf="!genres">No genres listed.</span></p>
         </div>
         <star-rating [showHalfStars]="true" [rating]="avgRating" [readOnly]="true" [size]="'medium'"></star-rating>
+        <div class="busket-link" >
+            <a *ngIf="!isToOrder" class="busket-btn" (click)="isToOrder = true">Order</a>
+
+            <make-order *ngIf="isToOrder" [bookId]="bookId"></make-order>
+        </div>
     </div>
 
     

@@ -44,10 +44,10 @@ public class OrderService : IOrderService
         return orderDtos;
     }
 
-    public async Task CloseUsersOrderAsync(CreateOrderDto createOrderDto)
+    public async Task CloseUsersOrderAsync(CreateOrderDto createOrderDto, string userId)
     {
         var order = (await _unitOfWork.OrderRepository
-                        .GetUserOrdersAsync(createOrderDto.UserId))
+                        .GetUserOrdersAsync(userId))
                     .FirstOrDefault(o => o.OrderStatus == OrderStatus.Open)
                     ?? throw new EntityNotFoundException("No Order was open to proceed.");
 
@@ -63,6 +63,15 @@ public class OrderService : IOrderService
         var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId)
                    ?? throw new EntityNotFoundException($"User with Id '{userId}' not found.");
 
-        return new Order { User = user };
+        var newOrder = new Order
+        {
+            UserId = userId,
+            OrderStatus = OrderStatus.Open,
+        };
+
+        await _unitOfWork.OrderRepository.AddAsync(newOrder);
+        await _unitOfWork.CommitAsync();
+
+        return newOrder;
     }
 }

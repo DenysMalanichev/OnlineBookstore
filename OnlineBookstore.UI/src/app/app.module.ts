@@ -36,6 +36,10 @@ import { CommentComponent } from './components/comment/comment.component';
 import { CommentsContainerComponent } from './components/comments-container/comments-container.component';
 import { StarRatingModule } from 'angular-star-rating';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { BusketComponent } from './components/basket/basket.component';
+import { OrderCardComponent } from './components/order-card/order-card.component';
+import { MakeOrderComponent } from './components/make-order/make-order.component';
+import { AuthCheckInterceptor } from './interceptors/auth-check.interceptor';
 
 @NgModule({
   declarations: [
@@ -57,7 +61,10 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     AccountComponent,
     AlertDialogComponent,
     CommentComponent,
-    CommentsContainerComponent
+    CommentsContainerComponent,
+    BusketComponent,
+    OrderCardComponent,
+    MakeOrderComponent
   ],
   imports: [
     BrowserModule,
@@ -89,7 +96,13 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,
     multi: true
-  }],
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthCheckInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 

@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineBookstore.Application.Services.Interfaces;
+using OnlineBookstore.Extentions;
 using OnlineBookstore.Features.OrderFeatures;
 using OnlineBookstore.Features.OrderFeatures.OrderDetailFeatures;
 
@@ -19,8 +22,14 @@ public class OrdersController : ControllerBase
     }
 
     [HttpGet("users-active-order")]
-    public async Task<IActionResult> GetUsersActiveOrderAsync(string userId)
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> GetUsersActiveOrderAsync()
     {
+        var userId = await this.GetUserIdFromJwtAsync();
+        if (userId is null)
+        {
+            return Unauthorized();
+        }
         var orderDto = await _orderService.GetUsersActiveOrderAsync(userId);
 
         return Ok(orderDto);
@@ -35,17 +44,29 @@ public class OrdersController : ControllerBase
     }
 
     [HttpPost("ship-users-order")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> CloseUsersOrderAsync(CreateOrderDto createOrderDto)
     {
-        await _orderService.CloseUsersOrderAsync(createOrderDto);
+        var userId = await this.GetUserIdFromJwtAsync();
+        if (userId is null)
+        {
+            return Unauthorized();
+        }
+        await _orderService.CloseUsersOrderAsync(createOrderDto, userId);
 
         return Ok();
     }
 
     [HttpPost("add-order-detail")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> AddOrderDetailAsync(AddOrderDetailDto addOrderDetailDto)
     {
-        await _orderDetailService.AddOrderDetailAsync(addOrderDetailDto);
+        var userId = await this.GetUserIdFromJwtAsync();
+        if (userId is null)
+        {
+            return Unauthorized();
+        }
+        await _orderDetailService.AddOrderDetailAsync(addOrderDetailDto, userId);
 
         return Ok();
     }

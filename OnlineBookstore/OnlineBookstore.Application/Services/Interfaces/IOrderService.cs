@@ -8,5 +8,5 @@ public interface IOrderService
 
     Task<IEnumerable<GetOrderDto>> GetUsersOrdersAsync(string userId);
 
-    Task CloseUsersOrderAsync(CreateOrderDto createOrderDto);
+    Task CloseUsersOrderAsync(CreateOrderDto createOrderDto, string userId);
 }

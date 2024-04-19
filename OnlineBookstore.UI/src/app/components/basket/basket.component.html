@@ -1,0 +1,44 @@
+<div class="order-container">
+    <h1>Order Summary</h1>
+    <div class="order-info">
+        <h2>Order ID: {{ order.id }}</h2>
+        <div class="order-data-container">
+            <form class="custom-form" [formGroup]="shipData" (submit)="shipOrder()">
+                <div class="form-group">
+                    <label for="city"><strong>Ship to City:</strong></label>
+                    <input type="text" id="city" placeholder="Not specified" class="form-control" formControlName="shipCity">
+                </div>
+                
+                <div class="form-group">
+                    <label for="address"><strong>Ship to Address:</strong></label>
+                    <input type="text" id="address" placeholder="Not specified" class="form-control" formControlName="shipAddress">
+                </div>
+            
+                <div class="form-group">
+                    <input type="submit" value="Order" class="submit-btn">
+                </div>
+            </form> 
+            <div class="order-details">
+                <h3>Order Details</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Position ID</th>
+                            <th>Book Name</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let od of order.orderDetails">
+                            <td>{{ od.id }}</td>
+                            <td>{{ books[od.bookId].name }}</td>
+                            <td>{{ od.quantity }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>   
+        </div>
+        
+    </div>
+    
+</div>

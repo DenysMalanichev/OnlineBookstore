@@ -26,6 +26,8 @@ export class BookFullInfoComponent implements OnInit {
 
   avgRating!: number;
 
+  isToOrder = false;
+
   constructor(
     private booksService: BooksService,
     private authorService: AuthorService,

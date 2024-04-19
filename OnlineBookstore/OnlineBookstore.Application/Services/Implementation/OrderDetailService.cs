@@ -10,27 +10,23 @@ namespace OnlineBookstore.Application.Services.Implementation;
 
 public class OrderDetailService : IOrderDetailService
 {
+    private readonly IOrderService _orderService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public OrderDetailService(IUnitOfWork unitOfWork, IMapper mapper)
+    public OrderDetailService(IUnitOfWork unitOfWork, IMapper mapper, IOrderService orderService)
     {
+        _orderService = orderService;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
-    public async Task AddOrderDetailAsync(AddOrderDetailDto addOrderDetailDto)
+    public async Task AddOrderDetailAsync(AddOrderDetailDto addOrderDetailDto, string userId)
     {
-        var order = await _unitOfWork.OrderRepository.GetByIdAsync(addOrderDetailDto.OrderId)!
-                    ?? throw new EntityNotFoundException($"No Order opened with Id '{addOrderDetailDto.OrderId}'");
-
-        if (order.OrderStatus == OrderStatus.Closed)
-        {
-            throw new OrderClosedException("Order with Id '{addOrderDetailDto.OrderId}' is already closed.");
-        }
+        var order = await _orderService.GetUsersActiveOrderAsync(userId);
 
         var orderDetail = _mapper.Map<OrderDetail>(addOrderDetailDto);
-        orderDetail.Order = order;
+        orderDetail.OrderId = order.Id;
 
         await _unitOfWork.OrderDetailRepository.AddAsync(orderDetail);
         await _unitOfWork.CommitAsync();

@@ -19,6 +19,7 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
     {
         return await _dataContext.Orders
             .Include(o => o.User)
+            .Include(o => o.OrderDetails)
             .Where(o => o.User.Id == userId)
             .ToListAsync();
     }

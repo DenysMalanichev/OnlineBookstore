@@ -5,6 +5,7 @@ using OnlineBookstore.Features.BookFeatures;
 using OnlineBookstore.Features.CommentFeatures;
 using OnlineBookstore.Features.GenreFeatures;
 using OnlineBookstore.Features.OrderFeatures;
+using OnlineBookstore.Features.OrderFeatures.OrderDetailFeatures;
 using OnlineBookstore.Features.PublisherFeatures;
 using OnlineBookstore.Features.UserFeatures;
 
@@ -18,11 +19,13 @@ public class AutoMapperProfile : Profile
         CreateMap<UpdateBookDto, Book>().ReverseMap();
         CreateMap<Book, GetBriefBookDto>()
             .ForMember(gb => gb.AuthorName, 
-                opt => opt.MapFrom(src => src.Author.FirstName + src.Author.LastName))
+                opt =>
+                opt.MapFrom(src => src.Author.FirstName + src.Author.LastName))
             .ReverseMap();
         CreateMap<Book, GetBookDto>()
             .ForMember(gb => gb.GenreIds, 
-                opt => opt.MapFrom(src => src.Genres.Select(g => g.Id)))
+                opt =>
+                    opt.MapFrom(src => src.Genres.Select(g => g.Id)))
             .ReverseMap();
         
         CreateMap<CreateGenreDto, Genre>().ReverseMap();
@@ -44,10 +47,14 @@ public class AutoMapperProfile : Profile
         
         CreateMap<CreateOrderDto, Order>().ReverseMap();
         CreateMap<GetOrderDto, Order>().ReverseMap();
+
+        CreateMap<AddOrderDetailDto, OrderDetail>().ReverseMap();
+        CreateMap<GetOrderDetailDto, OrderDetail>().ReverseMap();
         
         CreateMap<RegisterUserDto, User>()
             .ForMember(dest => dest.UserName,
-                opt =>opt.MapFrom(src => src.FirstName + src.LastName))
+                opt =>
+                    opt.MapFrom(src => src.FirstName + src.LastName))
             .ReverseMap();
     }
 }
