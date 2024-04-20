@@ -80,4 +80,13 @@ export class BusketComponent implements OnInit{
         }
       });
   }
+
+  countOrderTotalPrice(): number {
+    let price = 0;
+    for(let orderDetail of this.order.orderDetails) {
+      price += this.books[orderDetail.bookId].price * orderDetail.quantity;
+    }
+
+    return price;
+  }
 }

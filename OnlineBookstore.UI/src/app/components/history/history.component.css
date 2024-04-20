@@ -1,0 +1,38 @@
+.order-details {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    flex: 4;
+}
+
+.order-details table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.order-details th, .order-details td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+}
+
+h1, h2, h3 {
+    color: #333;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+h2 {
+    font-size: 20px;
+}
+
+h3 {
+    font-size: 18px;
+}
+
+.history-container {
+    margin: 40px;
+}

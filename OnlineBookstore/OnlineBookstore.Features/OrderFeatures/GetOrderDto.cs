@@ -10,5 +10,7 @@ public class GetOrderDto
 
     public IEnumerable<GetOrderDetailDto> OrderDetails { get; set; } = null!;
 
+    public string Status { get; set; } = null!;
+    
     public int Id { get; set; }
 }

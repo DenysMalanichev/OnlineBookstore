@@ -29,4 +29,10 @@ export class OrdersService {
 
     return this.http.post(shipOrderPath, { shipCity, shipAddress });
   }
+
+  getHistory(): Observable<GetOrderModel[]> {
+    const shipOrderPath = this.baseOrdersPath + environment.endpoints.orders.getUserHistoryPath;
+
+    return this.http.get<GetOrderModel[]>(shipOrderPath);
+  }
 }

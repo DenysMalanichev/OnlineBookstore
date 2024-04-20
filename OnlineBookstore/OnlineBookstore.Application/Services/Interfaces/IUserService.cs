@@ -9,4 +9,6 @@ public interface IUserService
     Task RegisterAdminAsync(RegisterUserDto registerUserDto);
 
     Task<LoginResponseDto> LoginUserAsync(LoginUserDto loginUserDto);
+
+    Task<GetUserDto> GetUserDataAsync(string userId);
 }

@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineBookstore.Application.Services.Interfaces;
+using OnlineBookstore.Extentions;
 using OnlineBookstore.Features.UserFeatures;
 
 namespace OnlineBookstore.Controllers;
@@ -15,6 +18,20 @@ public class UsersController : ControllerBase
         _userService = userService;
     }
 
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> GetUserDataAsync()
+    {
+        var userId = await this.GetUserIdFromJwtAsync();
+        if (userId is null)
+        {
+            return Unauthorized();
+        }
+        var userDto = await _userService.GetUserDataAsync(userId);
+
+        return Ok(userDto);
+    }
+    
     [HttpPost("register-user")]
     public async Task<IActionResult> RegisterUserAsync(RegisterUserDto registerUserDto)
     {

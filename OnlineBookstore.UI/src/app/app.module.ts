@@ -13,6 +13,7 @@ import { JwtModule } from "@auth0/angular-jwt";
 import {MatButtonModule} from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatIconModule } from '@angular/material/icon';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -40,6 +41,7 @@ import { BusketComponent } from './components/basket/basket.component';
 import { OrderCardComponent } from './components/order-card/order-card.component';
 import { MakeOrderComponent } from './components/make-order/make-order.component';
 import { AuthCheckInterceptor } from './interceptors/auth-check.interceptor';
+import { HistoryComponent } from './components/history/history.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +66,8 @@ import { AuthCheckInterceptor } from './interceptors/auth-check.interceptor';
     CommentsContainerComponent,
     BusketComponent,
     OrderCardComponent,
-    MakeOrderComponent
+    MakeOrderComponent,
+    HistoryComponent
   ],
   imports: [
     BrowserModule,
@@ -82,6 +85,7 @@ import { AuthCheckInterceptor } from './interceptors/auth-check.interceptor';
     MatPaginatorModule,
     MatButtonModule,
     MatDialogModule,
+    MatIconModule,
     StarRatingModule.forRoot(),
     JwtModule.forRoot({
       config: {

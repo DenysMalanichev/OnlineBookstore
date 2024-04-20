@@ -1,9 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { RegisterModel } from '../models/auth-models/registerModel';
+import { GetUserModel } from '../models/auth-models/getUserModel';
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +38,11 @@ export class AuthService {
   public get loggedIn(): boolean {
     let token = localStorage.getItem('access_token');
     return !this.jwtHelper.isTokenExpired(token);
+  }
+
+  getUserData(): Observable<GetUserModel> {
+    const getUserData = this.baseAuthUrl;
+
+    return this.http.get<GetUserModel>(getUserData);
   }
 }

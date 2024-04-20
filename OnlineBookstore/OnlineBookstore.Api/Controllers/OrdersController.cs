@@ -36,8 +36,14 @@ public class OrdersController : ControllerBase
     }
 
     [HttpGet("user-orders-history")]
-    public async Task<IActionResult> GetUsersOrdersAsync(string userId)
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> GetUsersOrdersAsync()
     {
+        var userId = await this.GetUserIdFromJwtAsync();
+        if (userId is null)
+        {
+            return Unauthorized();
+        }
         var ordersDtos = await _orderService.GetUsersOrdersAsync(userId);
 
         return Ok(ordersDtos);

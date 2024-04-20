@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using OnlineBookstore.Application.Services.Interfaces;
 using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Domain.Entities;
+using OnlineBookstore.Features.OrderFeatures;
 using OnlineBookstore.Features.UserFeatures;
 using OnlineBookstore.Features.UserFeatures.Options;
 
@@ -60,7 +61,17 @@ public class UserService : IUserService
             }
             : throw new AuthenticationException("Wrong password");
     }
-    
+
+    public async Task<GetUserDto> GetUserDataAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId)
+                   ?? throw new ArgumentException("User doest exists");
+
+        var userDto = _mapper.Map<GetUserDto>(user);
+
+        return userDto;
+    }
+
     private string GenerateJwtAsync(User user, string roleName)
     {
         var authClaims = new List<Claim>

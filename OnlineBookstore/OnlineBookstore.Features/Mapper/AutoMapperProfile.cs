@@ -46,7 +46,11 @@ public class AutoMapperProfile : Profile
         CreateMap<GetCommentDto, Comment>().ReverseMap();
         
         CreateMap<CreateOrderDto, Order>().ReverseMap();
-        CreateMap<GetOrderDto, Order>().ReverseMap();
+        CreateMap<GetOrderDto, Order>()
+            .ForMember(o => o.OrderStatus, 
+                opt =>
+                    opt.MapFrom(src => src.Status))
+            .ReverseMap();
 
         CreateMap<AddOrderDetailDto, OrderDetail>().ReverseMap();
         CreateMap<GetOrderDetailDto, OrderDetail>().ReverseMap();
@@ -56,5 +60,6 @@ public class AutoMapperProfile : Profile
                 opt =>
                     opt.MapFrom(src => src.FirstName + src.LastName))
             .ReverseMap();
+        CreateMap<GetUserDto, User>().ReverseMap();
     }
 }

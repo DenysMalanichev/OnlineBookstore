@@ -11,6 +11,10 @@
         <a class="nav-link" routerLink="/publishers">Publishers</a>      
         
         <a *ngIf="!isLoggedin()" routerLink="/login">Log In</a>
-        <a *ngIf="isLoggedin()" routerLink="/account">Account</a>
+        
+        <a *ngIf="isLoggedin()" routerLink="/busket" mat-icon-button aria-label="View shopping cart">
+            <mat-icon>shopping_cart</mat-icon>
+        </a> 
+        <a *ngIf="isLoggedin()" routerLink="/account">Account</a>               
     </div>    
 </div>
