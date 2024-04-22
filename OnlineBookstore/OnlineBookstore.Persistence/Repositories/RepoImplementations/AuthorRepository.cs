@@ -1,6 +1,6 @@
 using OnlineBookstore.Domain.Entities;
-using OnlineBookstore.Features.Interfaces;
 using OnlineBookstore.Persistence.Context;
+using OnlineBookstore.Persistence.Repositories.Interfaces;
 
 namespace OnlineBookstore.Persistence.Repositories.RepoImplementations;
 

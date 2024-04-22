@@ -6,6 +6,7 @@ import { BriefBookModel } from 'src/app/models/book-models/briefBookModel';
 import { GetFilteredBooksRequest } from 'src/app/models/book-models/getFilteredBooksRequest';
 import { BooksService } from 'src/app/services/books-service.service';
 import { PageEvent } from '@angular/material/paginator';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'books-list',
@@ -22,6 +23,9 @@ export class BooksListComponent implements OnInit{
   pageSize = 12;
   pageSizeOptions = [8, 12, 16];
   
+  isAdmin: boolean = false;
+  isAddBook: boolean = false;
+
   getFilteredBooksRequest = new FormGroup({
     name: new FormControl(null),
     authorName: new FormControl(null),
@@ -36,11 +40,13 @@ export class BooksListComponent implements OnInit{
 
   constructor(
     private booksService: BooksService,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private authService: AuthService
     ) {}
 
   ngOnInit(): void {
     this.getFilteredBooks();
+    this.isAdminCheck();
 
     const gridMap = new Map([
       [Breakpoints.XSmall, 1],
@@ -69,7 +75,6 @@ export class BooksListComponent implements OnInit{
   private getFilteredBooks() {
     this.booksService.getFilteredBooks(this.prepareFilteredBooksRequest(this.getFilteredBooksRequest.value))
     .subscribe(x => {
-      console.log('in get Books page');
       this.books = x.entities;
       this.totalPages = x.totalPages;
     });
@@ -101,5 +106,12 @@ export class BooksListComponent implements OnInit{
       page: this.currentPage + 1
     });
     this.getFilteredBooks();
+  }
+
+  isAdminCheck(): void {    
+    this.authService.isAdmin().subscribe(x => {
+      this.isAdmin = x;
+      console.log("is admin - " + x);
+    });
   }
 }

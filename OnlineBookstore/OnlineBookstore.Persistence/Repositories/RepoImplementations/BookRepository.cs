@@ -1,8 +1,8 @@
 using System.Data.Entity;
 using LinqKit;
 using OnlineBookstore.Domain.Entities;
-using OnlineBookstore.Features.Interfaces;
 using OnlineBookstore.Persistence.Context;
+using OnlineBookstore.Persistence.Repositories.Interfaces;
 
 namespace OnlineBookstore.Persistence.Repositories.RepoImplementations;
 
@@ -44,10 +44,17 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
             .ToList(), _dataContext.Books.Count(b => b.PublisherId == publisherId));
     }
 
-    public double CountAvgRatingForBook(int bookId)
+    public double? CountAvgRatingForBook(int bookId)
     {
-        return _dataContext.Comments
-            .Where(c => c.BookId == bookId)
-            .Average(c => c.BookRating);
+        try
+        {
+            return _dataContext.Comments
+                .Where(c => c.BookId == bookId)
+                .Average(c => c.BookRating);
+        }
+        catch (InvalidOperationException)
+        {
+            return null!;
+        }
     }
 }

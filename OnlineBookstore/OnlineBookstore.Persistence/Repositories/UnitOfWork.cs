@@ -1,5 +1,5 @@
-using OnlineBookstore.Features.Interfaces;
 using OnlineBookstore.Persistence.Context;
+using OnlineBookstore.Persistence.Repositories.Interfaces;
 using OnlineBookstore.Persistence.Repositories.RepoImplementations;
 
 namespace OnlineBookstore.Persistence.Repositories;

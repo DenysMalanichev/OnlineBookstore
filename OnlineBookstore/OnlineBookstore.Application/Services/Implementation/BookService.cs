@@ -8,8 +8,8 @@ using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Features.BookFeatures;
 using OnlineBookstore.Features.BookFeatures.BooksSpecifications;
 using OnlineBookstore.Features.BookFeatures.BooksSpecifications.PriceSpecifications;
-using OnlineBookstore.Features.Interfaces;
 using OnlineBookstore.Features.Paging;
+using OnlineBookstore.Persistence.Repositories.Interfaces;
 
 namespace OnlineBookstore.Application.Services.Implementation;
 
@@ -147,7 +147,7 @@ public class BookService : IBookService
         await _unitOfWork.CommitAsync();
     }
 
-    public double CountAvgRatingOfBook(int bookId)
+    public double? CountAvgRatingOfBook(int bookId)
     {
         return _unitOfWork.BookRepository.CountAvgRatingForBook(bookId);
     }

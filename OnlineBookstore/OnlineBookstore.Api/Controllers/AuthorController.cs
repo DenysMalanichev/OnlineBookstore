@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineBookstore.Application.Services.Interfaces;
 using OnlineBookstore.Features.AuthorFeatures;
@@ -38,7 +40,7 @@ public class AuthorController : ControllerBase
 
         return Ok(authorDto);
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> GetAllAuthorsAsync()
     {

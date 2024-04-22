@@ -56,8 +56,7 @@ public class UserService : IUserService
         return await _userManager.CheckPasswordAsync(userExists, loginUserDto.Password)
             ? new LoginResponseDto 
             {
-                Token =  GenerateJwtAsync(userExists, role.ToString()),
-                RoleName = role.ToString(),
+                Token =  GenerateJwtAsync(userExists, role.ToString())
             }
             : throw new AuthenticationException("Wrong password");
     }

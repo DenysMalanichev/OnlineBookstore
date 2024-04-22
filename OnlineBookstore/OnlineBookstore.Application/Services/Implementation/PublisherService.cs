@@ -2,8 +2,8 @@ using AutoMapper;
 using OnlineBookstore.Application.Exceptions;
 using OnlineBookstore.Application.Services.Interfaces;
 using OnlineBookstore.Domain.Entities;
-using OnlineBookstore.Features.Interfaces;
 using OnlineBookstore.Features.PublisherFeatures;
+using OnlineBookstore.Persistence.Repositories.Interfaces;
 
 namespace OnlineBookstore.Application.Services.Implementation;
 

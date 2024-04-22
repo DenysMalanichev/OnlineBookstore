@@ -9,12 +9,24 @@
             <p><strong>Publisher ID:</strong> {{ publisher.companyName }}</p>
             <p><strong>Genres: </strong> <span *ngIf="genres">{{ genreNames }}</span><span *ngIf="!genres">No genres listed.</span></p>
         </div>
-        <star-rating [showHalfStars]="true" [rating]="avgRating" [readOnly]="true" [size]="'medium'"></star-rating>
+        <star-rating [showHalfStars]="true" [rating]="avgRating || 0" [readOnly]="true" [size]="'medium'"></star-rating>
         <div class="busket-link" >
             <a *ngIf="!isToOrder" class="busket-btn" (click)="isToOrder = true">Order</a>
-
+            <div style="margin-top: 40px">
+                <div *ngIf="isAdmin && !isUpdateBook" class="add-book-btn" (click)="isUpdateBook = true">
+                    <button mat-flat-button color="accent">Update book</button>
+                </div>
+                <div *ngIf="isAdmin && isUpdateBook" class="add-book-container">
+                    <button mat-flat-button color="warn" (click)="isUpdateBook = false">Cance</button>
+                    <book-form [book]="this.book" [bookId]="this.bookId"></book-form>               
+                </div>
+                <div *ngIf="isAdmin">
+                    <button mat-flat-button color="warn" style="margin-top: 40px" (click)="deleteBook()">Delete</button>
+                </div>
+            </div>
             <make-order *ngIf="isToOrder" [bookId]="bookId"></make-order>
         </div>
+       
     </div>
 
     

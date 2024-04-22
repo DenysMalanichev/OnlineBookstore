@@ -1,0 +1,40 @@
+<form [formGroup]="bookForm">
+    <div>
+      <label for="name">Book Name:</label>
+      <input type="text" formControlName="name" id="name" placeholder="name">
+    </div>
+    <div>
+      <label for="description">Description:</label>
+      <textarea formControlName="description" id="description"></textarea>
+    </div>
+    <div>
+      <label for="price">Price:</label>
+      <input type="number" formControlName="price" id="price" required>
+    </div>
+    <div>
+      <label for="authorId">Author:</label>
+      <select id="fauthor" name="fauthor" class="form-control" formControlName="authorId">
+        <option *ngFor="let author of authors" [value]="author.id" [attr.id]="'author' + author.id" >
+            {{ author.firstName + author.lastName }}
+        </option>
+      </select>
+    </div>
+    <div>
+      <label for="publisherId">Publishers:</label>
+      <select id="fpublisher" name="fpublishers" class="form-control" formControlName="publisherId">
+        <option *ngFor="let publisher of publishers" [value]="publisher.id" [attr.id]="'publisher' + publisher.id" >
+            {{publisher.companyName}}
+        </option>
+      </select>
+    </div>
+      <ng-container formArrayName="genreIds">
+        <label for="genreIds">Genres:</label>
+        <div *ngFor="let genre of genreControls.controls; let i = index" class="checkbox-wrapper">
+          <input *ngIf="isInBooksGenres(genre.value)" type="checkbox" [id]="'book-genre-' + i" class="checkbox-input" (change)="onGenresChange($event, genres.at(i)?.id!)" checked>
+          <input *ngIf="!isInBooksGenres(genre.value)" type="checkbox" [id]="'book-genre-' + i" class="checkbox-input" (change)="onGenresChange($event, genres.at(i)?.id!)">
+          <label  for="{{ 'book-genre-' + i }}">{{ genres.at(i)?.name }}</label>
+        </div><br>
+      </ng-container>
+    <button *ngIf="!this.book" mat-flat-button color="accent" type="submit" (click)="this.addNewBook()">Submit</button>
+    <button *ngIf="this.book" mat-flat-button color="accent" type="submit" (click)="this.updateBook()">Submit</button>
+</form>

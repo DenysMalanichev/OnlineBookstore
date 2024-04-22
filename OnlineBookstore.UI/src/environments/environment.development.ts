@@ -6,13 +6,15 @@ export const environment = {
             addDetailToOrderPath: 'add-order-detail',
             getUserOpenOrderPath: 'users-active-order',
             shipUserOrderPath: 'ship-users-order',
-            getUserHistoryPath: 'user-orders-history'
+            getUserHistoryPath: 'user-orders-history',
+            
         },
         users: {
             usersBasePath: 'users/',
             loginUserPath: 'login/',
             registerUserPath: 'register-user/',
-            registerAdminPAth: 'register-admin/'
+            registerAdminPAth: 'register-admin/',
+            isAdminCheckPath: 'is-admin'
         },
         author: {
             authorBasePath: 'author/'

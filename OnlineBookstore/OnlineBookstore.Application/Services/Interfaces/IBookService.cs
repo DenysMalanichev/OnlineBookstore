@@ -19,5 +19,5 @@ public interface IBookService
 
     Task DeleteBookAsync(int bookId);
 
-    double CountAvgRatingOfBook(int bookId);
+    double? CountAvgRatingOfBook(int bookId);
 }

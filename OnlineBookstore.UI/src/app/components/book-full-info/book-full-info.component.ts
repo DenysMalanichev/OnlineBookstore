@@ -1,11 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthorModel } from 'src/app/models/author-models/authorModel';
 import { BriefBookModel } from 'src/app/models/book-models/briefBookModel';
 import { FullBookModel } from 'src/app/models/book-models/fullBookModel';
 import { BriefGenreModel } from 'src/app/models/genre-models/briefGenreModel';
 import { BriefPublisherModel } from 'src/app/models/publisher-models/briefPublisherModel';
+import { AuthService } from 'src/app/services/auth.service';
 import { AuthorService } from 'src/app/services/author-service.service';
 import { BooksService } from 'src/app/services/books-service.service';
 import { GenresService } from 'src/app/services/genres-service.service';
@@ -28,12 +29,17 @@ export class BookFullInfoComponent implements OnInit {
 
   isToOrder = false;
 
+  isAdmin: boolean = false;
+  isUpdateBook: boolean = false;
+
   constructor(
     private booksService: BooksService,
     private authorService: AuthorService,
     private publisherService: PublishersService,
     private genresService: GenresService,
-    private route: ActivatedRoute) {}
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private router: Router) {}
 
   ngOnInit(): void {    
     this.route.params.subscribe((params) => {
@@ -47,7 +53,17 @@ export class BookFullInfoComponent implements OnInit {
           this.getBooksAvgRating(this.bookId);
         });
       }
+
+      this.isAdminCheck();
     });    
+  }
+
+  deleteBook(): void {
+    this.booksService.deleteBook(this.bookId).subscribe({
+      next: () => {
+        this.router.navigate(['/books-filters'])
+      }
+    });
   }
 
   getBook(id: number): Observable<FullBookModel> {
@@ -72,5 +88,9 @@ export class BookFullInfoComponent implements OnInit {
 
   get genreNames(): string {
     return this.genres.map(g => g.name).join(', ');
+  }
+
+  isAdminCheck(): void {    
+    this.authService.isAdmin().subscribe(x => this.isAdmin = x);
   }
 }

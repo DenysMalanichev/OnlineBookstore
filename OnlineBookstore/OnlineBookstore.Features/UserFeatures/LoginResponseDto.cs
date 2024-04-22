@@ -7,7 +7,4 @@ public class LoginResponseDto
 {
     [Required]
     public string Token { get; set; } = null!;
-
-    [Required]
-    public string RoleName { get; set; } = null!;
 }

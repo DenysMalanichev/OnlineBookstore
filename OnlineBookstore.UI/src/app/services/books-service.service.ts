@@ -6,6 +6,8 @@ import { BriefBookModel } from '../models/book-models/briefBookModel';
 import { environment } from '../../environments/environment.development';
 import { PageableResponse } from '../models/common/pageableResponse';
 import { FullBookModel } from '../models/book-models/fullBookModel';
+import { CreateNewBook } from '../models/book-models/createNewBook';
+import { UpdateBookModel } from '../models/book-models/updateBookModel';
 
 @Injectable({
   providedIn: 'root'
@@ -67,7 +69,25 @@ export class BooksService {
   getBooksAvgRating(bookId: number): Observable<number> {
     const apiUrl = environment.apiBaseUrl + environment.endpoints.books.booksBasePath + environment.endpoints.books.getBooksAvgRating + bookId;
 
-
     return this.http.get<number>(apiUrl);
+  }
+
+  addNewBook(book: CreateNewBook) {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.books.booksBasePath;
+
+    return this.http.post(apiUrl, { ...book });
+  }
+
+  updateBook(book: UpdateBookModel) {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.books.booksBasePath;
+
+    return this.http.put(apiUrl, { ...book });
+  }
+
+  deleteBook(bookId: number) {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.books.booksBasePath;
+    let params = new HttpParams()
+      .set('bookId', bookId.toString())
+    return this.http.delete(apiUrl, { params });
   }
 }

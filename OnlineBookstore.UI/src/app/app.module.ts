@@ -38,10 +38,10 @@ import { CommentsContainerComponent } from './components/comments-container/comm
 import { StarRatingModule } from 'angular-star-rating';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { BusketComponent } from './components/basket/basket.component';
-import { OrderCardComponent } from './components/order-card/order-card.component';
 import { MakeOrderComponent } from './components/make-order/make-order.component';
 import { AuthCheckInterceptor } from './interceptors/auth-check.interceptor';
 import { HistoryComponent } from './components/history/history.component';
+import { BookFormComponent } from './components/book-form/book-form.component';
 
 @NgModule({
   declarations: [
@@ -65,9 +65,9 @@ import { HistoryComponent } from './components/history/history.component';
     CommentComponent,
     CommentsContainerComponent,
     BusketComponent,
-    OrderCardComponent,
     MakeOrderComponent,
-    HistoryComponent
+    HistoryComponent,
+    BookFormComponent,
   ],
   imports: [
     BrowserModule,

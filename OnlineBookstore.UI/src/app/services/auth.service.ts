@@ -45,4 +45,10 @@ export class AuthService {
 
     return this.http.get<GetUserModel>(getUserData);
   }
+
+  isAdmin(): Observable<boolean> {
+    const registerPathUrl = this.baseAuthUrl + environment.endpoints.users.isAdminCheckPath;
+
+    return this.http.get<boolean>(registerPathUrl);
+  }
 }

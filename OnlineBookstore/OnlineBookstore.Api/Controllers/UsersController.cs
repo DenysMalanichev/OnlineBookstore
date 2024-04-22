@@ -32,6 +32,14 @@ public class UsersController : ControllerBase
         return Ok(userDto);
     }
     
+    [HttpGet("is-admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public IActionResult IsAdmin()
+    {
+        var isAdmin = User.IsInRole("Admin");
+        return Ok(isAdmin);
+    }
+    
     [HttpPost("register-user")]
     public async Task<IActionResult> RegisterUserAsync(RegisterUserDto registerUserDto)
     {
