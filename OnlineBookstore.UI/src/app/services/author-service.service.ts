@@ -22,4 +22,11 @@ export class AuthorService {
 
     return this.http.get<AuthorModel[]>(apiUrl);
   }
+
+  deleteAuthor(authorId: number) {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.author.authorBasePath;
+    let params = new HttpParams().set('authorId', authorId);
+
+    return this.http.delete(apiUrl, { params });
+  }
 }

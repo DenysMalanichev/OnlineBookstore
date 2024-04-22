@@ -3,6 +3,11 @@
         <h1 class="author-name">{{ author.firstName + author.lastName }}</h1>
         <p class="author-email">{{ author.email }}</p>
     </div>
+    <div>
+        <button *ngIf="isAdmin" mat-flat-button color="accent" class="crud-btn" >Update</button>
+        <button *ngIf="isAdmin" mat-flat-button color="warn" class="crud-btn" (click)="deleteAuthor(author.id)">Delete</button>
+    </div>
+    
     <generic-list title="Authored Books">
         <a *ngFor="let book of authoredBooks" [routerLink]="['/book-details/', book.id]" class="book-link">
             <div class="authors-list-item" >

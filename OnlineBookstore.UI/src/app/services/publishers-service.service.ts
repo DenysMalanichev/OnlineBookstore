@@ -23,4 +23,12 @@ export class PublishersService {
     
     return this.http.get<FullPublisherModel>(apiUrl);
   }
+
+  deletePublisher(publisherId: number) {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.publishers.publishersBasePath;
+
+    let params = new HttpParams().set('publisherId', publisherId);
+
+    return this.http.delete(apiUrl, { params });
+  }
 }

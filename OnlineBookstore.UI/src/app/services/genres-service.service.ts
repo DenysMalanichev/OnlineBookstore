@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { environment } from '../../environments/environment.development';
@@ -23,5 +23,13 @@ export class GenresService {
     const apiUrl = environment.apiBaseUrl + environment.endpoints.genres.genresBasePath + environment.endpoints.genres.genresByBook + bookId;
     
     return this.http.get<BriefGenreModel[]>(apiUrl);
+  }
+
+  deleteGenre(genreId: number) {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.genres.genresBasePath;
+
+    let params = new HttpParams().set('genreId', genreId);
+
+    return this.http.delete(apiUrl, { params });
   }
 }

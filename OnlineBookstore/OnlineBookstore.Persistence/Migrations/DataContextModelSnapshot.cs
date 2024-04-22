@@ -34,7 +34,7 @@ namespace OnlineBookstore.Persistence.Migrations
 
                     b.HasIndex("GenresId");
 
-                    b.ToTable("BookGenre");
+                    b.ToTable("BookGenre", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -164,7 +164,7 @@ namespace OnlineBookstore.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors");
+                    b.ToTable("Authors", (string)null);
                 });
 
             modelBuilder.Entity("OnlineBookstore.Domain.Entities.Book", b =>
@@ -197,7 +197,7 @@ namespace OnlineBookstore.Persistence.Migrations
 
                     b.HasIndex("PublisherId");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
             modelBuilder.Entity("OnlineBookstore.Domain.Entities.Comment", b =>
@@ -231,7 +231,7 @@ namespace OnlineBookstore.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("OnlineBookstore.Domain.Entities.Genre", b =>
@@ -252,7 +252,7 @@ namespace OnlineBookstore.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
 
                     b.HasData(
                         new
@@ -341,7 +341,7 @@ namespace OnlineBookstore.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("OnlineBookstore.Domain.Entities.OrderDetail", b =>
@@ -367,7 +367,7 @@ namespace OnlineBookstore.Persistence.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderDetails", (string)null);
                 });
 
             modelBuilder.Entity("OnlineBookstore.Domain.Entities.Publisher", b =>
@@ -394,7 +394,7 @@ namespace OnlineBookstore.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Publishers");
+                    b.ToTable("Publishers", (string)null);
                 });
 
             modelBuilder.Entity("OnlineBookstore.Domain.Entities.Role", b =>

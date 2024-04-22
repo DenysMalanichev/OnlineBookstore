@@ -4,6 +4,10 @@
         <p class="author-email">Contact Name {{ publisher.contactName }}</p>
         <p class="author-email">Address {{ publisher.address }}</p>
     </div>
+    <div>
+        <button *ngIf="isAdmin" mat-flat-button color="accent" class="crud-btn" >Update</button>
+        <button *ngIf="isAdmin" mat-flat-button color="warn" class="crud-btn" (click)="deletePublisher(publisher.id)">Delete</button>
+    </div>
     <generic-list title="Authored Books">
         <a *ngFor="let book of publishedBooks" [routerLink]="['/book-details/', book.id]" class="book-link">
             <div class="authors-list-item" >
