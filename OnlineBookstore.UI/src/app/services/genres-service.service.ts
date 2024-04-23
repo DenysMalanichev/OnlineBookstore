@@ -32,4 +32,16 @@ export class GenresService {
 
     return this.http.delete(apiUrl, { params });
   }
+
+  updateGenre(id: number, name: string, description: string) {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.genres.genresBasePath;
+
+    return this.http.put(apiUrl, { id, name, description });
+  }
+
+  createGenre(name: string, description: string) {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.genres.genresBasePath;
+
+    return this.http.post(apiUrl, { name, description });
+  }
 }

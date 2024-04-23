@@ -28,7 +28,7 @@ public class GenreService : IGenreService
 
     public async Task UpdateGenreAsync(UpdateGenreDto updateGenreDto)
     {
-        if (await GetGenreByIdAsync(updateGenreDto.Id) is null)
+        if (await _unitOfWork.GenreRepository.GetByIdAsync(updateGenreDto.Id, true)! is null)
         {
             throw new EntityNotFoundException($"No Genre with Id '{updateGenreDto.Id}'");
         }

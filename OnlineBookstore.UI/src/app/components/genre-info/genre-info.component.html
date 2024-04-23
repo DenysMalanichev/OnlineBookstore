@@ -1,0 +1,12 @@
+<div>
+    <strong class="genre-name">{{ genre.name }}</strong>
+    <p class="genre-description">{{ genre.description }}</p>
+
+    <button *ngIf="isAdmin && !isUpdate" mat-flat-button color="accent" class="crud-btn" (click)="isUpdate = true">Update</button>  
+
+    <genre-form *ngIf="isUpdate" [genreId]="genre.id"></genre-form>  
+    
+    <button *ngIf="isAdmin && isUpdate" mat-flat-button color="warn" class="crud-btn" (click)="isUpdate = false">Cancel</button>
+    <button *ngIf="isAdmin" mat-flat-button color="warn" class="crud-btn" (click)="deleteGenre(genre.id)">Delete</button>       
+</div>
+

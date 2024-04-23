@@ -28,7 +28,7 @@ public class AuthorService : IAuthorService
 
     public async Task UpdateAuthorAsync(UpdateAuthorDto updateAuthorDto)
     {
-        if (await GetAuthorByIdAsync(updateAuthorDto.Id) is null)
+        if (await _unitOfWork.AuthorRepository.GetByIdAsync(updateAuthorDto.Id, true)! is null)
         {
             throw new EntityNotFoundException($"No Author with Id '{updateAuthorDto.Id}'");
         }

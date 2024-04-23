@@ -6,18 +6,18 @@ import { GenresService } from 'src/app/services/genres-service.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-genres-list',
+  selector: 'genres-list',
   templateUrl: './genres-list.component.html',
   styleUrls: ['./genres-list.component.css']
 })
 export class GenresListComponent implements OnInit {
   genres!: FullGenreModel[];
   isAdmin = false;
+  isCreate = false;
 
   constructor(
     private genresService: GenresService,
-    private authService: AuthService,
-    private router: Router
+    private authService: AuthService
     ) {}
 
   ngOnInit(): void {
@@ -27,32 +27,6 @@ export class GenresListComponent implements OnInit {
 
   getGenres(): void {
     this.genresService.getAllGenres().subscribe(x => this.genres = x);
-  }
-
-  deleteGenre(genreId: number): void {
-    this.genresService.deleteGenre(genreId).subscribe({
-      next: () => { 
-          Swal.fire({
-          position: "bottom-end",
-          icon: "success",
-          title: "Deleted",
-          showConfirmButton: false,
-          timer: 2500
-        });
-        this.router.navigate(['/books-filters']);
-        return;
-      },
-      error: () => {
-        Swal.fire({
-          position: "bottom-end",
-          icon: "error",
-          title: "Error deleting. Make sure you`ve deleted all books with this genre before",
-          showConfirmButton: false,
-          timer: 2500
-        });
-        return;
-      }
-    });
   }
 
   isAdminCheck(): void {

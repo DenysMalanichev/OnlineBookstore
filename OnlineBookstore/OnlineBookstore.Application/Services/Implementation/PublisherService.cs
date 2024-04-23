@@ -28,7 +28,7 @@ public class PublisherService : IPublisherService
 
     public async Task UpdatePublisherAsync(UpdatePublisherDto updatePublisherDto)
     {
-        if (await GetPublisherByIdAsync(updatePublisherDto.Id) is null)
+        if (await _unitOfWork.PublisherRepository.GetByIdAsync(updatePublisherDto.Id, true)! is null)
         {
             throw new EntityNotFoundException($"No Publisher with Id '{updatePublisherDto.Id}'");
         }

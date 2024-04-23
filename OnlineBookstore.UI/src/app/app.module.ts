@@ -42,6 +42,8 @@ import { MakeOrderComponent } from './components/make-order/make-order.component
 import { AuthCheckInterceptor } from './interceptors/auth-check.interceptor';
 import { HistoryComponent } from './components/history/history.component';
 import { BookFormComponent } from './components/book-form/book-form.component';
+import { GenreFormComponent } from './components/genre-form/genre-form.component';
+import { GenreInfoComponent } from './components/genre-info/genre-info.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +70,8 @@ import { BookFormComponent } from './components/book-form/book-form.component';
     MakeOrderComponent,
     HistoryComponent,
     BookFormComponent,
+    GenreFormComponent,
+    GenreInfoComponent,
   ],
   imports: [
     BrowserModule,
