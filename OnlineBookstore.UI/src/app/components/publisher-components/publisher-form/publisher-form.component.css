@@ -1,7 +1,3 @@
-div {
-    background-color: #f4f4f4;
-}
-
 form {
     padding: 20px;
     border-radius: 8px;
@@ -18,7 +14,8 @@ label {
     color: #333;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="tel"] {
     width: 100%;
     padding: 8px;
     margin-bottom: 20px;

@@ -3,9 +3,13 @@
         <h1 class="author-name">{{ publisher.companyName }}</h1>
         <p class="author-email">Contact Name {{ publisher.contactName }}</p>
         <p class="author-email">Address {{ publisher.address }}</p>
+        <p class="author-email">Phone {{ publisher.phone }}</p>
     </div>
     <div>
-        <button *ngIf="isAdmin" mat-flat-button color="accent" class="crud-btn" >Update</button>
+        <button *ngIf="isAdmin && !isUpdate" mat-flat-button color="accent" class="crud-btn" (click)="isUpdate = true">Update</button>
+        <publisher-form *ngIf="isAdmin && isUpdate" [publisher]="publisher">
+            <button mat-flat-button color="warn" class="crud-btn" (click)="isUpdate = false">Cancel</button>
+        </publisher-form>
         <button *ngIf="isAdmin" mat-flat-button color="warn" class="crud-btn" (click)="deletePublisher(publisher.id)">Delete</button>
     </div>
     <generic-list title="Authored Books">

@@ -4,11 +4,13 @@ import { Observable } from 'rxjs/internal/Observable';
 import { environment } from 'src/environments/environment.development';
 import { BriefPublisherModel } from '../models/publisher-models/briefPublisherModel';
 import { FullPublisherModel } from '../models/publisher-models/fullPublisherModel';
+import { CreatePublisherModel } from '../models/publisher-models/createPublisherModel';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PublishersService {
+  
 
   constructor(private http: HttpClient) { }
 
@@ -30,5 +32,17 @@ export class PublishersService {
     let params = new HttpParams().set('publisherId', publisherId);
 
     return this.http.delete(apiUrl, { params });
+  }
+  
+  createPublisher(publisherData: CreatePublisherModel) {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.publishers.publishersBasePath;
+
+    return this.http.post(apiUrl, { ...publisherData });
+  }
+
+  updatePublisher(publisherData: FullPublisherModel) {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.publishers.publishersBasePath;
+
+    return this.http.put(apiUrl, { ...publisherData });
   }
 }

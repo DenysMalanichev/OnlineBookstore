@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FullGenreModel } from 'src/app/models/genre-models/fullGenreModel';
 import { GenresService } from 'src/app/services/genres-service.service';
 import Swal from 'sweetalert2';
 
@@ -8,25 +9,29 @@ import Swal from 'sweetalert2';
   templateUrl: './genre-form.component.html',
   styleUrls: ['./genre-form.component.css']
 })
-export class GenreFormComponent {
+export class GenreFormComponent implements OnInit {
   @Input()
-  genreId? :number;
-  genreForm = new FormGroup({
-    name: new FormControl('', Validators.required),
-    description: new FormControl('')
-  });
+  genre?: FullGenreModel;
+  genreForm!: FormGroup; 
 
   constructor(
     private genreService: GenresService
   ) {}
 
+  ngOnInit(): void {
+    this.genreForm = new FormGroup({
+      name: new FormControl(this.genre?.name || '', Validators.required),
+      description: new FormControl(this.genre?.description || '')
+    });
+  }
+
   updateGenre(): void {
-    if(this.genreForm.invalid || !this.genreId) {
+    if(this.genreForm.invalid || !this.genre) {
       this.throwErrorAlert();
       return;
     }
     this.genreService
-      .updateGenre(this.genreId!, this.genreForm.get('name')!.value!, this.genreForm.get('description')!.value ?? '')
+      .updateGenre(this.genre!.id, this.genreForm.get('name')!.value!, this.genreForm.get('description')!.value ?? '')
       .subscribe({
         next: () => {
           Swal.fire({

@@ -1,7 +1,0 @@
-<generic-list title="Authors">
-    <a *ngFor="let a of authors" [routerLink]="['/author', a.id]" class="author-link">
-        <div class="authors-list-item" >
-            <strong class="author-name">{{ a.firstName + a.lastName }}</strong>         
-        </div>
-    </a>
-</generic-list>

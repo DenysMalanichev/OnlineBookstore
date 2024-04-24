@@ -9,6 +9,7 @@ import { PublishersService } from 'src/app/services/publishers-service.service';
 })
 export class PublishersListComponent implements OnInit {  
   publishers!: BriefPublisherModel[];
+  isAdd = false;
 
   constructor(private publishersService: PublishersService) {}
 

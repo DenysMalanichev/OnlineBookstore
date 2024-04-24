@@ -1,0 +1,15 @@
+<div>
+    <form [formGroup]="genreForm">
+        <label [for]="'genre-name-' + genre?.id">Genre name:</label>
+        <input type="text" [id]="'genre-name-' + genre?.id" formControlName="name">
+
+        <label [for]="'genre-desc-' + genre?.id">Description:</label>
+        <input type="text" [id]="'genre-desc-' + genre?.id" formControlName="description">
+
+        <button mat-flat-button *ngIf="genre" color="accent" (click)="updateGenre()">Update</button>
+        <button mat-flat-button *ngIf="!genre" color="accent" (click)="createGenre()">Create</button>
+
+        <!-- To pass cancel button for exm. --> 
+        <ng-content></ng-content>
+    </form>
+</div>

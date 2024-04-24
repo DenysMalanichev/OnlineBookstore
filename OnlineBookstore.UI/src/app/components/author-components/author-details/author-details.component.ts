@@ -1,55 +1,54 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/internal/Observable';
+import { AuthorModel } from 'src/app/models/author-models/authorModel';
 import { BriefBookModel } from 'src/app/models/book-models/briefBookModel';
-import { FullPublisherModel } from 'src/app/models/publisher-models/fullPublisherModel';
 import { AuthService } from 'src/app/services/auth.service';
+import { AuthorService } from 'src/app/services/author-service.service';
 import { BooksService } from 'src/app/services/books-service.service';
-import { PublishersService } from 'src/app/services/publishers-service.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-publisher-details',
-  templateUrl: './publisher-details.component.html',
-  styleUrls: ['./publisher-details.component.css']
+  selector: 'app-author-details',
+  templateUrl: './author-details.component.html',
+  styleUrls: ['./author-details.component.css']
 })
-export class PublisherDetailsComponent implements OnInit {  
-  publisher!: FullPublisherModel;
-  publishedBooks!: BriefBookModel[];
+export class AuthorDetailsComponent implements OnInit {
+  authoredBooks!: BriefBookModel[];
+  author!: AuthorModel;
 
   page = 1;
   totalPages?: number;
 
   isAdmin = false;
+  isUpdate = false;
 
   constructor(
-    private publishersService: PublishersService,
+    private authorService: AuthorService,
     private booksService: BooksService,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router
-    ) {}
+    private router: Router) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       const id = +params['id'];
       if (id) {
-        this.getPublisher(id).subscribe(p => {
-          this.publisher = p;
-          this.getBooksByPublisher(id, this.page);          
+        this.getAuthor(id).subscribe(a => {
+          this.author = a;
+          this.getBooksByAuthor(a.id, this.page);          
         });
       }
-
       this.isAdminCheck();
-    });   
+    });    
   }
 
-  getPublisher(id: number): Observable<FullPublisherModel> {
-    return this.publishersService.getPublisherById(id);
+  getAuthor(id: number): Observable<AuthorModel> {
+    return this.authorService.getAuthorById(id);
   }
 
-  deletePublisher(publisherId: number): void {
-    this.publishersService.deletePublisher(publisherId).subscribe({
+  deleteAuthor(authorId: number): void {
+    this.authorService.deleteAuthor(authorId).subscribe({
       next: () => { 
           Swal.fire({
           position: "bottom-end",
@@ -58,14 +57,14 @@ export class PublisherDetailsComponent implements OnInit {
           showConfirmButton: false,
           timer: 2500
         });
-        this.router.navigate(['/publishers']);
+        this.router.navigate(['/authors']);
         return;
       },
       error: () => {
         Swal.fire({
           position: "bottom-end",
           icon: "error",
-          title: "Error deleting. Make sure you`ve deleted all books of this publisher before",
+          title: "Error deleting. Make sure you`ve deleted all books of this author before",
           showConfirmButton: false,
           timer: 2500
         });
@@ -73,14 +72,13 @@ export class PublisherDetailsComponent implements OnInit {
       }
     });
   }
-
-  getBooksByPublisher(publisherId: number, page: number, itemsOnPage = 10): void {
-    this.booksService.getBooksByPublisher(publisherId, page, itemsOnPage)
-    .subscribe(x => {
-      console.log(x);
-      this.publishedBooks = x.entities;
+  
+  getBooksByAuthor(authorId: number, page: number, itemsOnPage = 10): void {
+    this.booksService.getBooksByAuthor(authorId, page, itemsOnPage).subscribe(x => {
+      this.authoredBooks = x.entities;
       this.totalPages = x.totalPages;
-    });
+    },
+    error => console.error('Error fetching books:', error));
   }
 
   isAdminCheck(): void {

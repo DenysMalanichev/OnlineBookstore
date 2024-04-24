@@ -1,10 +1,13 @@
 <div class="author-container">
     <div class="author-info">
-        <h1 class="author-name">{{ author.firstName + author.lastName }}</h1>
+        <h1 class="author-name">{{ author.firstName }} {{ author.lastName }}</h1>
         <p class="author-email">{{ author.email }}</p>
     </div>
     <div>
-        <button *ngIf="isAdmin" mat-flat-button color="accent" class="crud-btn" >Update</button>
+        <button *ngIf="isAdmin && !isUpdate" mat-flat-button color="accent" class="crud-btn" (click)="isUpdate = true">Update</button>
+        <author-form [author]="author" *ngIf="isAdmin && isUpdate">
+            <button mat-flat-button  color="warn" (click)="isUpdate = false;">Cancel</button>
+        </author-form>
         <button *ngIf="isAdmin" mat-flat-button color="warn" class="crud-btn" (click)="deleteAuthor(author.id)">Delete</button>
     </div>
     

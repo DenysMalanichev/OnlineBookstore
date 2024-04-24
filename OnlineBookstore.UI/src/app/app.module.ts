@@ -7,10 +7,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
-import {MatListModule} from '@angular/material/list';
-import {MatPaginatorModule} from '@angular/material/paginator';
+import { MatListModule } from '@angular/material/list';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { JwtModule } from "@auth0/angular-jwt";
-import {MatButtonModule} from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,12 +23,12 @@ import { BookCardComponent } from './components/book-card/book-card.component';
 import { BooksFilterComponent } from './components/books-filter/books-filter.component';
 import { HeaderComponent } from './components/header/header.component';
 import { BookFullInfoComponent } from './components/book-full-info/book-full-info.component';
-import { GenresListComponent } from './components/genres-list/genres-list.component';
-import { AuthorsListComponent } from './components/authors-list/authors-list.component';
+import { GenresListComponent } from './components/genre-components/genres-list/genres-list.component';
+import { AuthorsListComponent } from './components/author-components/authors-list/authors-list.component';
 import { GenericListComponent } from './components/generic-list/generic-list.component';
-import { PublishersListComponent } from './components/publishers-list/publishers-list.component';
-import { AuthorDetailsComponent } from './components/author-details/author-details.component';
-import { PublisherDetailsComponent } from './components/publisher-details/publisher-details.component';
+import { PublishersListComponent } from './components/publisher-components/publishers-list/publishers-list.component';
+import { AuthorDetailsComponent } from './components/author-components/author-details/author-details.component';
+import { PublisherDetailsComponent } from './components/publisher-components/publisher-details/publisher-details.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { RegisterComponent } from './components/auth/register/register.component';
 import { AccountComponent } from './components/auth/account/account.component';
@@ -42,8 +42,10 @@ import { MakeOrderComponent } from './components/make-order/make-order.component
 import { AuthCheckInterceptor } from './interceptors/auth-check.interceptor';
 import { HistoryComponent } from './components/history/history.component';
 import { BookFormComponent } from './components/book-form/book-form.component';
-import { GenreFormComponent } from './components/genre-form/genre-form.component';
-import { GenreInfoComponent } from './components/genre-info/genre-info.component';
+import { GenreFormComponent } from './components/genre-components/genre-form/genre-form.component';
+import { GenreInfoComponent } from './components/genre-components/genre-info/genre-info.component';
+import { AuthorFormComponent } from './components/author-components/author-form/author-form.component';
+import { PublisherFormComponent } from './components/publisher-components/publisher-form/publisher-form.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +74,8 @@ import { GenreInfoComponent } from './components/genre-info/genre-info.component
     BookFormComponent,
     GenreFormComponent,
     GenreInfoComponent,
+    AuthorFormComponent,
+    PublisherFormComponent,
   ],
   imports: [
     BrowserModule,

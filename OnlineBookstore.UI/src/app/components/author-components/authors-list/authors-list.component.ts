@@ -9,6 +9,7 @@ import { AuthorService } from 'src/app/services/author-service.service';
 })
 export class AuthorsListComponent implements OnInit {
   authors!: AuthorModel[];
+  isAdd = false;
   
   constructor(private authorsService: AuthorService) {}
 

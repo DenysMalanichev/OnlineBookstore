@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthorModel } from '../models/author-models/authorModel';
 import { environment } from 'src/environments/environment.development';
+import { CreateAuthorModel } from '../models/author-models/createAuthorModel';
 
 @Injectable({
   providedIn: 'root'
@@ -28,5 +29,17 @@ export class AuthorService {
     let params = new HttpParams().set('authorId', authorId);
 
     return this.http.delete(apiUrl, { params });
+  }
+
+  updateAuthor(authorData: AuthorModel) {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.author.authorBasePath;
+
+    return this.http.put(apiUrl, { ...authorData });
+  }
+
+  createAuthor(authorData: CreateAuthorModel) {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.author.authorBasePath;
+
+    return this.http.post(apiUrl, { ...authorData });
   }
 }
