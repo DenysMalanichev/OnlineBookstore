@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineBookstore.Application.Services.Interfaces;
+using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Features.BookFeatures;
 
 namespace OnlineBookstore.Controllers;
@@ -16,6 +19,7 @@ public class BooksController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
     public async Task<IActionResult> CreateBookAsync(CreateBookDto createBookDto)
     {
         await _bookService.AddBookAsync(createBookDto);
@@ -24,6 +28,7 @@ public class BooksController : ControllerBase
     }
     
     [HttpPut]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
     public async Task<IActionResult> UpdateBookAsync(UpdateBookDto updateBookDto)
     {
         await _bookService.UpdateBookAsync(updateBookDto);
@@ -72,6 +77,7 @@ public class BooksController : ControllerBase
     }
 
     [HttpDelete]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
     public async Task<IActionResult> DeleteBookAsync(int bookId)
     {
         await _bookService.DeleteBookAsync(bookId);

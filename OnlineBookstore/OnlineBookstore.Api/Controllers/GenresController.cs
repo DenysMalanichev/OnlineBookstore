@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineBookstore.Application.Services.Interfaces;
+using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Features.GenreFeatures;
 
 namespace OnlineBookstore.Controllers;
@@ -16,6 +19,7 @@ public class GenresController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
     public async Task<IActionResult> CreateGenreAsync(CreateGenreDto createGenreDto)
     {
         await _genreService.AddGenreAsync(createGenreDto);
@@ -24,6 +28,7 @@ public class GenresController : ControllerBase
     }
     
     [HttpPut]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
     public async Task<IActionResult> UpdateGenreAsync(UpdateGenreDto updateGenreDto)
     {
         await _genreService.UpdateGenreAsync(updateGenreDto);
@@ -56,6 +61,7 @@ public class GenresController : ControllerBase
     }
     
     [HttpDelete]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
     public async Task<IActionResult> DeleteGenreAsync(int genreId)
     {
         await _genreService.DeleteGenreAsync(genreId);
