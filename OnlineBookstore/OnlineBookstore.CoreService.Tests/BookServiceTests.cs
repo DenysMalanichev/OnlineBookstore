@@ -316,9 +316,9 @@ public class BookServiceTests
 
         _bookRepoMock.Setup(br => br.GetBooksByAuthor(authorId, page, 10))
             .Returns((books, 21));
-        var getBriefBookDtos = expectedBookDto as GetBriefBookDto[] ?? expectedBookDto.ToArray();
+        var getBriefBookDto = expectedBookDto as GetBriefBookDto[] ?? expectedBookDto.ToArray();
         _mapperMock.Setup(m => m.Map<IEnumerable<GetBriefBookDto>>(books))
-            .Returns(getBriefBookDtos);
+            .Returns(getBriefBookDto);
 
         var bookService = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
 
@@ -326,7 +326,7 @@ public class BookServiceTests
         var returnedBook = bookService.GetBooksByAuthor(authorId, page);
 
         // Assert
-        returnedBook.Entities.Should().BeEquivalentTo(getBriefBookDtos);
+        returnedBook.Entities.Should().BeEquivalentTo(getBriefBookDto);
         Assert.Equal(2, returnedBook.CurrentPage);
         Assert.Equal(21, returnedBook.TotalPages);
     }
@@ -342,9 +342,9 @@ public class BookServiceTests
 
         _bookRepoMock.Setup(br => br.GetBooksByPublisher(publisherId, page, 10))
             .Returns((books, 21));
-        var getBriefBookDtos = expectedBookDto as GetBriefBookDto[] ?? expectedBookDto.ToArray();
+        var getBriefBookDto = expectedBookDto as GetBriefBookDto[] ?? expectedBookDto.ToArray();
         _mapperMock.Setup(m => m.Map<IEnumerable<GetBriefBookDto>>(books))
-            .Returns(getBriefBookDtos);
+            .Returns(getBriefBookDto);
 
         var bookService = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
 
@@ -352,7 +352,7 @@ public class BookServiceTests
         var returnedBook = bookService.GetBooksByPublisher(publisherId, page);
 
         // Assert
-        returnedBook.Entities.Should().BeEquivalentTo(getBriefBookDtos);
+        returnedBook.Entities.Should().BeEquivalentTo(getBriefBookDto);
         Assert.Equal(2, returnedBook.CurrentPage);
         Assert.Equal(21, returnedBook.TotalPages);
     }
@@ -397,7 +397,7 @@ public class BookServiceTests
 
 
     [Fact]
-    public async Task CountAvgRatingOfBook_ShouldReturnCountAsInDb()
+    public void CountAvgRatingOfBook_ShouldReturnCountAsInDb()
     {
         // Arrange
         const int bookId = 100;
