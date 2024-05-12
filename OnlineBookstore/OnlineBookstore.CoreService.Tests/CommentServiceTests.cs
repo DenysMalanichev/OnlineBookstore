@@ -1,4 +1,3 @@
-using System.Collections;
 using OnlineBookstore.Features.CommentFeatures;
 
 namespace OnlineBookstore.CoreService.Tests;
