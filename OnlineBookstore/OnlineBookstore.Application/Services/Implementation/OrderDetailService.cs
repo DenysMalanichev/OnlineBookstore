@@ -1,7 +1,6 @@
 using AutoMapper;
 using OnlineBookstore.Application.Exceptions;
 using OnlineBookstore.Application.Services.Interfaces;
-using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Features.OrderFeatures.OrderDetailFeatures;
 using OnlineBookstore.Persistence.Repositories.Interfaces;
