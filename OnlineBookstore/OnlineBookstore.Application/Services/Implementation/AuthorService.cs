@@ -41,10 +41,10 @@ public class AuthorService : IAuthorService
 
     public async Task<GetAuthorDto> GetAuthorByIdAsync(int authorDto)
     {
-        var genre = await _unitOfWork.AuthorRepository.GetByIdAsync(authorDto)!
+        var author = await _unitOfWork.AuthorRepository.GetByIdAsync(authorDto)!
                     ?? throw new EntityNotFoundException($"No Author with Id '{authorDto}'");
 
-        return _mapper.Map<GetAuthorDto>(genre);
+        return _mapper.Map<GetAuthorDto>(author);
     }
 
     public async Task<IEnumerable<GetAuthorDto>> GetAllAuthorsAsync()

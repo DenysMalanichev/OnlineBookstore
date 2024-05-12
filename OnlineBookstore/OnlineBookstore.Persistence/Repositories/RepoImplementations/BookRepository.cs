@@ -28,7 +28,7 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
             : query;
     }
 
-    public (IEnumerable<Book> booksOnPage, int totalItems) GetBooksByAuthorAsync(int authorId, int page, int itemsOnPage)
+    public (IEnumerable<Book> booksOnPage, int totalItems) GetBooksByAuthor(int authorId, int page, int itemsOnPage)
     {
         return (_dataContext.Books.Where(b => b.AuthorId == authorId)
             .Skip((page - 1) * itemsOnPage)
