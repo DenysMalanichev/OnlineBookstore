@@ -9,7 +9,7 @@ Online Bookstore is written using the following **technologies**:
 - ASP.NET Core
 - EF Core
 - MS SQL Server
-- xUnit (for future testing)
+- xUnit (along with Moq, NBuilder, Bogus, FluentAssertion, InMemory)
 - ASP.NET Core Identity for auth
 ### Front-end
 - Angular
@@ -48,6 +48,13 @@ This SQL diagram is simplyfied and aims to show only main idea of DB. It is not 
 user can also add any nu,ber of books to order, specify quantity. Created order can by closed by enering shipping address.
 - User can filter on books on multiple criterias, like book name, genre, author name, publisher name or price. This functional is build using Specification pattern.
 - Result of filtering books, requesting publishers and authors will be returned in paged format. User can specify number of entites in page.
+
+## Test coverage 
+API is tested with unit, integration and end-to-end tests.
+xUnit along with Moq, NBuilder, Bogus, FluentAssertion, InMemory libraries used
+![image](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/3ac5b38d-0bba-46f9-8a81-376d172fb529)
+![image](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/7b889f69-4a23-46b1-ae7e-9c5f2713af42)
+
 
 ## API documentation
 Create Author
