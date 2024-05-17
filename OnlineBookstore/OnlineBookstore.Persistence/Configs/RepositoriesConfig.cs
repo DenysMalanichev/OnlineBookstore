@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using OnlineBookstore.Persistence.Repositories;
 using OnlineBookstore.Persistence.Repositories.Interfaces;
@@ -5,6 +6,7 @@ using OnlineBookstore.Persistence.Repositories.RepoImplementations;
 
 namespace OnlineBookstore.Persistence.Configs;
 
+[ExcludeFromCodeCoverage]
 public static class RepositoriesConfig
 {
     public static void AddUnitOfWork(this IServiceCollection service)

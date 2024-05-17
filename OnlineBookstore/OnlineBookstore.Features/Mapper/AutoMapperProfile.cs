@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Features.AuthorFeatures;
@@ -11,6 +12,7 @@ using OnlineBookstore.Features.UserFeatures;
 
 namespace OnlineBookstore.Features.Mapper;
 
+[ExcludeFromCodeCoverage]
 public class AutoMapperProfile : Profile
 {
     public AutoMapperProfile()

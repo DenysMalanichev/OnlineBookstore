@@ -45,7 +45,6 @@ public class OrderDetailService : IOrderDetailService
     {
         var orderDetail = await _unitOfWork.OrderDetailRepository.GetByIdAsync(updateOrderDetailDto.Id)!
                           ?? throw new EntityNotFoundException($"No Order Detail with Id '{updateOrderDetailDto.Id}'");
-        orderDetail = _mapper.Map<OrderDetail>(updateOrderDetailDto);
 
         await _unitOfWork.CommitAsync();
     }

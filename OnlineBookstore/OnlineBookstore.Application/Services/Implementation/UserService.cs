@@ -10,7 +10,6 @@ using Microsoft.IdentityModel.Tokens;
 using OnlineBookstore.Application.Services.Interfaces;
 using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Domain.Entities;
-using OnlineBookstore.Features.OrderFeatures;
 using OnlineBookstore.Features.UserFeatures;
 using OnlineBookstore.Features.UserFeatures.Options;
 
