@@ -1,9 +1,13 @@
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OnlineBookstore.Application.Services.Interfaces;
+using OnlineBookstore.Application.Publishers.Create;
+using OnlineBookstore.Application.Publishers.Delete;
+using OnlineBookstore.Application.Publishers.GetAll;
+using OnlineBookstore.Application.Publishers.GetById;
+using OnlineBookstore.Application.Publishers.Update;
 using OnlineBookstore.Domain.Constants;
-using OnlineBookstore.Features.PublisherFeatures;
 
 namespace OnlineBookstore.Controllers;
 
@@ -11,17 +15,17 @@ namespace OnlineBookstore.Controllers;
 [Route("api/[controller]")]
 public class PublishersController : ControllerBase
 {
-    private readonly IPublisherService _publisherService;
+    private readonly IMediator _mediator;
 
-    public PublishersController(IPublisherService publisherService)
+    public PublishersController(IMediator mediator)
     {
-        _publisherService = publisherService;
+        _mediator = mediator;
     }
 
     [HttpGet("{publisherId:int}")]
     public async Task<IActionResult> GetPublisherByIdAsync(int publisherId)
     {
-        var publisher = await _publisherService.GetPublisherByIdAsync(publisherId);
+        var publisher = await _mediator.Send(new GetPublisherByIdQuery { PublisherId = publisherId});
 
         return Ok(publisher);
     }
@@ -29,25 +33,25 @@ public class PublishersController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllPublishersAsync()
     {
-        var publishersDto = await _publisherService.GetAllPublishersAsync();
+        var publishersDto = await _mediator.Send(new GetAllPublishersQuery());
 
         return Ok(publishersDto);
     }
     
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
-    public async Task<IActionResult> CreatePublisherAsync(CreatePublisherDto createPublisherDto)
+    public async Task<IActionResult> CreatePublisherAsync(CreatePublisherCommand createPublisherCommand)
     {
-        await _publisherService.AddPublisherAsync(createPublisherDto);
+        await _mediator.Send(createPublisherCommand);
 
         return Ok();
     }
     
     [HttpPut]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
-    public async Task<IActionResult> UpdatePublisherAsync(UpdatePublisherDto updatePublisherDto)
+    public async Task<IActionResult> UpdatePublisherAsync(UpdatePublisherCommand updatePublisherCommand)
     {
-        await _publisherService.UpdatePublisherAsync(updatePublisherDto);
+        await _mediator.Send(updatePublisherCommand);
 
         return Ok();
     }
@@ -56,7 +60,7 @@ public class PublishersController : ControllerBase
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
     public async Task<IActionResult> DeletePublisherAsync(int publisherId)
     {
-        await _publisherService.DeletePublisherAsync(publisherId);
+        await _mediator.Send(new DeletePublisherCommand { PublisherId = publisherId });
 
         return Ok();
     }

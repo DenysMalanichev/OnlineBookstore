@@ -1,9 +1,14 @@
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OnlineBookstore.Application.Services.Interfaces;
+using OnlineBookstore.Application.Genres.Create;
+using OnlineBookstore.Application.Genres.Delete;
+using OnlineBookstore.Application.Genres.GetAll;
+using OnlineBookstore.Application.Genres.GetByBook;
+using OnlineBookstore.Application.Genres.GetById;
+using OnlineBookstore.Application.Genres.Update;
 using OnlineBookstore.Domain.Constants;
-using OnlineBookstore.Features.GenreFeatures;
 
 namespace OnlineBookstore.Controllers;
 
@@ -11,27 +16,27 @@ namespace OnlineBookstore.Controllers;
 [Route("api/[controller]")]
 public class GenresController : ControllerBase
 {
-    private readonly IGenreService _genreService;
+    private readonly IMediator _mediator;
 
-    public GenresController(IGenreService genreService)
+    public GenresController(IMediator mediator)
     {
-        _genreService = genreService;
+        _mediator = mediator;
     }
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
-    public async Task<IActionResult> CreateGenreAsync(CreateGenreDto createGenreDto)
+    public async Task<IActionResult> CreateGenreAsync(CreateGenreCommand createGenreCommand)
     {
-        await _genreService.AddGenreAsync(createGenreDto);
+        await _mediator.Send(createGenreCommand);
 
         return Ok();
     }
     
     [HttpPut]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
-    public async Task<IActionResult> UpdateGenreAsync(UpdateGenreDto updateGenreDto)
+    public async Task<IActionResult> UpdateGenreAsync(UpdateGenreCommand updateGenreCommand)
     {
-        await _genreService.UpdateGenreAsync(updateGenreDto);
+        await _mediator.Send(updateGenreCommand);
 
         return Ok();
     }
@@ -39,7 +44,7 @@ public class GenresController : ControllerBase
     [HttpGet("{genreId:int}")]
     public async Task<IActionResult> GetGenreAsync(int genreId)
     {
-        var genreDto = await _genreService.GetGenreByIdAsync(genreId);
+        var genreDto = await _mediator.Send(new GetGenreByIdQuery { GenreId = genreId });
 
         return Ok(genreDto);
     }
@@ -47,7 +52,7 @@ public class GenresController : ControllerBase
     [HttpGet("by-book/{bookId:int}")]
     public async Task<IActionResult> GetGenresByBookAsync(int bookId)
     {
-        var genreDto = await _genreService.GetGenresByBookAsync(bookId);
+        var genreDto = await _mediator.Send(new GetGenresByBookQuery { BookId = bookId });
 
         return Ok(genreDto);
     }
@@ -55,7 +60,7 @@ public class GenresController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllGenresAsync()
     {
-        var genresDto = await _genreService.GetAllGenresAsync();
+        var genresDto = await _mediator.Send(new GetAllGenresQuery());
 
         return Ok(genresDto);
     }
@@ -64,7 +69,7 @@ public class GenresController : ControllerBase
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
     public async Task<IActionResult> DeleteGenreAsync(int genreId)
     {
-        await _genreService.DeleteGenreAsync(genreId);
+        await _mediator.Send(new DeleteGenreCommand { GenreId = genreId });
 
         return Ok();
     }

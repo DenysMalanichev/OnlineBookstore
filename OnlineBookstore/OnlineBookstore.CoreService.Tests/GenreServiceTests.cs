@@ -1,3 +1,6 @@
+using OnlineBookstore.Application.Books;
+using OnlineBookstore.Application.Common;
+using OnlineBookstore.Application.Genres.Dtos;
 using OnlineBookstore.Features.GenreFeatures;
 
 namespace OnlineBookstore.CoreService.Tests;
@@ -6,7 +9,7 @@ public class GenreServiceTests
 {
     private readonly Mock<IMapper> _mapperMock = new();
     private readonly Mock<IGenreRepository> _genreRepoMock = new();
-    private readonly Mock<IBookRepository> _bookRepoMock = new();
+    private readonly Mock<IBookCommandRepository> _bookRepoMock = new();
     private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
     private readonly IMapper _mapper;
 

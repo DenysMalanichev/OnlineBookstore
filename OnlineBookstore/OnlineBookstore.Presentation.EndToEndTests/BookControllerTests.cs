@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using OnlineBookstore.Application.Books.Dtos;
+using OnlineBookstore.Application.Common.Paging;
 using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Domain.Entities;
-using OnlineBookstore.Features.BookFeatures;
-using OnlineBookstore.Features.Paging;
 using OnlineBookstore.Persistence.Context;
 
 namespace OnlineBookstore.Presentation.EndToEndTests;

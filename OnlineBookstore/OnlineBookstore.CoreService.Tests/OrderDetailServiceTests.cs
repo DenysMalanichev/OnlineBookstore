@@ -1,3 +1,6 @@
+using OnlineBookstore.Application.Common;
+using OnlineBookstore.Application.OrderDetails.Dtos;
+using OnlineBookstore.Application.Orders.Dtos;
 using OnlineBookstore.Features.OrderFeatures;
 using OnlineBookstore.Features.OrderFeatures.OrderDetailFeatures;
 

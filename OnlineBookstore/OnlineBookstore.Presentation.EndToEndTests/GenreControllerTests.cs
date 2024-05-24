@@ -6,9 +6,9 @@ using FizzWare.NBuilder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using OnlineBookstore.Application.Genres.Dtos;
 using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Domain.Entities;
-using OnlineBookstore.Features.GenreFeatures;
 using OnlineBookstore.Persistence.Context;
 using EntityState = Microsoft.EntityFrameworkCore.EntityState;
 

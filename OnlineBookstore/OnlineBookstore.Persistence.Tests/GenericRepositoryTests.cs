@@ -9,7 +9,7 @@ public class GenericRepositoryTests
     {
         var options = CreateNewContextOptions();
         _dataContext = new DataContext(options);
-        _authorRepository = new AuthorRepository(_dataContext);
+        _authorRepository = new AuthorCommandRepository(_dataContext);
     }
     
     [Fact]

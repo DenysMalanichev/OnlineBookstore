@@ -1,3 +1,5 @@
+using OnlineBookstore.Application.Comments.Dtos;
+using OnlineBookstore.Application.Common;
 using OnlineBookstore.Features.CommentFeatures;
 
 namespace OnlineBookstore.CoreService.Tests;

@@ -1,3 +1,4 @@
+using OnlineBookstore.Application.Common;
 using OnlineBookstore.Features.PublisherFeatures;
 
 namespace OnlineBookstore.CoreService.Tests;

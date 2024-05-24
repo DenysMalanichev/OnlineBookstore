@@ -7,10 +7,10 @@ using FizzWare.NBuilder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using OnlineBookstore.Application.OrderDetails.Dtos;
+using OnlineBookstore.Application.Orders.Dtos;
 using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Domain.Entities;
-using OnlineBookstore.Features.OrderFeatures;
-using OnlineBookstore.Features.OrderFeatures.OrderDetailFeatures;
 using OnlineBookstore.Persistence.Context;
 
 namespace OnlineBookstore.Presentation.EndToEndTests;

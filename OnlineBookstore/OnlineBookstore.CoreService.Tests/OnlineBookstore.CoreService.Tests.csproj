@@ -28,7 +28,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\OnlineBookstore.Application\OnlineBookstore.Application.csproj" />
-      <ProjectReference Include="..\OnlineBookstore.Features\OnlineBookstore.Features.csproj" />
       <ProjectReference Include="..\OnlineBookstore.Persistence\OnlineBookstore.Persistence.csproj" />
     </ItemGroup>
 

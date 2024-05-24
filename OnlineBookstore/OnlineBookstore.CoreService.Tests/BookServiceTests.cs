@@ -1,14 +1,16 @@
 using System.Linq.Expressions;
 using LinqKit;
 using Microsoft.EntityFrameworkCore.Query;
-using OnlineBookstore.Features.BookFeatures;
+using OnlineBookstore.Application.Books;
+using OnlineBookstore.Application.Books.Dtos;
+using OnlineBookstore.Application.Common;
 
 namespace OnlineBookstore.CoreService.Tests;
 
 public class BookServiceTests
 {
     private readonly Mock<IMapper> _mapperMock = new();
-    private readonly Mock<IBookRepository> _bookRepoMock = new();
+    private readonly Mock<IBookCommandRepository> _bookRepoMock = new();
     private readonly Mock<IGenreRepository> _genreRepoMock = new();
     private readonly Mock<IPublisherRepository> _publisherRepoMock = new();
     private readonly Mock<IAuthorRepository> _authorRepoMock = new();
