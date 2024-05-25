@@ -81,6 +81,9 @@ These handlers would call separate BookCommand and BookQuery repositories, that 
 
 ![image](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/eac243cc-8aea-44c1-8237-26c92786929f)
 
+### Deployment diagram
+![image](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/d4a32e40-101b-43cc-b0c0-f1dfd0e6f4e9)
+
 ## API documentation
 Create Author
 /api/author (POST)
