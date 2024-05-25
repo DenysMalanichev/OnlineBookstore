@@ -21,7 +21,7 @@ public class UpdateGenreCommandHandler : IRequestHandler<UpdateGenreCommand>
     {
         var genreToUpdate = _mapper.Map<Genre>(request);
 
-        await _unitOfWork.GenreRepository.UpdateAsync(request.Id, genreToUpdate);
+        await _unitOfWork.GenreRepository.UpdateAsync(genreToUpdate);
         await _unitOfWork.CommitAsync(cancellationToken);
     }
 }

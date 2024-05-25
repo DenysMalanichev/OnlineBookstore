@@ -20,7 +20,7 @@ public class UpdateOrderDetailCommandHandler : IRequestHandler<UpdateOrderDetail
     {
         var orderDetail = _mapper.Map<OrderDetail>(request);
 
-        await _unitOfWork.OrderDetailRepository.UpdateAsync(request.Id, orderDetail);
+        await _unitOfWork.OrderDetailRepository.UpdateAsync(orderDetail);
         await _unitOfWork.CommitAsync(cancellationToken);
     }
 }

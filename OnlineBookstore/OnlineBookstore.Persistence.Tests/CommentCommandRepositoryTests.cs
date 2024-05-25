@@ -2,12 +2,12 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace OnlineBookstore.Persistence.Tests;
 
-public class CommentRepositoryTests
+public class CommentCommandRepositoryTests
 {
     private readonly DbContextOptions<DataContext> _dataContextOptions;
     private readonly InMemoryDatabaseRoot _databaseRoot;
 
-    public CommentRepositoryTests()
+    public CommentCommandRepositoryTests()
     {
         _databaseRoot = new InMemoryDatabaseRoot();
         _dataContextOptions = CreateNewContextOptions();
@@ -43,7 +43,7 @@ public class CommentRepositoryTests
         await context.Comments.AddRangeAsync(comments);
         await context.SaveChangesAsync();
 
-        var commentRepository = new CommentRepository(context);
+        var commentRepository = new CommentQueryRepository(context);
 
         // Act
         var foundComments = await commentRepository.GetCommentsByBookIdAsync(bookId);
@@ -69,7 +69,7 @@ public class CommentRepositoryTests
         await context.Comments.AddRangeAsync(comments);
         await context.SaveChangesAsync();
 
-        var commentRepository = new CommentRepository(context);
+        var commentRepository = new CommentCommandRepository(context);
 
         // Act
         var result = commentRepository.IsUserWroteCommentForThisBook(userId, bookId);

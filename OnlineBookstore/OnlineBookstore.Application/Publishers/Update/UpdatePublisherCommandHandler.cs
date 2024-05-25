@@ -19,10 +19,9 @@ public class UpdatePublisherCommandHandler : IRequestHandler<UpdatePublisherComm
     
     public async Task Handle(UpdatePublisherCommand request, CancellationToken cancellationToken)
     {
-        
         var publisherToUpdate = _mapper.Map<Publisher>(request);
 
-        await _unitOfWork.PublisherRepository.UpdateAsync(request.Id, publisherToUpdate);
+        await _unitOfWork.PublisherRepository.UpdateAsync(publisherToUpdate);
         await _unitOfWork.CommitAsync(cancellationToken);
     }
 }

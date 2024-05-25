@@ -1,11 +1,13 @@
+using OnlineBookstore.Application.Author;
+
 namespace OnlineBookstore.Persistence.Tests;
 
-public class GenericRepositoryTests
+public class GenericCommandRepositoryTests
 {
     private readonly DataContext _dataContext;
-    private readonly IAuthorRepository _authorRepository;
+    private readonly IAuthorCommandRepository _authorRepository;
 
-    public GenericRepositoryTests()
+    public GenericCommandRepositoryTests()
     {
         var options = CreateNewContextOptions();
         _dataContext = new DataContext(options);
@@ -25,37 +27,7 @@ public class GenericRepositoryTests
         // Assert
         addedBook.Should().BeEquivalentTo(entity);
     }
-    
-    [Fact]
-    public async Task GetByIdAsync_ReturnsEntity_IfExists()
-    {
-        // Arrange
-        var entity = Builder<Author>.CreateNew().Build();
-        await _dataContext.Authors.AddAsync(entity);
-        await _dataContext.SaveChangesAsync();
 
-        // Act
-        var foundBook = await _authorRepository.GetByIdAsync(entity.Id)!;
-
-        // Assert
-        foundBook.Should().BeEquivalentTo(entity);
-    }
-
-    [Fact]
-    public async Task GetAllAsync_ReturnsIEnumerableOfEntities()
-    {
-        // Arrange
-        var entities = Builder<Author>.CreateListOfSize(10).Build();
-        await _dataContext.Authors.AddRangeAsync(entities);
-        await _dataContext.SaveChangesAsync();
-
-        // Act
-        var foundBooks = await _authorRepository.GetAllAsync();
-
-        // Assert
-        foundBooks.Should().BeEquivalentTo(entities);
-    }
-    
     [Fact]
     public async Task AddRangeAsync_AddsListOfEntities()
     {
@@ -78,7 +50,7 @@ public class GenericRepositoryTests
         await _dataContext.SaveChangesAsync();
 
         // Act
-        await _authorRepository.DeleteAsync(entity);
+        await _authorRepository.DeleteAsync(entity.Id);
 
         // Assert
         Assert.Null(await _dataContext.Authors.FirstOrDefaultAsync(a => a.Id == entity.Id));
@@ -88,6 +60,8 @@ public class GenericRepositoryTests
     public async Task UpdateAsync_UpdatesDataIsDb()
     {
         // Arrange
+        DetachAllEntities(_dataContext);
+        
         var entity = Builder<Author>.CreateNew().Build();
         await _dataContext.Authors.AddAsync(entity);
         await _dataContext.SaveChangesAsync();

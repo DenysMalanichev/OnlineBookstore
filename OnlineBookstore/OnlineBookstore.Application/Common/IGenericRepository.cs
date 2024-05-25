@@ -9,7 +9,7 @@ public interface IGenericRepository<T>
 
     Task AddRangeAsync(IList<T> entities);
 
-    Task UpdateAsync(int entityId, T entity);
+    Task UpdateAsync(T entity);
 
     Task DeleteAsync(int entityId);
 }

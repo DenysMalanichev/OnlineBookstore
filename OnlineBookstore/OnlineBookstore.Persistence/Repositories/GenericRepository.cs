@@ -24,11 +24,11 @@ public class GenericRepository<T> : IGenericRepository<T>
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(int entityId, T entity)
+    public async Task UpdateAsync(T entity)
     {
-        if (await _dbSet.FindAsync(entityId) is null)
+        if (await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => e.Id == entity.Id) is null)
         {
-            throw new EntityNotFoundException($"No {typeof(T).Name} found with Id '{entityId}'");
+            throw new EntityNotFoundException($"No {typeof(T).Name} found with Id '{entity.Id}'");
         }
         
         _dbSet.Update(entity);

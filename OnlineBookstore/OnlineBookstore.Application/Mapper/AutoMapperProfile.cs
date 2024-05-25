@@ -5,12 +5,14 @@ using OnlineBookstore.Application.Author.Update;
 using OnlineBookstore.Application.Books.Create;
 using OnlineBookstore.Application.Books.Dtos;
 using OnlineBookstore.Application.Books.Update;
+using OnlineBookstore.Application.Comments.Create;
 using OnlineBookstore.Application.Comments.Dtos;
 using OnlineBookstore.Application.Genres.Create;
 using OnlineBookstore.Application.Genres.Dtos;
 using OnlineBookstore.Application.Genres.Update;
 using OnlineBookstore.Application.OrderDetails.Create;
 using OnlineBookstore.Application.OrderDetails.Dtos;
+using OnlineBookstore.Application.OrderDetails.Update;
 using OnlineBookstore.Application.Orders.CloseUsersOrder;
 using OnlineBookstore.Application.Orders.Create;
 using OnlineBookstore.Application.Orders.Dtos;
@@ -55,7 +57,7 @@ public class AutoMapperProfile : Profile
         CreateMap<UpdateAuthorCommand, Domain.Entities.Author>().ReverseMap();
         CreateMap<GetAuthorDto, Domain.Entities.Author>().ReverseMap();
         
-        CreateMap<CreateCommentDto, Comment>().ReverseMap();
+        CreateMap<CreateCommentCommand, Comment>().ReverseMap();
         CreateMap<GetCommentDto, Comment>().ReverseMap();
 
         CreateMap<CloseOrderData, CloseUsersOrderCommand>().ReverseMap();
@@ -67,6 +69,7 @@ public class AutoMapperProfile : Profile
             .ReverseMap();
 
         CreateMap<CreateOrderDetailCommand, OrderDetail>().ReverseMap();
+        CreateMap<UpdateOrderDetailCommand, OrderDetail>().ReverseMap();
         CreateMap<GetOrderDetailDto, OrderDetail>().ReverseMap();
         
         CreateMap<RegisterUserDto, User>()

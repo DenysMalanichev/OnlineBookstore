@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using OnlineBookstore.Application.Author.Create;
+using OnlineBookstore.Application.Author.Update;
 using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Features.AuthorFeatures;
@@ -42,7 +44,7 @@ public class AuthorControllerTests : IClassFixture<CustomWebApplicationFactory<P
         using var scope = _factory.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
         
-        var createNewAuthorDto = Builder<CreateAuthorDto>
+        var createNewAuthorDto = Builder<CreateAuthorCommand>
             .CreateNew()
             .With(a => a.Email = _faker.Random.Word() + "@email.com")
             .Build();
@@ -81,7 +83,7 @@ public class AuthorControllerTests : IClassFixture<CustomWebApplicationFactory<P
         
         dbContext.Entry(author).State = EntityState.Detached;
 
-        var updateAuthorDto = Builder<UpdateAuthorDto>
+        var updateAuthorDto = Builder<UpdateAuthorCommand>
             .CreateNew()
             .With(a => a.Email = _faker.Random.Word() + "@email.com")
             .With(a => a.Id = authorId)

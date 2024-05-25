@@ -21,7 +21,7 @@ public class UpdateBookCommandHandler : IRequestHandler<UpdateBookCommand>
     {
         var bookToUpdate = _mapper.Map<Book>(request);
 
-        await _unitOfWork.BookRepository.UpdateAsync(request.AuthorId, bookToUpdate);
+        await _unitOfWork.BookRepository.UpdateAsync(bookToUpdate);
         await _unitOfWork.CommitAsync(cancellationToken);
     }
 }

@@ -10,9 +10,9 @@ public class GenreQueryRepository : GenericQueryRepository<Genre>, IGenreQueryRe
 {
     private readonly DataContext _dataContext;
 
-    public GenreQueryRepository(DataContext context, DataContext dataContext) : base(context)
+    public GenreQueryRepository(DataContext context) : base(context)
     {
-        _dataContext = dataContext;
+        _dataContext = context;
     }
 
     public async Task<IEnumerable<Genre>> GetGenresByBookAsync(int bookId)

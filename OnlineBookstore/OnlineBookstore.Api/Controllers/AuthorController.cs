@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineBookstore.Application.Author.Create;
+using OnlineBookstore.Application.Author.Delete;
 using OnlineBookstore.Application.Author.GetAll;
 using OnlineBookstore.Application.Author.GetAuthorById;
 using OnlineBookstore.Application.Author.Update;
@@ -59,7 +60,7 @@ public class AuthorController : ControllerBase
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
     public async Task<IActionResult> DeleteAuthorAsync(int authorId)
     {
-        await _mediator.Send(authorId);
+        await _mediator.Send(new DeleteAuthorCommand { AuthorId = authorId});
 
         return Ok();
     }

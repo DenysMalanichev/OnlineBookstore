@@ -6,6 +6,7 @@ using OnlineBookstore.Application.OrderDetails.Create;
 using OnlineBookstore.Application.OrderDetails.Delete;
 using OnlineBookstore.Application.OrderDetails.GetById;
 using OnlineBookstore.Application.OrderDetails.Update;
+using OnlineBookstore.Application.Orders.CloseUsersOrder;
 using OnlineBookstore.Application.Orders.Create;
 using OnlineBookstore.Application.Orders.GetUserActiveOrder;
 using OnlineBookstore.Application.Orders.GetUserOrders;
@@ -54,7 +55,7 @@ public class OrdersController : ControllerBase
 
     [HttpPost("ship-users-order")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<IActionResult> CloseUsersOrderAsync(CreateOrderCommand createOrderCommand)
+    public async Task<IActionResult> CloseUsersOrderAsync(CloseUsersOrderCommand createOrderCommand)
     {
         var userId = await this.GetUserIdFromJwtAsync();
         if (userId is null)

@@ -7,6 +7,7 @@ using FizzWare.NBuilder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using OnlineBookstore.Application.Comments.Create;
 using OnlineBookstore.Application.Comments.Dtos;
 using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Domain.Entities;
@@ -79,7 +80,7 @@ public class CommentControllerTests : IClassFixture<CustomWebApplicationFactory<
     public async Task CreateCommentAsync_CreatesNewCommentInDb()
     {
         // Arrange
-        var createCommentDto = Builder<CreateCommentDto>.CreateNew().Build();
+        var createCommentDto = Builder<CreateCommentCommand>.CreateNew().Build();
 
         var content = new StringContent(
             JsonConvert.SerializeObject(createCommentDto), Encoding.UTF8, "application/json");

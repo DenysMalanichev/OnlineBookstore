@@ -1,9 +1,7 @@
 using AutoMapper;
 using MediatR;
 using OnlineBookstore.Application.Common;
-using OnlineBookstore.Application.Exceptions;
 using OnlineBookstore.Application.Orders.GetUserActiveOrder;
-using OnlineBookstore.Domain.Constants;
 
 namespace OnlineBookstore.Application.Orders.CloseUsersOrder;
 
@@ -22,7 +20,8 @@ public class CloseUsersOrderCommandHandler : IRequestHandler<CloseUsersOrderComm
     
     public async Task Handle(CloseUsersOrderCommand request, CancellationToken cancellationToken)
     {
-        var activeOrder = await _mediator.Send(new GetUserActiveOrderQuery { UserId = request.UserId }, cancellationToken);
+        var activeOrder = await _mediator.Send(
+            new GetUserActiveOrderQuery { UserId = request.UserId }, cancellationToken);
         
         var closeOrderData = _mapper.Map<CloseOrderData>(request);
         closeOrderData.OrderId = activeOrder.Id;

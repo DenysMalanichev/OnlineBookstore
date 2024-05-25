@@ -6,7 +6,9 @@ using FizzWare.NBuilder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using OnlineBookstore.Application.Genres.Create;
 using OnlineBookstore.Application.Genres.Dtos;
+using OnlineBookstore.Application.Genres.Update;
 using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Persistence.Context;
@@ -49,7 +51,7 @@ public class GenreControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
     {
         // Arrange
         
-        var createGenreDto = Builder<CreateGenreDto>
+        var createGenreDto = Builder<CreateGenreCommand>
             .CreateNew()
             .Build();
         
@@ -139,7 +141,7 @@ public class GenreControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
             .CreateNew()
             .With(g => g.Id = genreId)
             .Build();
-        var updateGenreDto = Builder<UpdateGenreDto>
+        var updateGenreDto = Builder<UpdateGenreCommand>
             .CreateNew()
             .With(g => g.Name = "NewName")
             .With(g => g.Description = "NewDesc")

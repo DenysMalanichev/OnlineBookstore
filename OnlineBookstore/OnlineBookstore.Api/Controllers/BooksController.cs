@@ -60,9 +60,9 @@ public class BooksController : ControllerBase
     }
     
     [HttpGet("by-author")]
-    public IActionResult GetBooksByAuthor(int authorId, int? page, int itemsOnPage = 10)
+    public async Task<IActionResult> GetBooksByAuthor(int authorId, int? page, int itemsOnPage = 10)
     {
-        var pagedBooksResult = _mediator.Send(new GetBooksByAuthorQuery
+        var pagedBooksResult = await _mediator.Send(new GetBooksByAuthorQuery
         {
             AuthorId = authorId,
             Page = page,
@@ -73,9 +73,9 @@ public class BooksController : ControllerBase
     }
     
     [HttpGet("by-publisher")]
-    public IActionResult GetBooksBuPublisher(int publisherId, int? page, int itemsOnPage = 10)
+    public async Task<IActionResult> GetBooksBuPublisher(int publisherId, int? page, int itemsOnPage = 10)
     {
-        var pagedBooksResult = _mediator.Send(new GetBooksByPublisherQuery
+        var pagedBooksResult = await _mediator.Send(new GetBooksByPublisherQuery
         {
             PublisherId = publisherId,
             Page = page,
@@ -86,9 +86,9 @@ public class BooksController : ControllerBase
     }
 
     [HttpGet("avg-rating/{bookId:int}")]
-    public IActionResult GetAvgBookRating(int bookId)
+    public async Task<IActionResult> GetAvgBookRating(int bookId)
     {
-        var avgRating = _mediator.Send(new GetAvgBookRatingQuery { BookId = bookId });
+        var avgRating = await _mediator.Send(new GetAvgBookRatingQuery { BookId = bookId });
 
         return Ok(avgRating);
     }

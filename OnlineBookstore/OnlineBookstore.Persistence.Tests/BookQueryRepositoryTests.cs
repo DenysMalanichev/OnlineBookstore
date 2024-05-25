@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace OnlineBookstore.Persistence.Tests;
 
-public class BookRepositoryTests
+public class BookQueryRepositoryTests
 {
     private readonly DbContextOptions<DataContext> _dataContextOptions;
     private readonly InMemoryDatabaseRoot _databaseRoot;
     private readonly Faker _faker;
 
-    public BookRepositoryTests()
+    public BookQueryRepositoryTests()
     {
         _databaseRoot = new InMemoryDatabaseRoot();
         _dataContextOptions = CreateNewContextOptions();
@@ -49,7 +49,7 @@ public class BookRepositoryTests
         
         var expectedBooks = books.Take(itemsOnPage).ToList();
 
-        var bookRepository = new BookCommandRepository(context);
+        var bookRepository = new BookQueryRepository(context);
 
         // Act
         var foundBooks = bookRepository.GetBooksByAuthor(authorId, page, itemsOnPage);
@@ -86,7 +86,7 @@ public class BookRepositoryTests
         
         var expectedBooks = books.Take(itemsOnPage).ToList();
 
-        var bookRepository = new BookCommandRepository(context);
+        var bookRepository = new BookQueryRepository(context);
 
         // Act
         var foundBooks = bookRepository.GetBooksByPublisher(publisherId, page, itemsOnPage);
@@ -116,7 +116,7 @@ public class BookRepositoryTests
         await context.Comments.AddRangeAsync(comments);
         await context.SaveChangesAsync();
 
-        var bookRepository = new BookCommandRepository(context);
+        var bookRepository = new BookQueryRepository(context);
 
         // Act
         var returnedAvgRating = bookRepository.CountAvgRatingForBook(bookId);
@@ -133,7 +133,7 @@ public class BookRepositoryTests
         
         await using var context = CreateContext();
 
-        var bookRepository = new BookCommandRepository(context);
+        var bookRepository = new BookQueryRepository(context);
 
         // Act
         var returnedAvgRating = bookRepository.CountAvgRatingForBook(bookId);
@@ -171,7 +171,7 @@ public class BookRepositoryTests
 
         var expectedBooks = books.Where(b => b.Price < 10);
         
-        var bookRepository = new BookCommandRepository(context);
+        var bookRepository = new BookQueryRepository(context);
 
         // Act
         var foundBooks = bookRepository.GetItemsByPredicate(predicate, false);
