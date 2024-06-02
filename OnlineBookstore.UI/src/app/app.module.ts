@@ -47,6 +47,10 @@ import { GenreInfoComponent } from './components/genre-components/genre-info/gen
 import { AuthorFormComponent } from './components/author-components/author-form/author-form.component';
 import { PublisherFormComponent } from './components/publisher-components/publisher-form/publisher-form.component';
 
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputNumberModule } from 'primeng/inputnumber';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -94,6 +98,9 @@ import { PublisherFormComponent } from './components/publisher-components/publis
     MatButtonModule,
     MatDialogModule,
     MatIconModule,
+    InputTextModule,
+    DropdownModule,
+    InputNumberModule,
     StarRatingModule.forRoot(),
     JwtModule.forRoot({
       config: {
