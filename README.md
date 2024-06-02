@@ -11,10 +11,11 @@ Online Bookstore is written using the following **technologies**:
 - MS SQL Server
 - xUnit (along with Moq, NBuilder, Bogus, FluentAssertion, InMemory)
 - ASP.NET Core Identity for auth
+- MediatR
 ### Front-end
 - Angular
 - HTML, CSS, TS
-- Karma (for future testing)
+- Primeng
 
 ### Expected scenario of expluatation:
 Back-end part constitutes a public API that every one can use.
