@@ -8,8 +8,6 @@
 
         <button mat-flat-button *ngIf="genre" color="accent" (click)="updateGenre()">Update</button>
         <button mat-flat-button *ngIf="!genre" color="accent" (click)="createGenre()">Create</button>
-
-        <!-- To pass cancel button for exm. --> 
         <ng-content></ng-content>
     </form>
 </div>

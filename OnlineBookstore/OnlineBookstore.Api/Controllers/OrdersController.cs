@@ -1,10 +1,16 @@
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OnlineBookstore.Application.Services.Interfaces;
+using OnlineBookstore.Application.OrderDetails.Create;
+using OnlineBookstore.Application.OrderDetails.Delete;
+using OnlineBookstore.Application.OrderDetails.GetById;
+using OnlineBookstore.Application.OrderDetails.Update;
+using OnlineBookstore.Application.Orders.CloseUsersOrder;
+using OnlineBookstore.Application.Orders.Create;
+using OnlineBookstore.Application.Orders.GetUserActiveOrder;
+using OnlineBookstore.Application.Orders.GetUserOrders;
 using OnlineBookstore.Extentions;
-using OnlineBookstore.Features.OrderFeatures;
-using OnlineBookstore.Features.OrderFeatures.OrderDetailFeatures;
 
 namespace OnlineBookstore.Controllers;
 
@@ -12,13 +18,11 @@ namespace OnlineBookstore.Controllers;
 [Route("api/[controller]")]
 public class OrdersController : ControllerBase
 {
-    private readonly IOrderService _orderService;
-    private readonly IOrderDetailService _orderDetailService;
+    private readonly IMediator _mediator;
 
-    public OrdersController(IOrderService orderService, IOrderDetailService orderDetailService)
+    public OrdersController(IMediator mediator)
     {
-        _orderService = orderService;
-        _orderDetailService = orderDetailService;
+        _mediator = mediator;
     }
 
     [HttpGet("users-active-order")]
@@ -30,7 +34,7 @@ public class OrdersController : ControllerBase
         {
             return Unauthorized();
         }
-        var orderDto = await _orderService.GetUsersActiveOrderAsync(userId);
+        var orderDto = await _mediator.Send(new GetUserActiveOrderQuery { UserId = userId });
 
         return Ok(orderDto);
     }
@@ -44,35 +48,41 @@ public class OrdersController : ControllerBase
         {
             return Unauthorized();
         }
-        var ordersDtos = await _orderService.GetUsersOrdersAsync(userId);
+        var ordersDtos = await _mediator.Send(new GetUserOrdersQuery { UserId = userId });
 
         return Ok(ordersDtos);
     }
 
     [HttpPost("ship-users-order")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<IActionResult> CloseUsersOrderAsync(CreateOrderDto createOrderDto)
+    public async Task<IActionResult> CloseUsersOrderAsync(CloseUsersOrderCommand createOrderCommand)
     {
         var userId = await this.GetUserIdFromJwtAsync();
         if (userId is null)
         {
             return Unauthorized();
         }
-        await _orderService.CloseUsersOrderAsync(createOrderDto, userId);
+
+        createOrderCommand.UserId = userId;
+        
+        await _mediator.Send(createOrderCommand);
 
         return Ok();
     }
 
     [HttpPost("add-order-detail")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<IActionResult> AddOrderDetailAsync(AddOrderDetailDto addOrderDetailDto)
+    public async Task<IActionResult> AddOrderDetailAsync(CreateOrderDetailCommand addOrderDetailCommand)
     {
         var userId = await this.GetUserIdFromJwtAsync();
         if (userId is null)
         {
             return Unauthorized();
         }
-        await _orderDetailService.AddOrderDetailAsync(addOrderDetailDto, userId);
+        
+        addOrderDetailCommand.UserId = userId;
+        
+        await _mediator.Send(addOrderDetailCommand);
 
         return Ok();
     }
@@ -80,15 +90,15 @@ public class OrdersController : ControllerBase
     [HttpGet("get-order-detail")]
     public async Task<IActionResult> GetOrderDetailAsync(int orderDetailId)
     {
-        var orderDetailDto = await _orderDetailService.GetOrderDetailByIdAsync(orderDetailId);
+        var orderDetailDto = await _mediator.Send(new GetOrderDetailByIdQuery { OrderDetailId = orderDetailId});
 
         return Ok(orderDetailDto);
     }
 
     [HttpPut("update-order-detail")]
-    public async Task<IActionResult> UpdateOrderDetailAsync(UpdateOrderDetailDto updateOrderDetailDto)
+    public async Task<IActionResult> UpdateOrderDetailAsync(UpdateOrderDetailCommand updateOrderDetailCommand)
     {
-        await _orderDetailService.UpdateOrderDetailAsync(updateOrderDetailDto);
+        await _mediator.Send(updateOrderDetailCommand);
 
         return Ok();
     }
@@ -96,7 +106,7 @@ public class OrdersController : ControllerBase
     [HttpDelete("delete-order-detail")]
     public async Task<IActionResult> DeleteOrderDetailAsync(int orderDetailId)
     {
-        await _orderDetailService.DeleteOrderDetailAsync(orderDetailId);
+        await _mediator.Send(new DeleteOrderDetailCommand { OrderDetailId = orderDetailId });
 
         return Ok();
     }

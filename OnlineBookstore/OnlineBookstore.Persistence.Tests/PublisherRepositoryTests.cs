@@ -30,7 +30,7 @@ public class PublisherRepositoryTests
         await context.Publishers.AddAsync(publisher);
         await context.SaveChangesAsync();
 
-        var publisherRepository = new PublisherRepository(context);
+        var publisherRepository = new PublisherQueryRepository(context);
 
         // Act
         var result = await publisherRepository.GetByIdAsync(publisherId);

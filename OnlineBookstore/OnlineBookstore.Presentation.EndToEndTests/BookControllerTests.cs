@@ -8,10 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using OnlineBookstore.Application.Books.Create;
+using OnlineBookstore.Application.Books.Dtos;
+using OnlineBookstore.Application.Books.GetBooksUsingFilters;
+using OnlineBookstore.Application.Books.Update;
+using OnlineBookstore.Application.Common.Paging;
 using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Domain.Entities;
-using OnlineBookstore.Features.BookFeatures;
-using OnlineBookstore.Features.Paging;
 using OnlineBookstore.Persistence.Context;
 
 namespace OnlineBookstore.Presentation.EndToEndTests;
@@ -47,7 +50,7 @@ public class BookControllerTests : IClassFixture<CustomWebApplicationFactory<Pro
 
         await dbContext.SaveChangesAsync();
 
-        var createNewBookDto = Builder<CreateBookDto>
+        var createNewBookDto = Builder<CreateBookCommand>
             .CreateNew()
             .With(b => b.GenreIds = new List<int>())
             .Build();
@@ -62,7 +65,7 @@ public class BookControllerTests : IClassFixture<CustomWebApplicationFactory<Pro
         // Assert
         response.EnsureSuccessStatusCode();
 
-        Assert.NotNull(await dbContext.Books.FirstOrDefaultAsync(a =>
+        Assert.NotNull(await dbContext.Books.AsNoTracking().FirstOrDefaultAsync(a =>
             a.Name == createNewBookDto.Name));
 
         await RemoveAllEntitiesAsync(dbContext);
@@ -90,7 +93,7 @@ public class BookControllerTests : IClassFixture<CustomWebApplicationFactory<Pro
 
         dbContext.Entry(book).State = EntityState.Detached;
 
-        var updateBookDto = Builder<UpdateBookDto>
+        var updateBookDto = Builder<UpdateBookCommand>
             .CreateNew()
             .With(a => a.Name = _faker.Random.Word())
             .With(a => a.Id = bookId)
@@ -109,7 +112,7 @@ public class BookControllerTests : IClassFixture<CustomWebApplicationFactory<Pro
         response.EnsureSuccessStatusCode();
 
         Assert.Equal(updateBookDto.Name,
-            (await dbContext.Books.FirstOrDefaultAsync(b => b.Id == bookId))!.Name);
+            (await dbContext.Books.AsNoTracking().FirstOrDefaultAsync(b => b.Id == bookId))!.Name);
 
         await RemoveAllEntitiesAsync(dbContext);
     }
@@ -178,7 +181,7 @@ public class BookControllerTests : IClassFixture<CustomWebApplicationFactory<Pro
 
         await dbContext.Entry(book).ReloadAsync();
 
-        Assert.Null(await dbContext.Books.FirstOrDefaultAsync(a => a.Id == bookId));
+        Assert.Null(await dbContext.Books.AsNoTracking().FirstOrDefaultAsync(a => a.Id == bookId));
 
         await RemoveAllEntitiesAsync(dbContext);
     }
@@ -320,7 +323,7 @@ public class BookControllerTests : IClassFixture<CustomWebApplicationFactory<Pro
         await dbContext.Books.AddAsync(book);
         await dbContext.SaveChangesAsync();
 
-        var bookSearchParams = new GetFilteredBooksDto
+        var bookSearchParams = new GetFilteredBooksQuery
         {
             Name = book.Name
         };

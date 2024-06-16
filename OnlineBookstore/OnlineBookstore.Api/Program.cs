@@ -1,14 +1,16 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OnlineBookstore.Application.Configs;
+using OnlineBookstore.Application.Mapper;
 using OnlineBookstore.Configs;
 using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Extentions;
-using OnlineBookstore.Features.Mapper;
 using OnlineBookstore.Features.UserFeatures.Options;
 using OnlineBookstore.Middleware;
 using OnlineBookstore.Persistence.Configs;
 using OnlineBookstore.Persistence.Context;
+
+namespace OnlineBookstore;
 
 public class Program
 {
@@ -26,6 +28,7 @@ public class Program
 
         builder.Services.AddUnitOfWork();
         builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JWT"));
+
         builder.Services.AddCustomServices();
 
         builder.Services.AddControllers();

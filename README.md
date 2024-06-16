@@ -11,10 +11,11 @@ Online Bookstore is written using the following **technologies**:
 - MS SQL Server
 - xUnit (along with Moq, NBuilder, Bogus, FluentAssertion, InMemory)
 - ASP.NET Core Identity for auth
+- MediatR
 ### Front-end
 - Angular
 - HTML, CSS, TS
-- Karma (for future testing)
+- Primeng
 
 ### Expected scenario of expluatation:
 Back-end part constitutes a public API that every one can use.
@@ -56,6 +57,33 @@ API is tested with unit, integration and end-to-end tests.
 xUnit along with Moq, NBuilder, Bogus, FluentAssertion, InMemory libraries used.
 ![image](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/3ac5b38d-0bba-46f9-8a81-376d172fb529)
 ![image](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/7b889f69-4a23-46b1-ae7e-9c5f2713af42)
+
+## Phase 3 architecture changes
+According to phase 3, architecture of application has been changed to use Clean Architecture, DDD and CQRS along with MediatR library.
+Here is C4 diagrams of refactored project:
+### Context Diagram
+![image](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/b97b6ef9-f216-472d-b75b-23f439277497)
+
+### Container Diagram
+![image](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/ee563205-0fc0-4ece-a08f-3f9bf643430b)
+
+### Component Diagram
+![image](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/963f542f-ac84-46ed-9c8f-0c53c02aa397)
+
+Key thing to understand here is Command Query Responcibility Segregation principle. 
+We separate our classical repository into 2 - Command repository to modify data and Query Repository - to read data by some predicate:
+![image](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/fed96257-8a83-466b-9171-7a93411568e9)
+
+This segregation allow us easier manage dependencies and get some kind of optimization by using write specific repositories to edit data
+and read specific - to read data.
+Along with MediatR library, this decision looks like this - to create new Book we would create CreateBookCommand class, that inherits from IRequest interface, to Get Book by Id - GetBookByIdQuery class, that inherits from IRequest<GetBookDto>.
+Book Controller will redirect these entities to Mediator that will decide, which Handler to call. int our case - CreateBookCommandHandler and GetBookByIdQueryhandler correspondingly.
+These handlers would call separate BookCommand and BookQuery repositories, that will do its' job.
+
+![image](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/eac243cc-8aea-44c1-8237-26c92786929f)
+
+### Deployment diagram
+![image](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/d4a32e40-101b-43cc-b0c0-f1dfd0e6f4e9)
 
 ## API documentation
 Create Author

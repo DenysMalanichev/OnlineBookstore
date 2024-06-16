@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OnlineBookstore.Application.Services.Interfaces;
+using OnlineBookstore.Application.Users;
 using OnlineBookstore.Extentions;
 using OnlineBookstore.Features.UserFeatures;
 

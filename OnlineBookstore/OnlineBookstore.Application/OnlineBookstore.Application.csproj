@@ -8,11 +8,15 @@
 
     <ItemGroup>
       <ProjectReference Include="..\OnlineBookstore.Domain\OnlineBookstore.Domain.csproj" />
-      <ProjectReference Include="..\OnlineBookstore.Persistence\OnlineBookstore.Persistence.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="13.0.1" />
+      <PackageReference Include="LinqKit.Core" Version="1.2.5" />
+      <PackageReference Include="MediatR" Version="12.2.0" />
+      <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.35.0" />
+      <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.35.0" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.35.0" />
     </ItemGroup>
 
 </Project>

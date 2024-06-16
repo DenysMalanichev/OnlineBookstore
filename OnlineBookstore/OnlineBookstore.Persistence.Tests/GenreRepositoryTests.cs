@@ -16,7 +16,7 @@ public class GenreRepositoryTests
     private DataContext CreateContext() => new(_dataContextOptions);
     
     [Fact]
-    public async Task GetAsync_ReturnsGenreBuId()
+    public async Task GetAsync_ReturnsGenreById()
     {
         // Arrange
         const int genreId = 100;
@@ -30,7 +30,7 @@ public class GenreRepositoryTests
         await context.Genres.AddAsync(genre);
         await context.SaveChangesAsync();
 
-        var genreRepository = new GenreRepository(context);
+        var genreRepository = new GenreQueryRepository(context);
 
         // Act
         var result = await genreRepository.GetByIdAsync(genreId);

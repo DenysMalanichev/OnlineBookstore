@@ -4,13 +4,18 @@ using System.Security.Claims;
 using System.Text;
 using Bogus;
 using FizzWare.NBuilder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using OnlineBookstore.Application.OrderDetails.Create;
+using OnlineBookstore.Application.OrderDetails.Dtos;
+using OnlineBookstore.Application.OrderDetails.Update;
+using OnlineBookstore.Application.Orders.CloseUsersOrder;
+using OnlineBookstore.Application.Orders.Create;
+using OnlineBookstore.Application.Orders.Dtos;
 using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Domain.Entities;
-using OnlineBookstore.Features.OrderFeatures;
-using OnlineBookstore.Features.OrderFeatures.OrderDetailFeatures;
 using OnlineBookstore.Persistence.Context;
 
 namespace OnlineBookstore.Presentation.EndToEndTests;
@@ -119,7 +124,7 @@ public class OrderControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
         await dbContext.Orders.AddRangeAsync(order);
         await dbContext.SaveChangesAsync();
 
-        var shipOrderDto = Builder<CreateOrderDto>.CreateNew().Build();
+        var shipOrderDto = Builder<CloseUsersOrderCommand>.CreateNew().Build();
         var content = new StringContent(
             JsonConvert.SerializeObject(shipOrderDto), Encoding.UTF8, "application/json");
 
@@ -131,7 +136,7 @@ public class OrderControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
         // Assert
         response.EnsureSuccessStatusCode();
         
-        Assert.Equal(OrderStatus.Closed, dbContext.Orders.FirstOrDefault(o => o.Id == order.Id)!.OrderStatus);
+        Assert.Equal(OrderStatus.Closed, dbContext.Orders.AsNoTracking().FirstOrDefault(o => o.Id == order.Id)!.OrderStatus);
         
         await RemoveAllEntitiesAsync(dbContext);
     }
@@ -148,7 +153,7 @@ public class OrderControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
             .With(o => o.UserId = _userId)
             .With(o => o.OrderStatus = OrderStatus.Open)
             .Build();
-        var addOrderDetailDto = Builder<AddOrderDetailDto>.CreateNew().Build();
+        var addOrderDetailDto = Builder<CreateOrderDetailCommand>.CreateNew().Build();
 
         await dbContext.Orders.AddRangeAsync(order);
         await dbContext.SaveChangesAsync();
@@ -164,7 +169,10 @@ public class OrderControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
         // Assert
         response.EnsureSuccessStatusCode();
         
-        var foundOrder = dbContext.Orders.FirstOrDefault(o => o.Id == order.Id)!;
+        var foundOrder = dbContext.Orders
+            .AsNoTracking()
+            .Include(o => o.OrderDetails)
+            .FirstOrDefault(o => o.Id == order.Id)!;
         
         Assert.Equal(addOrderDetailDto.OrderId, foundOrder.Id);
         Assert.Equal(addOrderDetailDto.BookId, foundOrder.OrderDetails[0].BookId);
@@ -226,13 +234,15 @@ public class OrderControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
             .With(od => od.OrderId = order.Id)
             .Build();
 
-        var updateOrderDetailDto = Builder<UpdateOrderDetailDto>
+        var updateOrderDetailDto = Builder<UpdateOrderDetailCommand>
             .CreateNew()
             .Build();
 
         await dbContext.Orders.AddAsync(order);
         await dbContext.OrderDetails.AddAsync(orderDetail);
         await dbContext.SaveChangesAsync();
+        
+        dbContext.ChangeTracker.Clear();
 
         var content = new StringContent(
             JsonConvert.SerializeObject(updateOrderDetailDto), Encoding.UTF8, "application/json");
@@ -255,6 +265,8 @@ public class OrderControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
         using var scope = _factory.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
 
+        dbContext.ChangeTracker.Clear();
+        
         var order = Builder<Order>
             .CreateNew()
             .With(o => o.UserId = _userId)
@@ -268,6 +280,8 @@ public class OrderControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
         await dbContext.Orders.AddAsync(order);
         await dbContext.OrderDetails.AddAsync(orderDetail);
         await dbContext.SaveChangesAsync();
+        
+        dbContext.ChangeTracker.Clear();
         
         var url = $"/api/orders/delete-order-detail?orderDetailId={orderDetail.Id}";
 
