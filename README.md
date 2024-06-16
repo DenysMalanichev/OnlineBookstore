@@ -1,3 +1,4 @@
+
 # Online Bookstore
 Online Bookstore is a learning project. Its purpose is to create marketplace for books, that users would be able to buy and order shipping right to their homes.
 Every order may have more than 1 book and every book may have its own quantity. To order book customer would need to register in this system.
@@ -349,3 +350,6 @@ Login
 
 
 
+=======
+This is lab work for the .NET class. Each lab is encapsulated in a separate branch and can be reviewed in PR. Each PR is a new lab, but each lab is based on the previous one.
+All changes are described in the Readme file, which was updated after each phase. The readme file in the last PR contains all information about the project.
