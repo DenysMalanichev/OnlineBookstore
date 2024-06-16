@@ -1,4 +1,3 @@
-
 # Online Bookstore
 Online Bookstore is a learning project. Its purpose is to create marketplace for books, that users would be able to buy and order shipping right to their homes.
 Every order may have more than 1 book and every book may have its own quantity. To order book customer would need to register in this system.
@@ -10,7 +9,7 @@ Online Bookstore is written using the following **technologies**:
 - ASP.NET Core
 - EF Core
 - MS SQL Server
-- xUnit (for future testing)
+- xUnit (along with Moq, NBuilder, Bogus, FluentAssertion, InMemory)
 - ASP.NET Core Identity for auth
 ### Front-end
 - Angular
@@ -19,7 +18,9 @@ Online Bookstore is written using the following **technologies**:
 
 ### Expected scenario of expluatation:
 Back-end part constitutes a public API that every one can use.
-In our case front-end web-application, written on Angular, use this public API to get data from DB and execute business operations.
+In our case front-end web-application, written on Angular, 
+use this public API to get data from DB and execute business operations.
+
 ![layers-diagram](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/9c86dac1-bc87-43fa-9b46-4d9dd7f3796a)
 
 ## Back-end part of the project is written using N-layerd architecture:
@@ -49,6 +50,12 @@ This SQL diagram is simplyfied and aims to show only main idea of DB. It is not 
 user can also add any nu,ber of books to order, specify quantity. Created order can by closed by enering shipping address.
 - User can filter on books on multiple criterias, like book name, genre, author name, publisher name or price. This functional is build using Specification pattern.
 - Result of filtering books, requesting publishers and authors will be returned in paged format. User can specify number of entites in page.
+
+## Test coverage 
+API is tested with unit, integration and end-to-end tests.
+xUnit along with Moq, NBuilder, Bogus, FluentAssertion, InMemory libraries used.
+![image](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/3ac5b38d-0bba-46f9-8a81-376d172fb529)
+![image](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/7b889f69-4a23-46b1-ae7e-9c5f2713af42)
 
 ## API documentation
 Create Author
@@ -350,6 +357,3 @@ Login
 
 
 
-=======
-This is lab work for the .NET class. Each lab is encapsulated in a separate branch and can be reviewed in PR. Each PR is a new lab, but each lab is based on the previous one.
-All changes are described in the Readme file, which was updated after each phase. The readme file in the last PR contains all information about the project.

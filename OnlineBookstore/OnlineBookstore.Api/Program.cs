@@ -10,58 +10,64 @@ using OnlineBookstore.Middleware;
 using OnlineBookstore.Persistence.Configs;
 using OnlineBookstore.Persistence.Context;
 
-const string allowFrontEndSpecificOrigins = "_frontEndSpecificOrigins";
-
-var builder = WebApplication.CreateBuilder(args);
-
-builder.AddCorsPolicy(allowFrontEndSpecificOrigins);
-
-builder.Services.AddAuthConfigurations(builder.Configuration);
-
-builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
-
-builder.Services.AddUnitOfWork();
-builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JWT"));
-builder.Services.AddCustomServices();
-
-builder.Services.AddControllers();
-
-builder.Services.AddRouting(options => options.LowercaseUrls = true);
-
-var connectionString = builder.Configuration.GetConnectionString("ConnStr");
-builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlServer(connectionString)
-        .EnableSensitiveDataLogging()
-        .LogTo(Console.WriteLine, LogLevel.Information));
-    
-
-builder.Services.AddIdentity<User, Role>()
-    .AddEntityFrameworkStores<DataContext>()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-app.UseMiddleware<ExceptionHandlingMiddleware>();
-
-RolesDbInitializer.SeedRolesToDbAsync(app).Wait();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+public class Program
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    public static void Main(string[] args)
+    {
+        const string allowFrontEndSpecificOrigins = "_frontEndSpecificOrigins";
+
+        var builder = WebApplication.CreateBuilder(args);
+
+        builder.AddCorsPolicy(allowFrontEndSpecificOrigins);
+
+        builder.Services.AddAuthConfigurations(builder.Configuration);
+
+        builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+        builder.Services.AddUnitOfWork();
+        builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JWT"));
+        builder.Services.AddCustomServices();
+
+        builder.Services.AddControllers();
+
+        builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
+        var connectionString = builder.Configuration.GetConnectionString("ConnStr");
+        builder.Services.AddDbContext<DataContext>(options =>
+            options.UseSqlServer(connectionString)
+                .EnableSensitiveDataLogging()
+                .LogTo(Console.WriteLine, LogLevel.Information));
+
+
+        builder.Services.AddIdentity<User, Role>()
+            .AddEntityFrameworkStores<DataContext>()
+            .AddDefaultTokenProviders();
+
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+
+        var app = builder.Build();
+
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+        RolesDbInitializer.SeedRolesToDbAsync(app).Wait();
+
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.UseHttpsRedirection();
+
+        app.UseCors(allowFrontEndSpecificOrigins);
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.MapControllers();
+
+        app.Run();
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseCors(allowFrontEndSpecificOrigins);
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();

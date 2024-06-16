@@ -1,7 +1,6 @@
 using AutoMapper;
 using OnlineBookstore.Application.Exceptions;
 using OnlineBookstore.Application.Services.Interfaces;
-using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Features.OrderFeatures.OrderDetailFeatures;
 using OnlineBookstore.Persistence.Repositories.Interfaces;
@@ -46,7 +45,6 @@ public class OrderDetailService : IOrderDetailService
     {
         var orderDetail = await _unitOfWork.OrderDetailRepository.GetByIdAsync(updateOrderDetailDto.Id)!
                           ?? throw new EntityNotFoundException($"No Order Detail with Id '{updateOrderDetailDto.Id}'");
-        orderDetail = _mapper.Map<OrderDetail>(updateOrderDetailDto);
 
         await _unitOfWork.CommitAsync();
     }

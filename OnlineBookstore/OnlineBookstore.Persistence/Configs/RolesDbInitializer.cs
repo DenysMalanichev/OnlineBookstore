@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,6 +7,7 @@ using OnlineBookstore.Domain.Entities;
 
 namespace OnlineBookstore.Persistence.Configs;
 
+[ExcludeFromCodeCoverage]
 public class RolesDbInitializer
 {
     public static async Task SeedRolesToDbAsync(IApplicationBuilder builder)

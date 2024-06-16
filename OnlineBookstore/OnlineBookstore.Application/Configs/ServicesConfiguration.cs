@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using OnlineBookstore.Application.Services.Implementation;
 using OnlineBookstore.Application.Services.Interfaces;
 
 namespace OnlineBookstore.Application.Configs;
 
+[ExcludeFromCodeCoverage]
 public static class ServicesConfiguration
 {
     public static void AddCustomServices(this IServiceCollection services)

@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using OnlineBookstore.Persistence.Context;
 using OnlineBookstore.Persistence.Repositories.Interfaces;
 using OnlineBookstore.Persistence.Repositories.RepoImplementations;
 
 namespace OnlineBookstore.Persistence.Repositories;
 
+[ExcludeFromCodeCoverage]
 public class UnitOfWork : IUnitOfWork
 {
     private readonly DataContext _dataContext;

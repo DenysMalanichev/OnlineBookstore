@@ -1,0 +1,11 @@
+global using Xunit;
+global using FizzWare.NBuilder;
+global using AutoMapper;
+global using Bogus;
+global using FluentAssertions;
+global using Moq;
+global using OnlineBookstore.Application.Exceptions;
+global using OnlineBookstore.Application.Services.Implementation;
+global using OnlineBookstore.Domain.Entities;
+global using OnlineBookstore.Persistence.Repositories.Interfaces;
+global using OnlineBookstore.Application.Services.Interfaces;
