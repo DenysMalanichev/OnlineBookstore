@@ -1,0 +1,26 @@
+<div class="comments-container">
+    <form class="comment-form" [formGroup]="newComment">
+        <div class="form-group">
+            <label for="comment-title">Comment Title</label>
+            <input type="text" name="comment-title" id="comment-title" class="form-control" formControlName="title">
+        </div>
+    
+        <div class="form-group">
+            <label for="comment-body">Comment</label>
+            <textarea type="text" name="comment-body" id="comment-body" class="form-control comment-body" formControlName="body"></textarea>
+        </div>
+    
+        <div class="form-group">
+            <strong>Set your rating for this book: </strong>
+            <star-rating-control [starType]="'svg'" [rating]="0" formControlName="bookRating"></star-rating-control>
+        </div>
+    
+        <input type="submit" value="Add Comment" class="submit-btn" (click)="writeComment()">
+    </form>
+    <div class="spacer"></div>
+    <div class="comments-list">
+        <div >
+            <comment *ngFor="let comment of comments" [comment]="comment"></comment>
+        </div>        
+    </div>
+</div>

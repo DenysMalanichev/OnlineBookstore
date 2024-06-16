@@ -1,0 +1,66 @@
+<div>
+    <div class="container">
+        <div>
+            <form class="book-search-form" [formGroup]="getFilteredBooksRequest">
+                <div>
+                    <strong class="filters-title">Filters</strong>
+                    <hr>
+                </div>
+                <div class="form-group">
+                    <label for="fbookname">Book name:</label>
+                    <input type="text" id="fbookname" name="fbookname" placeholder="Type to search" class="form-control" formControlName="name">
+                    <br><br>
+                </div>
+            
+                <div class="form-group">
+                    <label for="fauthorname">Author name:</label>
+                    <input type="text" id="fauthorname" name="fauthorname" placeholder="Type to search" class="form-control" formControlName="authorName">
+                    <br><br>
+                </div>
+
+                <div class="form-group-checkbox">
+                    <label for="fgenres">Genres:</label>
+                    <div *ngFor="let genre of genres" class="checkbox-wrapper">
+                        <input type="checkbox" [attr.id]="'genre' + genre.id" name="fgenres" value="{{genre.id}}" class="checkbox-input" (change)="onGenresChange($event, genre.id)">
+                        <label for="{{genre.id}}" class="checkbox-label">{{genre.name}}</label>
+                    </div><br>
+                </div>
+            
+                <div class="form-group">
+                    <label for="fpublisher">Publishers:</label>
+                    <select id="fpublisher" name="fpublishers" class="form-control" formControlName="publisherId">
+                        <option *ngFor="let publisher of publishers" [value]="publisher.id" [attr.id]="'publisher' + publisher.id" >
+                            {{publisher.companyName}}
+                        </option>
+                    </select>
+                </div><br>
+            
+                <div>
+                    <div>
+                        <h3>Price:</h3>
+                    </div>
+                    <div style="display: flex;">
+                        <div>
+                            <label for="fminprice">Min:</label>
+                            <input type="number" id="fminprice" class="form-control price-control" formControlName="minPrice">
+                        </div>
+                        
+                        <div>
+                            <label for="fmaxprice">Max:</label>
+                            <input type="number" id="fmaxprice" class="form-control price-control" formControlName="maxPrice">
+                        </div>  
+                    </div>
+                                      
+                </div>
+            
+                <div style="text-align: right; margin-top: 10px;">
+                    <input type="submit" value="Search" class="form-submit" (click)="this.getFilteredBooks()">
+                </div>
+                
+            </form>
+        </div>
+        <div class="right">
+            <books-list [books]="this.books"></books-list>
+        </div>
+    </div>    
+</div>

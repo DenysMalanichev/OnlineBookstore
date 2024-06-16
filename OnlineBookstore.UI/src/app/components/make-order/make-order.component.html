@@ -1,0 +1,8 @@
+<div class="order-form-container order-form">
+    <form class="order-form" [formGroup]="bookQuantity" (ngSubmit)="addToOrder()">
+        <label for="quantity">How many exemplars do you need?</label>
+        <input id="quantity" type="number" value="1" class="quantity-input" formControlName="quantity" min="1">
+
+        <input type="submit" value="Add to order" class="submit-btn">
+    </form>
+</div>

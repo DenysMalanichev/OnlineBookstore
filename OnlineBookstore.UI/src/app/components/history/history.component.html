@@ -1,0 +1,25 @@
+<div class="history-container">
+    <div>
+        <h2>Orders History:</h2>
+    </div>
+    <div class="order-details" *ngFor="let order of orders">
+        <h3>Order (ID {{ order.id }}, Status - {{ order.status }})</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Position ID</th>
+                    <th>Book Name</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let od of order.orderDetails">
+                    <td>{{ od.id }}</td>
+                    <td>{{ books[od.bookId].name }}</td>
+                    <td>{{ od.quantity }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2>Total: ${{ countOrderTotalPrice(order) }}</h2>
+    </div>   
+</div>

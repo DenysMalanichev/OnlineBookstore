@@ -1,13 +1,52 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using OnlineBookstore.Application.Configs;
+using OnlineBookstore.Configs;
+using OnlineBookstore.Domain.Entities;
+using OnlineBookstore.Extentions;
+using OnlineBookstore.Features.Mapper;
+using OnlineBookstore.Features.UserFeatures.Options;
+using OnlineBookstore.Middleware;
+using OnlineBookstore.Persistence.Configs;
+using OnlineBookstore.Persistence.Context;
+
+const string allowFrontEndSpecificOrigins = "_frontEndSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.AddCorsPolicy(allowFrontEndSpecificOrigins);
+
+builder.Services.AddAuthConfigurations(builder.Configuration);
+
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+builder.Services.AddUnitOfWork();
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JWT"));
+builder.Services.AddCustomServices();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
+var connectionString = builder.Configuration.GetConnectionString("ConnStr");
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseSqlServer(connectionString)
+        .EnableSensitiveDataLogging()
+        .LogTo(Console.WriteLine, LogLevel.Information));
+    
+
+builder.Services.AddIdentity<User, Role>()
+    .AddEntityFrameworkStores<DataContext>()
+    .AddDefaultTokenProviders();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+RolesDbInitializer.SeedRolesToDbAsync(app).Wait();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -18,6 +57,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors(allowFrontEndSpecificOrigins);
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

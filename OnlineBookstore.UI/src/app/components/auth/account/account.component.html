@@ -1,0 +1,9 @@
+<div>
+    <div class="user-data-container">
+        <h1>{{user.firstName}} {{ user.lastName }}</h1>
+        <h2>{{ user.email }}</h2>
+    </div>
+    
+    <orders-history></orders-history>
+    <button mat-flat-button color="warn" (click)="logout()" class="logout-btn">Log out</button>
+</div>

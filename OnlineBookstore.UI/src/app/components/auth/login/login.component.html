@@ -1,0 +1,22 @@
+<div class="login-container">
+    <h2>Login</h2>
+    <form method="POST">
+      <div class="form-input">
+        <label for="username">Email</label>
+        <input type="text" id="username" name="username" required [formControl]="email">
+        <div *ngIf="email.invalid && (email.dirty || email.touched)" class="error">
+          <small>Email is required.</small>
+          <small>Please enter a valid email address.</small>
+        </div>
+      </div>
+      <div class="form-input">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required [formControl]="password">
+        <div *ngIf="password.invalid && (password.dirty || password.touched)" class="error">
+          <small>Password must be at least 8 characters long.</small>
+        </div>
+      </div>
+      <button type="submit" class="login-button" (click)="login()">Log In</button>
+      <center style="text-decoration: underline; color: blue; cursor: pointer;" routerLink="/register">No account? Register!</center>
+    </form>
+  </div>
