@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineBookstore.Api", "OnlineBookstore.Api\OnlineBookstore.Api.csproj", "{90D84F36-40F2-4DC5-A138-6B724107BCBD}"
 EndProject
