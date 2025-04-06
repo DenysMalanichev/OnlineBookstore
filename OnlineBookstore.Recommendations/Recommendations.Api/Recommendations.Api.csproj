@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Recommendations.Abstractions\Recommendations.Abstractions.csproj" />
+    <ProjectReference Include="..\Recommendations.Persistence\Recommendations.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

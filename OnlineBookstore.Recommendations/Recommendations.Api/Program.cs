@@ -1,12 +1,31 @@
+using Recommendations.Abstractions.Repositories;
+using Recommendations.Abstractions.Services.Implementation;
+using Recommendations.Abstractions.Services.Interfaces;
+using Recommendations.Persistence;
+using Recommendations.Persistence.Repositories;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Retrieve MongoDB connection settings
+var connectionString = builder.Configuration.GetConnectionString("MongoDbRecommendations")
+    ?? throw new ArgumentNullException("No configuration for MongoDbRecommendations connection string");
+var databaseName = builder.Configuration["DbNames:RecommendationsDbName"]
+    ?? throw new ArgumentNullException("No configuration for MongoDbRecommendations DB name");
+
+// Register MongoDbContext as a singleton
+builder.Services.AddSingleton<MongoDbContext>(provider => new MongoDbContext(connectionString, databaseName));
+
+builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IBookPortraitRepository, BookPortraitRepository>();
+builder.Services.AddScoped<IUserPortraitRepository, UserPortraitRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 var app = builder.Build();
 

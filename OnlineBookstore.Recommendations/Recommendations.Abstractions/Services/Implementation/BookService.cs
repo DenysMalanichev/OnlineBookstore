@@ -17,7 +17,7 @@ public class BookService : IBookService
     public async Task<IList<int>> GenerateRecommendationsAsync(string userId, int pageSize = 10)
     {
         var userPortrait = await _userService.GetUserPortraitAsync(userId)
-            ?? throw new NullReferenceException($"User woth Id {userId} wasnnot found");
+            ?? throw new NullReferenceException($"User with Id {userId} wasnnot found");
 
         return await _bookRepository.GetRecommendedBooksIdsAsync(userPortrait, pageSize);
     }

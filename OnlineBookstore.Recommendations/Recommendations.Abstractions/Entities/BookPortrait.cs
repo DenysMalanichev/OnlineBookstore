@@ -1,4 +1,8 @@
-﻿namespace Recommendations.Abstractions.Entities;
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace Recommendations.Abstractions.Entities;
+
+[BsonIgnoreExtraElements]
 public record BookPortrait
 {
     public int BookId { get; set; }
