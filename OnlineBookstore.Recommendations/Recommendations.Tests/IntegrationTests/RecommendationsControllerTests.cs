@@ -127,19 +127,15 @@ public class RecommendationsControllerTests : IClassFixture<MongoDbFixture>
     }
 
 
-    //[Fact]
-    //public async Task GeneratePersonalRecommendations_WithNonExistentUser_ReturnsNotFound()
-    //{
-    //    // Act
-    //    var response = await _client.GetAsync("/api/Recommendations?userId=nonexistentuser");
+    [Fact]
+    public async Task GeneratePersonalRecommendations_WithNonExistentUser_ReturnsNotFound()
+    {
+        // Act
+        var response = await _client.GetAsync("/api/Recommendations?userId=nonexistentuser");
 
-    //    // Assert
-    //    Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
-    //    var recommendations = await response.Content.ReadFromJsonAsync<List<int>>();
-
-    //    Assert.NotNull(recommendations);
-    //    Assert.Empty(recommendations);
-    //}
+        // Assert
+        Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+    }
 
     [Fact]
     public async Task GeneratePersonalRecommendations_PaginationWorks()

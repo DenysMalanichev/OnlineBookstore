@@ -27,14 +27,8 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
 
         builder.ConfigureServices(services =>
         {
-            //services.AddSingleton(_mongoFixture.Client);
-            //services.AddSingleton(_mongoFixture.Database);
             services.AddSingleton<MongoDbContext>(provider =>
                 new MongoDbContext(_mongoFixture.ConnectionString, "BookRecommendationTests"));
-            //services.AddSingleton(new Persistence.MongoDbContext(_mongoFixture.ConnectionString, "BookRecommendationTests"));
-
-            //services.AddScoped<IUserPortraitRepository, UserPortraitRepository>(sp => 
-            //    new UserPortraitRepository(new Persistence.MongoDbContext(_mongoFixture.ConnectionString, "BookRecommendationTests")));
         });
     }
 }

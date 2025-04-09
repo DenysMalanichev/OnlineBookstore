@@ -1,6 +1,7 @@
 using Recommendations.Abstractions.Repositories;
 using Recommendations.Abstractions.Services.Implementation;
 using Recommendations.Abstractions.Services.Interfaces;
+using Recommendations.Api.Middleware;
 using Recommendations.Persistence;
 using Recommendations.Persistence.Repositories;
 using Scalar.AspNetCore;
@@ -39,6 +40,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
 
