@@ -23,7 +23,7 @@ public class BookPortraitRepository : IBookPortraitRepository
         _bookPortraits = dbContext.BookPortraits;
     }
 
-    public async Task<IList<int>> GetRecommendedBooksIdsAsync(UserPortrait userPortrait, int pageSize = 10, int pageNumber = 1)
+    public async Task<IList<int>> GetRecommendedBooksIdsAsync(UserPortrait userPortrait, int pageNumber = 1, int pageSize = 10)
     {
         // Get max popularity value for normalization
         var maxPopularity = _bookPortraits.AsQueryable()
@@ -35,7 +35,7 @@ public class BookPortraitRepository : IBookPortraitRepository
             .Match(book => !userPortrait.PurchasedBooks.Contains(book.BookId))
 
             // Stage 2: Project to include normalized values
-            .AppendStage<BsonDocument>(new BsonDocumentPipelineStageDefinition<BookPortrait, BsonDocument>(
+            .AppendStage(new BsonDocumentPipelineStageDefinition<BookPortrait, BsonDocument>(
                 new BsonDocument("$project", new BsonDocument
                 {
                     { "BookId", 1 },
@@ -94,7 +94,7 @@ public class BookPortraitRepository : IBookPortraitRepository
             ))
 
             // Stage 3: Apply weights to normalized values
-            .AppendStage<BsonDocument>(new BsonDocumentPipelineStageDefinition<BsonDocument, BsonDocument>(
+            .AppendStage(new BsonDocumentPipelineStageDefinition<BsonDocument, BsonDocument>(
                 new BsonDocument("$project", new BsonDocument
                 {
                     { "BookId", 1 },
@@ -119,7 +119,7 @@ public class BookPortraitRepository : IBookPortraitRepository
             ))
 
             // Stage 4: Calculate distances to ideal and anti-ideal solutions
-            .AppendStage<BsonDocument>(new BsonDocumentPipelineStageDefinition<BsonDocument, BsonDocument>(
+            .AppendStage(new BsonDocumentPipelineStageDefinition<BsonDocument, BsonDocument>(
                 new BsonDocument("$project", new BsonDocument
                 {
                     { "BookId", 1 },
@@ -178,7 +178,7 @@ public class BookPortraitRepository : IBookPortraitRepository
             ))
 
             // Stage 5: Calculate final distances and closeness coefficient
-            .AppendStage<BsonDocument>(new BsonDocumentPipelineStageDefinition<BsonDocument, BsonDocument>(
+            .AppendStage(new BsonDocumentPipelineStageDefinition<BsonDocument, BsonDocument>(
                 new BsonDocument("$project", new BsonDocument
                 {
                     { "BookId", 1 },
@@ -204,33 +204,41 @@ public class BookPortraitRepository : IBookPortraitRepository
             ))
 
             // Stage 6: Sort by closeness coefficient (descending)
-            .AppendStage<BsonDocument>(new BsonDocumentPipelineStageDefinition<BsonDocument, BsonDocument>(
+            .AppendStage(new BsonDocumentPipelineStageDefinition<BsonDocument, BsonDocument>(
                 new BsonDocument("$sort", new BsonDocument
                 {
                     { "closenessCoefficient", -1 }
                 })
-            ))
+            ))           
 
-            // Stage 7: Select only IDs of ranged books
-            .AppendStage<BsonDocument>(new BsonDocumentPipelineStageDefinition<BsonDocument, BsonDocument>(
-                new BsonDocument("$project", new BsonDocument
+            // Stage 7: Use $facet to handle pagination
+            .AppendStage(new BsonDocumentPipelineStageDefinition<BsonDocument, BsonDocument>(
+                new BsonDocument("$facet", new BsonDocument
                 {
-                    { "_id", 0 },
-                    { "BookId", 1 }
+                    { "paginatedResults", new BsonArray
+                        {
+                            new BsonDocument("$skip", (pageNumber - 1) * pageSize),
+                            new BsonDocument("$limit", pageSize),
+                            new BsonDocument("$project", new BsonDocument
+                            {
+                                { "_id", 0 },
+                                { "BookId", 1 }
+                            })
+                        }
+                    }
                 })
-            ))
+            ));
 
-            // Stage 8: Pagination
-            .Skip((pageNumber - 1) * pageSize)
-            .Limit(pageSize);
 
         // Execute the pipeline and convert results back to BookPortrait objects
         var results = await pipeline
             .As<BsonDocument>()
             .ToListAsync();
 
-        return results
-            .Select(doc => doc.Elements.First().Value.AsInt32)
+        var tet = _bookPortraits.AsQueryable().ToList();
+
+        return results[0]["paginatedResults"].AsBsonArray
+            .Select(doc => doc.AsBsonDocument["BookId"].AsInt32)
             .ToList();
     }
 

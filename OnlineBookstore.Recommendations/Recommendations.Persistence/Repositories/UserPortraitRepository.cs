@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using Recommendations.Abstractions.Entities;
 using Recommendations.Abstractions.Repositories;
 

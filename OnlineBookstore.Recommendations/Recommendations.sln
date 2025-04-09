@@ -8,6 +8,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recommendations.Persistence
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recommendations.Api", "Recommendations.Api\Recommendations.Api.csproj", "{8140DF45-FE51-4BCD-90CB-4F8105D4CF79}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{336E6C5A-5103-49E6-B776-6127AC2AFF20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recommendations.Tests", "Recommendations.Tests\Recommendations.Tests.csproj", "{855B7AA6-3ADC-4ED9-B9D9-F0478E0ACDB5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +30,16 @@ Global
 		{8140DF45-FE51-4BCD-90CB-4F8105D4CF79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8140DF45-FE51-4BCD-90CB-4F8105D4CF79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8140DF45-FE51-4BCD-90CB-4F8105D4CF79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{855B7AA6-3ADC-4ED9-B9D9-F0478E0ACDB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{855B7AA6-3ADC-4ED9-B9D9-F0478E0ACDB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{855B7AA6-3ADC-4ED9-B9D9-F0478E0ACDB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{855B7AA6-3ADC-4ED9-B9D9-F0478E0ACDB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{855B7AA6-3ADC-4ED9-B9D9-F0478E0ACDB5} = {336E6C5A-5103-49E6-B776-6127AC2AFF20}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {72B3FD34-DF01-4A2C-8A56-15847E3BF1A1}

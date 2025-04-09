@@ -9,9 +9,13 @@ namespace Recommendations.Api.Controllers
     {
         [HttpGet]
         public async Task<IActionResult> GeneratePersonalRecommendationsAsync(
-            [FromQuery] string userId, [FromServices] IBookService bookService)
+            [FromServices] IBookService bookService,
+            [FromQuery] string userId,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10)
         {
-            return Ok(await bookService.GenerateRecommendationsAsync(userId));
+            var recommendation = await bookService.GenerateRecommendationsAsync(userId, pageNumber, pageSize);
+            return Ok(recommendation);
         }
     }
 }

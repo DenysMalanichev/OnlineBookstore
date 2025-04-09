@@ -14,12 +14,12 @@ public class BookService : IBookService
         _bookRepository = bookPortraitRepository;
     }
 
-    public async Task<IList<int>> GenerateRecommendationsAsync(string userId, int pageSize = 10)
+    public async Task<IList<int>> GenerateRecommendationsAsync(string userId, int pageNumber = 1, int pageSize = 10)
     {
         var userPortrait = await _userService.GetUserPortraitAsync(userId)
             ?? throw new NullReferenceException($"User with Id {userId} wasnnot found");
 
-        return await _bookRepository.GetRecommendedBooksIdsAsync(userPortrait, pageSize);
+        return await _bookRepository.GetRecommendedBooksIdsAsync(userPortrait, pageNumber, pageSize);
     }
 
     public Task UpdateNormilizedBooksDataAsync(BookPortrait bookPortrait)
