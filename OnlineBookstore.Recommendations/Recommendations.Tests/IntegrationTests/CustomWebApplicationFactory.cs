@@ -18,7 +18,7 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
     {
         builder.ConfigureAppConfiguration((context, config) =>
         {
-            config.AddInMemoryCollection(new Dictionary<string, string>
+            config.AddInMemoryCollection(new Dictionary<string, string?>
             {
                 {"MongoDbSettings:ConnectionString", _mongoFixture.ConnectionString},
                 {"MongoDbSettings:DatabaseName", "BookRecommendationTests"}

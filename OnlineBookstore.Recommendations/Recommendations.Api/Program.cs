@@ -1,7 +1,11 @@
+using Recommendations.Abstractions.MessageHandlers;
+using Recommendations.Abstractions.Messages;
 using Recommendations.Abstractions.Repositories;
 using Recommendations.Abstractions.Services.Implementation;
 using Recommendations.Abstractions.Services.Interfaces;
+using Recommendations.Api;
 using Recommendations.Api.Middleware;
+using Recommendations.Api.Settings;
 using Recommendations.Persistence;
 using Recommendations.Persistence.Repositories;
 using Scalar.AspNetCore;
@@ -21,6 +25,14 @@ builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBookPortraitRepository, BookPortraitRepository>();
 builder.Services.AddScoped<IUserPortraitRepository, UserPortraitRepository>();
+// Add Kafka settings
+builder.Services.Configure<KafkaSettings>(builder.Configuration.GetSection("KafkaSettings"));
+
+// Register message handlers
+builder.Services.AddScoped<IMessageHandler<BookDeletedMessage>, BookDeletedMessageHandler>();
+
+// Register Kafka consumer service
+builder.Services.AddHostedService<KafkaConsumerService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
