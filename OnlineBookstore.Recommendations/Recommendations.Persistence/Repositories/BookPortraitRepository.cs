@@ -242,6 +242,18 @@ public class BookPortraitRepository : IBookPortraitRepository
             .ToList();
     }
 
+    public async Task RemoveNormalizedBookAsync(int bookId)
+    {
+        var filterBuilder = new FilterDefinitionBuilder<BookPortrait>();
+        var filter = filterBuilder.Where(bp => bp.BookId == bookId);
+        var result = await _bookPortraits.DeleteOneAsync(filter);
+
+        if(result.DeletedCount != 1)
+        {
+            throw new Exception($"Error deleting book with Id {bookId}");
+        }
+    }
+
     public Task<IList<int>> UpdateNormalizedBooksAsync(BookPortrait userPortrait)
     {
         throw new NotImplementedException();

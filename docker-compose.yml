@@ -36,6 +36,13 @@ services:
     networks:
       - kafka-net
 
+  mongo:
+    image: mongo
+    container_name: recommendations_mongo
+    restart: always
+    ports: 
+      - "23245:27017"
+
 networks:
   kafka-net:
     driver: bridge

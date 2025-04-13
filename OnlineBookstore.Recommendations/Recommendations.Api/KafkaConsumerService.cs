@@ -63,7 +63,7 @@ public class KafkaConsumerService : BackgroundService
         {
             BootstrapServers = _kafkaSettings.BootstrapServers,
             GroupId = _kafkaSettings.GroupId,
-            AutoOffsetReset = AutoOffsetReset.Earliest,
+            AutoOffsetReset = AutoOffsetReset.Latest,
             EnableAutoCommit = false
         };
 
