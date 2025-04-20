@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using OnlineBookstore.Domain.Common;
 
@@ -9,7 +10,15 @@ public class Book : IBaseEntity
 
     public string? Description { get; set; }
 
+    [MinLength(2)]
+    [MaxLength(2)]
+    public string Language { get; set; } = default!;
+
+    public bool IsPaperback { get; set; } = true;
+
     [Column(TypeName = "decimal(5, 2)")]
+    public decimal Rating { get; set; }
+
     public decimal Price { get; set; }
 
     [ForeignKey(nameof(Author))]

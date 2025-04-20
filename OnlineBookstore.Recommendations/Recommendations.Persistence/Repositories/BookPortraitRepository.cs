@@ -254,8 +254,26 @@ public class BookPortraitRepository : IBookPortraitRepository
         }
     }
 
-    public Task<IList<int>> UpdateNormalizedBooksAsync(BookPortrait userPortrait)
+    public async Task UpdateNormalizedBookPurchaseNumberAsync(int bookId)
     {
-        throw new NotImplementedException();
+        // Create a filter to find the book by ID
+        var filter = Builders<BookPortrait>.Filter.Eq(b => b.BookId, bookId);
+
+        // Create an update definition to increment the purchase number
+        var update = Builders<BookPortrait>.Update.Inc(b => b.PurchaseNumber, 1);
+
+        // Update the document
+        var result = await _bookPortraits.UpdateOneAsync(filter, update);
+    }
+
+    public async Task UpsertNormalizedBooksAsync(BookPortrait bookPortrait)
+    {
+        var filter = Builders<BookPortrait>.Filter.Eq(b => b.BookId, bookPortrait.BookId);
+
+        await _bookPortraits.ReplaceOneAsync(
+            filter,
+            bookPortrait,
+            new ReplaceOptions { IsUpsert = true }
+        );
     }
 }

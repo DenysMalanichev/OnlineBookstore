@@ -23,6 +23,28 @@ services:
     networks:
       - kafka-net
 
+  init-kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    depends_on:
+      - kafka
+    networks:
+      - kafka-net
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # blocks until kafka is reachable
+      kafka-topics --bootstrap-server kafka:9092 --list
+
+      echo -e 'Creating kafka topics'
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic recommendations.book-upserted --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic recommendations.book-deleted --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic recommendations.book-purchased --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic recommendations.user-upserted --replication-factor 1 --partitions 1
+
+      echo -e 'Successfully created the following topics:'
+      kafka-topics --bootstrap-server kafka:9092 --list
+      "
+
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui

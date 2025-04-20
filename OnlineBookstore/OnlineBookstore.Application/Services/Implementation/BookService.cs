@@ -3,6 +3,7 @@ using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OnlineBookstore.Application.Exceptions;
+using OnlineBookstore.Application.Messages;
 using OnlineBookstore.Application.Services.Interfaces;
 using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Features.BookFeatures;
@@ -17,15 +18,16 @@ public class BookService : IBookService
 {
     private const int DefaultBooksOnPage = 10;
 
+    private readonly IKafkaProducerService _kafkaProducer;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public BookService(IUnitOfWork unitOfWork, IMapper mapper)
+    public BookService(IKafkaProducerService kafkaProducer, IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _kafkaProducer = kafkaProducer;
     }
-
 
     public async Task AddBookAsync(CreateBookDto createBookDto)
     {
@@ -48,35 +50,42 @@ public class BookService : IBookService
 
         await _unitOfWork.BookRepository.AddAsync(book);
         await _unitOfWork.CommitAsync();
+
+        await _kafkaProducer.ProduceAsync<string, BookUpsertedMessage>(
+            "recommendations.book-upserted",
+            book.Id.ToString(),
+            CreateBookUpsertedMessage(book, purchases: 0));
     }
 
     public async Task UpdateBookAsync(UpdateBookDto updateBookDto)
     {
-        if (await _unitOfWork.BookRepository.GetByIdAsync(updateBookDto.Id, true)! is null)
-        {
-            throw new EntityNotFoundException($"No Book with Id '{updateBookDto.Id}'");
-        }
+        var book = await _unitOfWork.BookRepository.GetByIdAsync(updateBookDto.Id, false)!
+            ?? throw new EntityNotFoundException($"No Book with Id '{updateBookDto.Id}'");
+        _mapper.Map(updateBookDto, book);
 
-        var bookToUpdate = _mapper.Map<Book>(updateBookDto);
-
-        bookToUpdate.Genres = new List<Genre>();
+        book.Genres.Clear();
         foreach (var genreId in updateBookDto.GenreIds)
         {
             var genre = await _unitOfWork.GenreRepository.GetByIdAsync(genreId)!
                         ?? throw new EntityNotFoundException($"No Genre with Id '{genreId}'");
 
-            bookToUpdate.Genres.Add(genre);
+            book.Genres.Add(genre);
         }
 
-        bookToUpdate.Publisher = await _unitOfWork.PublisherRepository.GetByIdAsync(updateBookDto.PublisherId)!
+        book.Publisher = await _unitOfWork.PublisherRepository.GetByIdAsync(updateBookDto.PublisherId)!
                                  ?? throw new EntityNotFoundException(
                                      $"No Publisher with Id '{updateBookDto.PublisherId}'");
 
-        bookToUpdate.Author = await _unitOfWork.AuthorRepository.GetByIdAsync(updateBookDto.AuthorId)!
+        book.Author = await _unitOfWork.AuthorRepository.GetByIdAsync(updateBookDto.AuthorId)!
                               ?? throw new EntityNotFoundException($"No Author with Id '{updateBookDto.AuthorId}'");
 
-        await _unitOfWork.BookRepository.UpdateAsync(bookToUpdate);
+        //await _unitOfWork.BookRepository.UpdateAsync(book);
         await _unitOfWork.CommitAsync();
+
+        await _kafkaProducer.ProduceAsync<string, BookUpsertedMessage>(
+            "recommendations.book-upserted",
+            book.Id.ToString(),
+            CreateBookUpsertedMessage(book, purchases: 0));
     }
 
     public async Task<GetBookDto> GetBookByIdAsync(int bookId)
@@ -147,6 +156,11 @@ public class BookService : IBookService
 
         await _unitOfWork.BookRepository.DeleteAsync(bookToDelete);
         await _unitOfWork.CommitAsync();
+
+        await _kafkaProducer.ProduceAsync<string, BookDeletedMessage>(
+            "recommendations.book-purchased",
+            bookId.ToString(),
+            new BookDeletedMessage { BookId = bookId });
     }
 
     public double? CountAvgRatingOfBook(int bookId)
@@ -206,4 +220,17 @@ public class BookService : IBookService
             predicate,
             (current, specification) => current.And(specification.Criteria));
     }
+
+    private BookUpsertedMessage CreateBookUpsertedMessage(Book book, int purchases) =>
+        new()
+        {
+            BookId = book.Id,
+            Title = book.Name,
+            Language = book.Language,
+            AuthorId = book.AuthorId,
+            GenreIds = book.GenreIds.ToList(),
+            Rating = CountAvgRatingOfBook(book.Id) ?? 0.0,
+            PurchaseNumber = purchases,
+            IsPaperback = book.IsPaperback,
+        };
 }

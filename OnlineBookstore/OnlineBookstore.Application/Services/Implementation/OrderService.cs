@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OnlineBookstore.Application.Exceptions;
+using OnlineBookstore.Application.Messages;
 using OnlineBookstore.Application.Services.Interfaces;
 using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Domain.Entities;
@@ -14,13 +15,19 @@ public class OrderService : IOrderService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<User> _userManager;
+    private readonly IKafkaProducerService _kafkaProducer;
     private readonly IMapper _mapper;
 
-    public OrderService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager)
+    public OrderService(
+        IKafkaProducerService kafkaProducer,
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        UserManager<User> userManager)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _userManager = userManager;
+        _kafkaProducer = kafkaProducer;
     }
 
 
@@ -56,6 +63,14 @@ public class OrderService : IOrderService
         order.OrderStatus = OrderStatus.Closed;
 
         await _unitOfWork.CommitAsync();
+
+        foreach(var orderDetail in order.OrderDetails)
+        {
+            await _kafkaProducer.ProduceAsync<string, BookPurchasedMessage>(
+                "recommendations.book-deleted",
+                orderDetail.BookId.ToString(),
+                new BookPurchasedMessage { BookId = orderDetail.BookId, UserId = userId });
+        }           
     }
 
     private async Task<Order> CreateNewOrderAsync(string userId)

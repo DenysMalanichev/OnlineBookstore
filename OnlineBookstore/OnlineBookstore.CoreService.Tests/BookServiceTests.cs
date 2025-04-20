@@ -13,6 +13,7 @@ public class BookServiceTests
     private readonly Mock<IPublisherRepository> _publisherRepoMock = new();
     private readonly Mock<IAuthorRepository> _authorRepoMock = new();
     private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
+    private readonly Mock<IKafkaProducerService> _kafkaProducer = new();
     private readonly Faker _faker = new();
     private readonly IMapper _mapper;
 
@@ -63,7 +64,7 @@ public class BookServiceTests
         _authorRepoMock.Setup(ar => ar.GetByIdAsync(createBookDto.AuthorId, false))!
             .ReturnsAsync(new Author());
 
-        var bookService = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act
         await bookService.AddBookAsync(createBookDto);
@@ -87,7 +88,7 @@ public class BookServiceTests
         _genreRepoMock.Setup(gr => gr.GetByIdAsync(It.IsAny<int>(), false))!
             .ReturnsAsync(new Genre());
 
-        var bookService = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act & Assert
         await Assert.ThrowsAsync<EntityNotFoundException>(async () => await bookService.AddBookAsync(createBookDto));
@@ -115,7 +116,7 @@ public class BookServiceTests
         _publisherRepoMock.Setup(pr => pr.GetByIdAsync(It.IsAny<int>(), false))!
             .ReturnsAsync((Publisher)null!);
 
-        var bookService = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act & Assert
         await Assert.ThrowsAsync<EntityNotFoundException>(async () => await bookService.AddBookAsync(createBookDto));
@@ -145,7 +146,7 @@ public class BookServiceTests
         _authorRepoMock.Setup(ar => ar.GetByIdAsync(createBookDto.AuthorId, false))!
             .ReturnsAsync((Author)null!);
 
-        var bookService = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act & Assert
         await Assert.ThrowsAsync<EntityNotFoundException>(async () => await bookService.AddBookAsync(createBookDto));
@@ -177,7 +178,7 @@ public class BookServiceTests
         _authorRepoMock.Setup(ar => ar.GetByIdAsync(updateBookDto.AuthorId, false))!
             .ReturnsAsync(new Author());
 
-        var bookService = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act
         await bookService.UpdateBookAsync(updateBookDto);
@@ -198,7 +199,7 @@ public class BookServiceTests
         _bookRepoMock.Setup(br => br.GetByIdAsync(updateBookDto.Id, true))!
             .ReturnsAsync((Book)null!);
 
-        var bookService = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act & Assert
         await Assert.ThrowsAsync<EntityNotFoundException>(async () => await bookService.UpdateBookAsync(updateBookDto));
@@ -220,7 +221,7 @@ public class BookServiceTests
         _genreRepoMock.Setup(gr => gr.GetByIdAsync(It.IsAny<int>(), false))!
             .ReturnsAsync((Genre)null!);
 
-        var bookService = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act & Assert
         await Assert.ThrowsAsync<EntityNotFoundException>(async () => await bookService.UpdateBookAsync(updateBookDto));
@@ -248,7 +249,7 @@ public class BookServiceTests
         _publisherRepoMock.Setup(pr => pr.GetByIdAsync(updateBookDto.PublisherId, false))!
             .ReturnsAsync((Publisher)null!);
 
-        var bookService = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act & Assert
         await Assert.ThrowsAsync<EntityNotFoundException>(async () => await bookService.UpdateBookAsync(updateBookDto));
@@ -278,7 +279,7 @@ public class BookServiceTests
         _authorRepoMock.Setup(ar => ar.GetByIdAsync(updateBookDto.AuthorId, false))!
             .ReturnsAsync((Author)null!);
 
-        var bookService = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act & Assert
         await Assert.ThrowsAsync<EntityNotFoundException>(async () => await bookService.UpdateBookAsync(updateBookDto));
@@ -296,7 +297,7 @@ public class BookServiceTests
             .ReturnsAsync(book);
         _mapperMock.Setup(m => m.Map<GetBookDto>(book)).Returns(expectedBookDto);
 
-        var bookService = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act
         var returnedBook = await bookService.GetBookByIdAsync(existingBookId);
@@ -320,7 +321,7 @@ public class BookServiceTests
         _mapperMock.Setup(m => m.Map<IEnumerable<GetBriefBookDto>>(books))
             .Returns(getBriefBookDto);
 
-        var bookService = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act
         var returnedBook = bookService.GetBooksByAuthor(authorId, page);
@@ -346,7 +347,7 @@ public class BookServiceTests
         _mapperMock.Setup(m => m.Map<IEnumerable<GetBriefBookDto>>(books))
             .Returns(getBriefBookDto);
 
-        var bookService = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act
         var returnedBook = bookService.GetBooksByPublisher(publisherId, page);
@@ -369,7 +370,7 @@ public class BookServiceTests
         _bookRepoMock.Setup(br => br.GetByIdAsync(bookId, false))!
             .ReturnsAsync(book);
 
-        var bookService = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act
         await bookService.DeleteBookAsync(bookId);
@@ -388,7 +389,7 @@ public class BookServiceTests
         _bookRepoMock.Setup(br => br.GetByIdAsync(notExistingBookId, false))!
             .ReturnsAsync((Book)null!);
 
-        var bookService = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act & Assert
         await Assert.ThrowsAsync<EntityNotFoundException>(async () =>
@@ -406,7 +407,7 @@ public class BookServiceTests
         _bookRepoMock.Setup(br => br.CountAvgRatingForBook(bookId))
             .Returns(expectedCount);
 
-        var bookService = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act
         var returnedCount = bookService.CountAvgRatingOfBook(bookId);
@@ -431,7 +432,7 @@ public class BookServiceTests
         _mapperMock.Setup(m => m.Map<IEnumerable<GetBriefBookDto>>(It.IsAny<IList<Book>>()))
             .Returns(pagedBooks.Select(b => new GetBriefBookDto { Id = b.Id }).ToList());
 
-        var service = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
+        var service = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act
         var result = await service.GetBooksUsingFiltersAsync(filteredBooksDto);
@@ -455,7 +456,7 @@ public class BookServiceTests
         _mapperMock.Setup(m => m.Map<IEnumerable<GetBriefBookDto>>(It.IsAny<IList<Book>>()))
             .Returns(pagedBooks.Select(b => new GetBriefBookDto { Id = b.Id }).ToList());
 
-        var service = new BookService(_unitOfWorkMock.Object, _mapperMock.Object);
+        var service = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentException>(async () =>

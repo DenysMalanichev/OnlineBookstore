@@ -40,12 +40,105 @@ public class KafkaConsumerService : BackgroundService
     {
         _logger.LogInformation("Kafka Consumer Service is starting");
 
-        // Start a consumer for book deletion messages
-        await ConsumeMessagesAsync<BookDeletedMessage>(
+        var config = new ConsumerConfig
+        {
+            BootstrapServers = _kafkaSettings.BootstrapServers,
+            GroupId = _kafkaSettings.GroupId,
+            AutoOffsetReset = AutoOffsetReset.Earliest,
+            EnableAutoCommit = false
+        };
+
+        using var consumer = new ConsumerBuilder<Ignore, string>(config).Build();
+
+        // Subscribe to multiple topics
+        consumer.Subscribe(new List<string> {
             _kafkaSettings.BookDeletedTopic,
-            stoppingToken);
+            _kafkaSettings.BookUpsertedTopic,
+            _kafkaSettings.BookPurchasedTopic,
+            _kafkaSettings.UserUpsertedTopic,
+        });
+
+        try
+        {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                try
+                {
+                    var consumeResult = consumer.Consume(stoppingToken);
+
+                    if (consumeResult != null)
+                    {
+                        _logger.LogInformation("Received message from topic: {Topic}", consumeResult.Topic);
+
+                        // Process message based on topic
+                        await ProcessMessageBasedOnTopicAsync(consumeResult.Topic, consumeResult.Message.Value);
+
+                        // Commit the offset after processing
+                        consumer.Commit(consumeResult);
+                    }
+                }
+                catch (ConsumeException ex)
+                {
+                    _logger.LogError(ex, "Error consuming message");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error processing message");
+                }
+            }
+        }
+        finally
+        {
+            consumer.Close();
+        }
 
         _logger.LogInformation("Kafka Consumer Service is stopping");
+    }
+
+    private async Task ProcessMessageBasedOnTopicAsync(string topic, string messageJson)
+    {
+        using var scope = _serviceProvider.CreateScope();
+
+        if (topic == _kafkaSettings.BookDeletedTopic)
+        {
+            var message = JsonSerializer.Deserialize<BookDeletedMessage>(messageJson);
+            if (message != null)
+            {
+                var handler = scope.ServiceProvider.GetRequiredService<IMessageHandler<BookDeletedMessage>>();
+                await handler.HandleAsync(message);
+            }
+        }
+        else if (topic == _kafkaSettings.BookUpsertedTopic)
+        {
+            var message = JsonSerializer.Deserialize<BookUpsertedMessage>(messageJson);
+            if (message != null)
+            {
+                var handler = scope.ServiceProvider.GetRequiredService<IMessageHandler<BookUpsertedMessage>>();
+                await handler.HandleAsync(message);
+            }
+        }
+        else if (topic == _kafkaSettings.BookPurchasedTopic)
+        {
+            var message = JsonSerializer.Deserialize<BookPurchasedMessage>(messageJson);
+            if (message != null)
+            {
+                var handler = scope.ServiceProvider.GetRequiredService<IMessageHandler<BookPurchasedMessage>>();
+                await handler.HandleAsync(message);
+            }
+        }
+        else if (topic == _kafkaSettings.UserUpsertedTopic)
+        {
+            var message = JsonSerializer.Deserialize<UserUpsertMessage>(messageJson);
+            if (message != null)
+            {
+                var handler = scope.ServiceProvider.GetRequiredService<IMessageHandler<UserUpsertMessage>>();
+                await handler.HandleAsync(message);
+            }
+        }
+        else
+        {
+            _logger.LogWarning("Received message from unexpected topic: {Topic}", topic);
+        }
     }
 
     /// <summary>

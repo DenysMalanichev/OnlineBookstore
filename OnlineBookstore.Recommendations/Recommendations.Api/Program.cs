@@ -30,6 +30,9 @@ builder.Services.Configure<KafkaSettings>(builder.Configuration.GetSection("Kafk
 
 // Register message handlers
 builder.Services.AddScoped<IMessageHandler<BookDeletedMessage>, BookDeletedMessageHandler>();
+builder.Services.AddScoped<IMessageHandler<BookUpsertedMessage>, BookUpsertedMessageHandler>();
+builder.Services.AddScoped<IMessageHandler<BookPurchasedMessage>, BookPurchasedMessageHandler>();
+builder.Services.AddScoped<IMessageHandler<UserUpsertMessage>, UserUpsertMessageHandler>();
 
 // Register Kafka consumer service
 builder.Services.AddHostedService<KafkaConsumerService>();

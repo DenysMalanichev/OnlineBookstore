@@ -1,5 +1,5 @@
 ﻿namespace Recommendations.Abstractions.Messages;
-public record BookUpdatedMessage
+public record BookUpsertedMessage
 {
     public int BookId { get; set; }
     public string Title { get; set; } = default!;

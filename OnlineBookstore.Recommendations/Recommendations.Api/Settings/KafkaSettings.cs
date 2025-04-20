@@ -17,15 +17,20 @@ public class KafkaSettings
     /// <summary>
     /// The topic for book deleted messages
     /// </summary>
-    public string BookDeletedTopic { get; set; } = "book-deleted";
+    public string BookDeletedTopic { get; set; } = "recommendations.book-deleted";
 
     /// <summary>
-    /// The topic for book updated messages
+    /// The topic for book upserted messages
     /// </summary>
-    public string BookUpdatedTopic { get; set; } = "book-updated";
+    public string BookUpsertedTopic { get; set; } = "recommendations.book-upserted";
+
+    /// <summary>
+    /// The topic for book purchased messages
+    /// </summary>
+    public string BookPurchasedTopic { get; set; } = "recommendations.book-purchased";
 
     /// <summary>
     /// The topic for user updated messages
     /// </summary>
-    public string UserUpdatedTopic { get; set; } = "user-updated";
+    public string UserUpsertedTopic { get; set; } = "recommendations.user-upserted";
 }

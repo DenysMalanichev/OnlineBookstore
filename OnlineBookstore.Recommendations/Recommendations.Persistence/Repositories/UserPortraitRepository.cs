@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using System.Net;
+using MongoDB.Driver;
 using Recommendations.Abstractions.Entities;
 using Recommendations.Abstractions.Repositories;
 
@@ -28,8 +29,17 @@ public class UserPortraitRepository : IUserPortraitRepository
         return userPortrait;
     }
 
-    public Task UpdateUserPortraitDataAsync(UserPortrait userPortrait)
+    public async Task UpsertUserPortraitDataAsync(UserPortrait userPortrait)
     {
-        throw new NotImplementedException();
+        ArgumentNullException.ThrowIfNull(userPortrait, nameof(userPortrait));
+
+        // Create a filter to find the book by ID
+        var filter = Builders<UserPortrait>.Filter.Eq(b => b.UserId, userPortrait.UserId);
+
+        await _userPortraits.ReplaceOneAsync(
+            filter,
+            userPortrait,
+            new ReplaceOptions { IsUpsert = true }
+        );
     }
 }

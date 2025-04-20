@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OnlineBookstore.Application.Configs;
+using OnlineBookstore.Application.Services.Implementation;
+using OnlineBookstore.Application.Services.Interfaces;
 using OnlineBookstore.Configs;
 using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Extentions;
@@ -17,6 +19,8 @@ public class Program
         const string allowFrontEndSpecificOrigins = "_frontEndSpecificOrigins";
 
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddSingleton<IKafkaProducerService, KafkaProducerService>();
 
         builder.AddCorsPolicy(allowFrontEndSpecificOrigins);
 
