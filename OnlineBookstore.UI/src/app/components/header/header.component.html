@@ -1,20 +1,12 @@
-<div class="header-container">
-    <div>
-        <a class="nav-link no-underline" routerLink="/books-filters">
-            <h1 class="main-title">Online Book Store</h1>
-        </a>
-    </div>
-    <div class="nav-links-container">
-        <a class="nav-link" routerLink="/books-filters">Books</a>  
-        <a class="nav-link" routerLink="/genres">Genres</a>  
-        <a class="nav-link" routerLink="/authors">Authors</a>
-        <a class="nav-link" routerLink="/publishers">Publishers</a>      
-        
-        <a *ngIf="!isLoggedin()" routerLink="/login">Log In</a>
-        
-        <a *ngIf="isLoggedin()" routerLink="/busket" mat-icon-button aria-label="View shopping cart">
-            <mat-icon>shopping_cart</mat-icon>
-        </a> 
-        <a *ngIf="isLoggedin()" routerLink="/account">Account</a>               
-    </div>    
+<div class="card">
+    <p-menubar [model]="items">
+        <ng-template pTemplate="start">
+            <p-button label="Online Book Store" [text]="true" severity="secondary" icon="pi pi-home" routerLink="/books-filters"></p-button>
+        </ng-template>
+        <ng-template pTemplate="end">
+            <p-button *ngIf="!isLoggedin()" label="Log In" icon="pi pi-sign-in" routerLink="/login"></p-button>
+            <p-button *ngIf="isLoggedin()" label="Account" icon="pi pi-user" routerLink="/account"></p-button>
+            <p-button *ngIf="isLoggedin()" icon="pi pi-shopping-cart" [text]="true" severity="secondary" routerLink="/busket"></p-button>
+        </ng-template>
+    </p-menubar>
 </div>

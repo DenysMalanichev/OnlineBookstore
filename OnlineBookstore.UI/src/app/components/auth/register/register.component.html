@@ -1,41 +1,111 @@
-<div class="login-container">
+<div class="login-container mt-7">
     <h2>Register</h2>
     <form method="POST" [formGroup]="registerFormControl">
       <div class="form-input">
-        <label for="username">Email</label>
-        <input type="text" id="username" name="username" required formControlName="email">
-        <div *ngIf="registerFormControl.get('email')?.invalid && (registerFormControl.get('email')?.dirty || registerFormControl.get('email')?.touched)" class="error">
+        <div class="p-field mb-4">
+          <span class="p-float-label">
+            <input pInputText type="text" id="username" name="username" required formControlName="email" />
+            <label>Email*</label>
+          </span>
+          <div *ngIf="registerFormControl.get('email')?.invalid && (registerFormControl.get('email')?.dirty || registerFormControl.get('email')?.touched)" class="error">
             <small>Email is required.</small>
             <small>Please enter a valid email address.</small>
+          </div>
         </div>
 
-        <label for="first-name">First Name</label>
-        <input type="text" id="first-name" name="first-name" required formControlName="firstName">
-        <div *ngIf="registerFormControl.get('firstName')?.invalid && (registerFormControl.get('firstName')?.dirty || registerFormControl.get('firstName')?.touched)" class="error">
+        <div class="p-field mb-4">
+          <span class="p-float-label">
+            <input pInputText type="text" id="first-name" name="first-name" required formControlName="firstName" />
+            <label>First Name*</label>
+          </span>
+          <div *ngIf="registerFormControl.get('firstName')?.invalid && (registerFormControl.get('firstName')?.dirty || registerFormControl.get('firstName')?.touched)" class="error">
             <small>First Name is required.</small>
             <small>Please enter a valid Name, 2-50 characters.</small>
+          </div>
         </div>
 
-        <label for="last-name">Last Name</label>
-        <input type="text" id="last-name" name="last-name" required formControlName="lastName">
-        <div *ngIf="registerFormControl.get('lastName')?.invalid && (registerFormControl.get('lastName')?.dirty || registerFormControl.get('lastName')?.touched)" class="error">
+        <div class="p-field mb-4">
+          <span class="p-float-label">
+            <input pInputText type="text" id="last-name" name="last-name" required formControlName="lastName" />
+            <label>Last Name*</label>
+          </span>
+          <div *ngIf="registerFormControl.get('lastName')?.invalid && (registerFormControl.get('lastName')?.dirty || registerFormControl.get('lastName')?.touched)" class="error">
             <small>Last Name is required.</small>
             <small>Please enter a valid Name, 2-50 characters.</small>
+          </div>
         </div>
       </div>
+
       <div class="form-input">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required formControlName="password">
-        <div *ngIf="registerFormControl.get('password')?.invalid && (registerFormControl.get('password')?.dirty || registerFormControl.get('password')?.touched)" class="error">
+        <div class="p-field mb-4">
+          <span class="p-float-label">
+            <input pInputText type="text" id="password" name="password" required formControlName="password" />
+            <label>Password*</label>
+          </span>
+          <div *ngIf="registerFormControl.get('password')?.invalid && (registerFormControl.get('password')?.dirty || registerFormControl.get('password')?.touched)" class="error">
             <small>Password must be at least 8 characters long with upper case and special character.</small>
+          </div>
         </div>
 
-        <label for="confirm-password">Confirm Password</label>
-        <input type="password" id="confirm-password" name="confirm-password" required formControlName="confirmPassword">
-        <div *ngIf="passwordMatchValidator() && registerFormControl.get('confirmPassword')?.touched" class="error">
+        <div class="p-field mb-4">
+          <span class="p-float-label">
+            <input pInputText type="text" id="confirm-password" name="confirm-password" required formControlName="confirmPassword" />
+            <label>Confirm Password*</label>
+          </span>
+          <div *ngIf="passwordMatchValidator() && registerFormControl.get('confirmPassword')?.touched" class="error">
             <small>Confirm Password is not equal to password.</small>
         </div>
+        </div>
       </div>
-      <button type="submit" class="login-button" (click)="register()">Register</button>
+
+      <p-divider />
+
+      <p-button
+        [text]="true"
+        tooltipPosition="bottom" 
+        pTooltip="Provided data will be used for detailed personal recommendations"
+        [label]="personalInfoLabel" />
+
+      <div>
+        <p-multiSelect
+          class="form-input"
+          optionLabel="name"
+          [options]="languages"
+          display="chip"
+          formControlName="preferedLanguages"
+          placeholder="Select Languages*"
+          [showClear]="true" />
+        <div *ngIf="registerFormControl.get('preferedLanguages')?.invalid && (registerFormControl.get('preferedLanguages')?.dirty || registerFormControl.get('preferedLanguages')?.touched)" class="error">
+            <small>Please select at least one language.</small>
+        </div>
+      </div>
+      
+      <div>
+        <p-multiSelect
+          class="form-input"
+          optionLabel="name"
+          [options]="genres"
+          display="chip"
+          formControlName="preferedGenres"
+          placeholder="Select Genres*"
+          [showClear]="true" />
+        <div *ngIf="registerFormControl.get('preferedGenres')?.invalid && (registerFormControl.get('preferedGenres')?.dirty || registerFormControl.get('preferedGenres')?.touched)" class="error">
+            <small>Please select at least one genre.</small>
+        </div>
+      </div>
+
+      <div>
+        <p-multiSelect
+          class="form-input"
+          optionLabel="name"
+          [options]="authors"
+          display="chip"
+          formControlName="preferedAuthors"
+          placeholder="Select Authors"
+          [showClear]="true" />
+      </div>
+
+      <p-button type="submit" class="login-button" (click)="register()" label="Register"/>
+      <p-button [link]="true" routerLink="/login" styleClass="login-link-text" label="Already have an account? Log In!" />
     </form>
   </div>

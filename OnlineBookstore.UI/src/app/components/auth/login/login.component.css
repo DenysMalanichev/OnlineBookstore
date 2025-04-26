@@ -33,18 +33,13 @@ h2 {
     border-color: #405cf5;
 }
 
-.login-button {
+:host ::ng-deep login-button {
     width: 100%;
-    padding: 10px;
-    border: none;
-    background-color: #405cf5;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
+    margin-bottom: 15px;
+    margin-top: 15px;
 }
-
-.login-button:hover {
-    background-color: #004494;
+:host ::ng-deep .p-button {
+    width: 100%;
 }
 
 .register-link {
@@ -53,4 +48,8 @@ h2 {
 
 .error small {
     color: red;
+}
+
+:host ::ng-deep .login-link-text .p-button-label {
+    font-weight: 300;
 }

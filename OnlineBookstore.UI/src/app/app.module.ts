@@ -14,6 +14,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { TooltipModule } from 'primeng/tooltip';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { MenubarModule } from 'primeng/menubar';
+import { DividerModule } from 'primeng/divider';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -78,6 +84,7 @@ import { PublisherFormComponent } from './components/publisher-components/publis
     PublisherFormComponent,
   ],
   imports: [
+    ButtonModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
@@ -85,6 +92,7 @@ import { PublisherFormComponent } from './components/publisher-components/publis
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
+    MultiSelectModule,
     FormsModule,
     MatCardModule,
     ReactiveFormsModule,
@@ -94,6 +102,10 @@ import { PublisherFormComponent } from './components/publisher-components/publis
     MatButtonModule,
     MatDialogModule,
     MatIconModule,
+    TooltipModule,
+    InputTextModule,
+    MenubarModule,
+    DividerModule,
     StarRatingModule.forRoot(),
     JwtModule.forRoot({
       config: {
