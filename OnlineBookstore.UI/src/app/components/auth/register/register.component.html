@@ -1,4 +1,4 @@
-<div class="login-container mt-7">
+<div class="login-container mt-5">
     <h2>Register</h2>
     <form method="POST" [formGroup]="registerFormControl">
       <div class="form-input">
@@ -66,9 +66,8 @@
         pTooltip="Provided data will be used for detailed personal recommendations"
         [label]="personalInfoLabel" />
 
-      <div>
+      <div  class="form-input">
         <p-multiSelect
-          class="form-input"
           optionLabel="name"
           [options]="languages"
           display="chip"
@@ -80,9 +79,8 @@
         </div>
       </div>
       
-      <div>
+      <div class="form-input">
         <p-multiSelect
-          class="form-input"
           optionLabel="name"
           [options]="genres"
           display="chip"
@@ -94,9 +92,8 @@
         </div>
       </div>
 
-      <div>
+      <div  class="form-input">
         <p-multiSelect
-          class="form-input"
           optionLabel="name"
           [options]="authors"
           display="chip"

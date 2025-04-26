@@ -79,7 +79,8 @@ export class RegisterComponent implements OnInit {
   }
 
   register(): void {
-    if(this.registerFormControl.invalid || this.passwordMatchValidator()) {
+    if(this.registerFormControl.invalid || !this.passwordMatchValidator()) {
+      this.registerFormControl.markAllAsTouched();
       return;
     }
 
