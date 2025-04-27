@@ -1,4 +1,3 @@
-using System.CodeDom.Compiler;
 using System.ComponentModel.DataAnnotations;
 
 namespace OnlineBookstore.Features.BookFeatures;
@@ -21,4 +20,6 @@ public class UpdateBookDto
     public IList<int> GenreIds { get; set; } = null!;
 
     public string Language { get; set; } = default!;
+
+    public bool IsPaperback { get; set; }
 }

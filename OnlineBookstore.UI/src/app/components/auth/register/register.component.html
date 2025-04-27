@@ -1,5 +1,5 @@
-<div class="login-container mt-5">
-    <h2>Register</h2>
+<div class="login-container mt-5 w-25rem mx-auto">
+    <h2 class="text-black-alpha-60">Register</h2>
     <form method="POST" [formGroup]="registerFormControl">
       <div class="form-input">
         <div class="p-field mb-4">
@@ -39,7 +39,7 @@
       <div class="form-input">
         <div class="p-field mb-4">
           <span class="p-float-label">
-            <input pInputText type="text" id="password" name="password" required formControlName="password" />
+            <input pInputText type="password" id="password" name="password" required formControlName="password" />
             <label>Password*</label>
           </span>
           <div *ngIf="registerFormControl.get('password')?.invalid && (registerFormControl.get('password')?.dirty || registerFormControl.get('password')?.touched)" class="error">
@@ -49,7 +49,7 @@
 
         <div class="p-field mb-4">
           <span class="p-float-label">
-            <input pInputText type="text" id="confirm-password" name="confirm-password" required formControlName="confirmPassword" />
+            <input pInputText type="password" id="confirm-password" name="confirm-password" required formControlName="confirmPassword" />
             <label>Confirm Password*</label>
           </span>
           <div *ngIf="passwordMatchValidator() && registerFormControl.get('confirmPassword')?.touched" class="error">
@@ -66,7 +66,7 @@
         pTooltip="Provided data will be used for detailed personal recommendations"
         [label]="personalInfoLabel" />
 
-      <div  class="form-input">
+      <div class="form-input">
         <p-multiSelect
           optionLabel="name"
           [options]="languages"
@@ -92,14 +92,19 @@
         </div>
       </div>
 
-      <div  class="form-input">
+      <div class="form-input">
         <p-multiSelect
           optionLabel="name"
           [options]="authors"
           display="chip"
-          formControlName="preferedAuthors"
+          formControlName="preferedAuthores"
           placeholder="Select Authors"
           [showClear]="true" />
+      </div>
+
+      <div class="form-input flex flex-row justify-content-center align-items-center">
+          <label for="switch1" class="text-color-secondary font-normal text-base mr-3">Paperback prefered</label>
+          <p-inputSwitch id="switch1" formControlName="isPaperbackPrefered" />
       </div>
 
       <p-button type="submit" class="login-button" (click)="register()" label="Register"/>

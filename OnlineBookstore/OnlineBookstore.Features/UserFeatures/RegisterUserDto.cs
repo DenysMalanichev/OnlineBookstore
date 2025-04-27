@@ -24,7 +24,7 @@ public class RegisterUserDto
     public IList<string> PreferedLanguages { get; set; } = default!;
 
     [Required]
-    public bool IsPaparbackPrefered { get; set; }
+    public bool IsPaperbackPrefered { get; set; }
 
     [Required]
     public IList<int> PreferedGenreIds { get; set; } = [];

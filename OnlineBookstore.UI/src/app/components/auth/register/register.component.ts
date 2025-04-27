@@ -51,7 +51,8 @@ export class RegisterComponent implements OnInit {
     preferedGenres: new FormControl('',[
       Validators.required
     ]),
-    preferedAuthores: new FormControl('', [])
+    preferedAuthores: new FormControl('', []),
+    isPaperbackPrefered: new FormControl('false', [])
   });
 
   languages: Language[] =  [];
@@ -79,7 +80,7 @@ export class RegisterComponent implements OnInit {
   }
 
   register(): void {
-    if(this.registerFormControl.invalid || !this.passwordMatchValidator()) {
+    if(this.registerFormControl.invalid || this.passwordMatchValidator()) {
       this.registerFormControl.markAllAsTouched();
       return;
     }
@@ -98,7 +99,11 @@ export class RegisterComponent implements OnInit {
       lastName: formValue.lastName,
       email: formValue.email,
       password: formValue.password,
-      confirmPassword: formValue.confirmPassword
+      confirmPassword: formValue.confirmPassword,
+      preferedLanguages: formValue.preferedLanguages.map((l: Language) => l.code),
+      preferedAuthoreIds: formValue.preferedAuthores.map((l: AuthorDisplayModel) => l.id),
+      preferedGenreIds: formValue.preferedGenres.map((l: BriefGenreModel) => l.id),
+      isPaperbackPrefered: formValue.isPaperbackPrefered
     }
   }
 

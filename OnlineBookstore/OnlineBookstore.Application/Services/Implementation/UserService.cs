@@ -63,7 +63,7 @@ public class UserService : IUserService
             PreferedAuthoreIds = registerUserDto.PreferedAuthoreIds,
             PreferedGenreIds = registerUserDto.PreferedGenreIds,
             PreferedLanguages = registerUserDto.PreferedLanguages,
-            IsPaperbackPrefered = registerUserDto.IsPaparbackPrefered,
+            IsPaperbackPrefered = registerUserDto.IsPaperbackPrefered,
         };
 
         await _kafkaProducerService.ProduceAsync<string, UserUpsertMessage>(

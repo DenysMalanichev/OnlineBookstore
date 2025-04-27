@@ -6,4 +6,6 @@ export interface UpdateBookModel {
     authorId: number;
     publisherId: number;
     genreIds: number[];
+    isPaperback: boolean;
+    language: string;
 }

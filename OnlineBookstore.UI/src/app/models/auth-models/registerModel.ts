@@ -4,4 +4,8 @@ export interface RegisterModel {
     email: string;
     password: string;
     confirmPassword: string;
+    preferedLanguages: string[];
+    preferedGenreIds: number[];
+    preferedAuthoreIds: number[];
+    isPaperbackPrefered: boolean;
 }

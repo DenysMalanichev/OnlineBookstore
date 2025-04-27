@@ -5,7 +5,6 @@ import { BriefPublisherModel } from 'src/app/models/publisher-models/briefPublis
 import { AuthorService } from 'src/app/services/author-service.service';
 import { GenresService } from 'src/app/services/genres-service.service';
 import { PublishersService } from 'src/app/services/publishers-service.service';
-import { AuthorModel } from 'src/app/models/author-models/authorModel';
 import { BooksService } from 'src/app/services/books-service.service';
 import { CreateNewBook } from 'src/app/models/book-models/createNewBook';
 import Swal from 'sweetalert2';
@@ -13,6 +12,15 @@ import { Router } from '@angular/router';
 import { FullBookModel } from 'src/app/models/book-models/fullBookModel';
 import { UpdateBookModel } from 'src/app/models/book-models/updateBookModel';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
+
+interface AuthorDisplayModel {
+  name: string,
+  id: number
+}
+interface Language {
+  name: string,
+  code: string
+}
 
 @Component({
   selector: 'book-form',
@@ -29,9 +37,10 @@ export class BookFormComponent implements OnInit {
 
   genres: BriefGenreModel[] = [];
   publishers: BriefPublisherModel[] = [];
-  authors: AuthorModel[] = [];
+  authors: AuthorDisplayModel[] = [];
 
   genresArray: number[] = [];
+  languages: Language[] =  [];
 
   constructor(
     private booksService: BooksService,
@@ -39,10 +48,19 @@ export class BookFormComponent implements OnInit {
     private publishersService: PublishersService,
     private authorsService: AuthorService,
     private router: Router
-    ) {}
+    ) {
+      this.languages = [
+        { name: "English", code: "EN"},
+        { name: "Українська", code: "UA"},
+        { name: "Español", code: "ES" },
+        { name: "Français", code: "FR" },
+        { name: "Deutsch", code: "DE" },
+        { name: "Italiano", code: "IT" },
+      ]
+    }
 
     ngOnInit(): void {
-      this.initForm();
+      this.initEmptyForm();
       forkJoin({
         genres: this.genresService.getAllGenres(),
         publishers: this.publishersService.getAllPublishers(),
@@ -51,36 +69,56 @@ export class BookFormComponent implements OnInit {
         next: ({genres, publishers, authors}) => {
           this.genres = genres;
           this.publishers = publishers;
-          this.authors = authors;
-          this.initGenres();
+          this.authors = authors.map(a => ({ 
+            name: a.firstName + ' ' + a.lastName, 
+            id: a.id 
+          }));
+
+          this.updateFormWithData();
         },
         error: (error) => {
           console.error('Error loading data:', error);
         }
       });
+      this.updateFormWithData();
     }
-    
-    private initForm(): void {
+
+    private initEmptyForm(): void {
       this.bookForm = new FormGroup({
         name: new FormControl(this.book?.name || null, Validators.required),
         description: new FormControl(this.book?.description || ''),
-        price: new FormControl(this.book?.price || 0, [Validators.required, Validators.min(0)]),
-        authorId: new FormControl(this.book?.authorId || 0, Validators.required),
-        publisherId: new FormControl(this.book?.publisherId || 0, Validators.required),
-        genreIds: new FormArray([])
+        price: new FormControl(this.book?.price || null, [Validators.required, Validators.min(0)]),
+        authorId: new FormControl(this.book?.authorId || null, Validators.required),
+        publisherId: new FormControl(null, Validators.required),
+        genreIds: new FormControl(null, Validators.required),
+        isPaperback: new FormControl(this.book?.isPaperback || ''),
+        language: new FormControl(this.languages.find(l => l.code === this.book?.language) || null, [Validators.required]),
       });
     }
+    
+    private updateFormWithData(): void {
+      // Find the publisher if we're editing a book
+      const selectedPublisher = this.book?.publisherId ? 
+        this.publishers.find(p => p.id === this.book?.publisherId) : 
+        null;
 
-    private initGenres(): void {
-      let genresFormArray = new FormArray<FormControl<number | null>>([]);
+      // Find the author if we're editing a book
+      const selectedAuthor = this.book?.authorId ? 
+        this.authors.find(p => p.id === this.book?.authorId) : 
+        null;
+
+      // Find genres if we're editing a book
+      const selectedGenres = this.book?.genreIds?.length! > 0 ? 
+        this.genres.filter(p => this.book?.genreIds?.includes(p.id)) : 
+        null;
       
-      for (let genre of this.genres) {
-        genresFormArray.push(new FormControl<number>(genre.id));
-      }
-      
-      this.bookForm.setControl('genreIds', genresFormArray);
+      // Update the form with the loaded data
+      this.bookForm.patchValue({
+        publisherId: selectedPublisher,
+        authorId: selectedAuthor,
+        genreIds: selectedGenres
+      });
     }
-
   addNewBook(): void {
     if(this.bookForm.invalid) {
       Swal.fire({
@@ -94,7 +132,7 @@ export class BookFormComponent implements OnInit {
     }
     this.booksService.addNewBook(this.createNewBookObject(this.bookForm.value)).subscribe({
       next: () => {
-        this.router.navigate(['/book-details/', this.bookId]);
+        this.router.navigate(['/books-filters']);
         return;
       },
       error: () => {
@@ -155,9 +193,11 @@ export class BookFormComponent implements OnInit {
       name: formValue.name,
       description: formValue.description || '',
       price: formValue.price,
-      authorId: formValue.authorId,
-      publisherId: formValue.publisherId,
-      genreIds: this.genresArray as []
+      authorId: formValue.authorId.id,
+      publisherId: formValue.publisherId.id,
+      genreIds: formValue.genreIds.map((g: BriefGenreModel) => g.id) as [],
+      isPaperback: formValue.isPaperback,
+      language: formValue.language.code
     };
   }
 
@@ -167,9 +207,11 @@ export class BookFormComponent implements OnInit {
       name: formValue.name,
       description: formValue.description || '',
       price: formValue.price,
-      authorId: formValue.authorId,
-      publisherId: formValue.publisherId,
-      genreIds: this.genresArray as []
+      authorId: formValue.authorId.id,
+      publisherId: formValue.publisherId.id,
+      genreIds: formValue.genreIds.map((g: BriefGenreModel) => g.id) as [],
+      isPaperback: formValue.isPaperback,
+      language: formValue.language.code
     };
   }
 

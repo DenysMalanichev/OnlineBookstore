@@ -13,4 +13,8 @@ public class GetBookDto
     public int PublisherId { get; set; }
 
     public IList<int> GenreIds { get; set; } = null!;
+
+    public string Language { get; set; } = default!;
+
+    public bool IsPaperback { get; set; }
 }

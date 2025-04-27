@@ -67,7 +67,7 @@ public class OrderService : IOrderService
         foreach(var orderDetail in order.OrderDetails)
         {
             await _kafkaProducer.ProduceAsync<string, BookPurchasedMessage>(
-                "recommendations.book-deleted",
+                "recommendations.book-purchased",
                 orderDetail.BookId.ToString(),
                 new BookPurchasedMessage { BookId = orderDetail.BookId, UserId = userId });
         }           
