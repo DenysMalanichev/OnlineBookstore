@@ -21,6 +21,9 @@ var databaseName = builder.Configuration["DbNames:RecommendationsDbName"]
 // Register MongoDbContext as a singleton
 builder.Services.AddSingleton<MongoDbContext>(provider => new MongoDbContext(connectionString, databaseName));
 
+// Add response caching
+builder.Services.AddResponseCaching();
+
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBookPortraitRepository, BookPortraitRepository>();
@@ -51,6 +54,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
+
+app.UseResponseCaching();
 
 app.UseHttpsRedirection();
 
