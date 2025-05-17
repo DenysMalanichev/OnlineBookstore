@@ -8,5 +8,7 @@ public interface IBookRepository : IGenericRepository<Book>, IQueryingRepository
     
     (IEnumerable<Book> booksOnPage, int totalItems) GetBooksByPublisher(int publisherId, int page, int itemsOnPage);
 
+    Task<IEnumerable<Book>>? GetByIdAsync(int[] ids, int? page, int itemsOnPage = 10);
+
     double? CountAvgRatingForBook(int bookId);
 }

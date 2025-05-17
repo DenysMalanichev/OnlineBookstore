@@ -6,7 +6,7 @@
             <p><strong>Author:</strong> {{ author.firstName + author.lastName }}</p>
             <p><strong>Price:</strong> ${{ book?.price }}</p>
             <p><strong>Description:</strong> {{ book?.description || 'No description available.' }}</p>
-            <p><strong>Publisher ID:</strong> {{ publisher.companyName }}</p>
+            <p><strong>Publisher:</strong> {{ publisher.companyName }}</p>
             <p><strong>Genres: </strong> <span *ngIf="genres">{{ genreNames }}</span><span *ngIf="!genres">No genres listed.</span></p>
         </div>
         <star-rating [showHalfStars]="true" [rating]="avgRating || 0" [readOnly]="true" [size]="'medium'"></star-rating>

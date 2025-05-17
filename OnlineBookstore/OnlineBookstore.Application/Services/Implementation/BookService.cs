@@ -2,6 +2,7 @@ using AutoMapper;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using OnlineBookstore.Application.Exceptions;
 using OnlineBookstore.Application.Messages;
 using OnlineBookstore.Application.Services.Interfaces;
@@ -79,13 +80,36 @@ public class BookService : IBookService
         book.Author = await _unitOfWork.AuthorRepository.GetByIdAsync(updateBookDto.AuthorId)!
                               ?? throw new EntityNotFoundException($"No Author with Id '{updateBookDto.AuthorId}'");
 
-        //await _unitOfWork.BookRepository.UpdateAsync(book);
         await _unitOfWork.CommitAsync();
 
         await _kafkaProducer.ProduceAsync<string, BookUpsertedMessage>(
             "recommendations.book-upserted",
             book.Id.ToString(),
             CreateBookUpsertedMessage(book, purchases: 0));
+    }
+
+    public async Task<GenericPagingDto<GetBriefBookDto>> GetRecommendationsAsync(Guid userId, int? page, int itemsOnPage = 10)
+    {
+        var httpClient = new HttpClient();
+        var path = $"https://localhost:7235/api/recommendations?userId={userId}&pageNumber={page ?? 1}&pageSize={itemsOnPage}";
+        var result = await httpClient.GetAsync(new Uri(path));
+
+        if(result is not null && result.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            var recommendationData = await new StreamReader(result.Content.ReadAsStream()).ReadToEndAsync();
+            var recommendedBookIds = JsonConvert.DeserializeObject<int[]>(recommendationData)!;
+            var books = await _unitOfWork.BookRepository.GetByIdAsync(recommendedBookIds, page, itemsOnPage)!;
+
+            var briefBookDtos = _mapper.Map<IEnumerable<GetBriefBookDto>>(books);
+            return new GenericPagingDto<GetBriefBookDto>
+            {
+                CurrentPage = page ?? 1,
+                Entities = briefBookDtos,
+                TotalPages = (await _unitOfWork.BookRepository.GetAllAsync()).Count(),
+            };
+        }
+
+        throw new HttpRequestException("Error requesting reccomendations");
     }
 
     public async Task<GetBookDto> GetBookByIdAsync(int bookId)

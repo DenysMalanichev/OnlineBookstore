@@ -9,6 +9,8 @@ public interface IBookService
     
     Task UpdateBookAsync(UpdateBookDto updateBookDto);
 
+    Task<GenericPagingDto<GetBriefBookDto>> GetRecommendationsAsync(Guid userId, int? page, int itemsOnPage = 10);
+
     Task<GetBookDto> GetBookByIdAsync(int bookId);
 
     Task<GenericPagingDto<GetBriefBookDto>> GetBooksUsingFiltersAsync(GetFilteredBooksDto filteredBooksDto);

@@ -1,4 +1,5 @@
 using System.Data.Entity;
+using System.Linq;
 using LinqKit;
 using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Persistence.Context;
@@ -56,5 +57,15 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
         {
             return null!;
         }
+    }
+
+    public async Task<IEnumerable<Book>>? GetByIdAsync(int[] ids, int? page, int itemsOnPage = 10)
+    {
+        return await Task.FromResult(_dataContext.Books
+            .Where(b => ids.Contains(b.Id))
+            .Skip(((page ?? 1) - 1) * itemsOnPage)
+            .Take(itemsOnPage)
+            .AsNoTracking()
+            .ToList());            
     }
 }

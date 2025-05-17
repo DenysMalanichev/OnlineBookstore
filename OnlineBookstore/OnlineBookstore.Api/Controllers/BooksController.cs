@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +36,20 @@ public class BooksController : ControllerBase
 
         return Ok();
     }
-    
+
+    [HttpGet("recommendations")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> GetRecommendationsAsync(int? page, int itemsOnPage = 10)
+    {
+        //var identifier = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+        //    ?? throw new ArgumentException(nameof(User));
+        //var userId = Guid.Parse(identifier);
+        var userId = new Guid("75beee04-855c-44d1-970a-c50fb4eee068");
+        var result = await _bookService.GetRecommendationsAsync(userId, page, itemsOnPage);
+
+        return Ok(result);
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetBookAsync(int bookId)
     {

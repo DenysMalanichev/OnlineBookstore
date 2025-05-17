@@ -64,17 +64,17 @@ public class KafkaConsumerService : BackgroundService
             {
                 try
                 {
-                    var consumeResult = consumer.Consume(stoppingToken);
+                    var consumeResult = consumer.Consume(TimeSpan.FromMilliseconds(100));
 
                     if (consumeResult != null)
                     {
-                        _logger.LogInformation("Received message from topic: {Topic}", consumeResult.Topic);
-
-                        // Process message based on topic
                         await ProcessMessageBasedOnTopicAsync(consumeResult.Topic, consumeResult.Message.Value);
-
-                        // Commit the offset after processing
                         consumer.Commit(consumeResult);
+                    }
+                    else
+                    {
+                        // Small delay to prevent CPU spinning when no messages
+                        await Task.Delay(10, stoppingToken);
                     }
                 }
                 catch (ConsumeException ex)
