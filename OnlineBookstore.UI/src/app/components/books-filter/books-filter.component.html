@@ -2,61 +2,68 @@
     <div class="container">
         <div>
             <form class="book-search-form" [formGroup]="getFilteredBooksRequest">
-                <div>
-                    <strong class="filters-title">Filters</strong>
-                    <hr>
-                </div>
-                <div class="form-group">
-                    <label for="fbookname">Book name:</label>
-                    <input type="text" id="fbookname" name="fbookname" placeholder="Type to search" class="form-control" formControlName="name">
-                    <br><br>
-                </div>
-            
-                <div class="form-group">
-                    <label for="fauthorname">Author name:</label>
-                    <input type="text" id="fauthorname" name="fauthorname" placeholder="Type to search" class="form-control" formControlName="authorName">
-                    <br><br>
-                </div>
-
-                <div class="form-group-checkbox">
-                    <label for="fgenres">Genres:</label>
-                    <div *ngFor="let genre of genres" class="checkbox-wrapper">
-                        <input type="checkbox" [attr.id]="'genre' + genre.id" name="fgenres" value="{{genre.id}}" class="checkbox-input" (change)="onGenresChange($event, genre.id)">
-                        <label for="{{genre.id}}" class="checkbox-label">{{genre.name}}</label>
-                    </div><br>
-                </div>
-            
-                <div class="form-group">
-                    <label for="fpublisher">Publishers:</label>
-                    <select id="fpublisher" name="fpublishers" class="form-control" formControlName="publisherId">
-                        <option *ngFor="let publisher of publishers" [value]="publisher.id" [attr.id]="'publisher' + publisher.id" >
-                            {{publisher.companyName}}
-                        </option>
-                    </select>
-                </div><br>
-            
-                <div>
-                    <div>
-                        <h3>Price:</h3>
+                <h2 class="text-black-alpha-60 align-center">Filters</h2>
+                <div class="form-input mb-4">
+                    <div class="p-field mb-4">
+                        <span class="p-float-label">
+                            <input pInputText type="text" formControlName="name" id="fbookname" />
+                            <label>Book Name</label>
+                        </span>
                     </div>
-                    <div style="display: flex;">
-                        <div>
-                            <label for="fminprice">Min:</label>
-                            <input type="number" id="fminprice" class="form-control price-control" formControlName="minPrice">
-                        </div>
-                        
-                        <div>
-                            <label for="fmaxprice">Max:</label>
-                            <input type="number" id="fmaxprice" class="form-control price-control" formControlName="maxPrice">
-                        </div>  
-                    </div>
-                                      
-                </div>
-            
-                <div style="text-align: right; margin-top: 10px;">
-                    <input type="submit" value="Search" class="form-submit" (click)="this.getFilteredBooks()">
                 </div>
                 
+                <div class="form-input mb-4">
+                    <div class="p-field mb-4">
+                        <span class="p-float-label">
+                            <input pInputText type="text" formControlName="authorName" id="fauthorname" />
+                            <label>Author name</label>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-input mb-4">
+                    <span class="p-float-label">
+                        <p-multiSelect optionLabel="name" [options]="genres" display="chip" formControlName="genreIds"
+                            placeholder="Select Genres" [showClear]="true" />
+                        <label>Genres</label>
+                    </span>
+                </div>
+            
+                <div class="form-input mb-4">
+                    <span class="p-float-label">
+                        <p-dropdown [options]="publishers" formControlName="publisherId" optionLabel="companyName" id="fpublisher" />
+                        <label>Publisher</label>
+                    </span>
+                </div>
+
+                    <div style="display: flex; margin-top: 35px;">
+                        <div class="form-input mb-4">
+                            <span class="p-float-label">
+                                <p-inputNumber formControlName="minPrice"
+                                    id="fminprice"
+                                    mode="currency"
+                                    currency="USD"
+                                    [min]="0"
+                                    [step]="0.5" />
+                                <label>Min price</label>
+                            </span>
+                        </div>
+                        <div class="form-input mb-4">
+                            <span class="p-float-label">
+                                <p-inputNumber formControlName="maxPrice"
+                                    id="fmaxprice"
+                                    mode="currency"
+                                    currency="USD"                                    
+                                    [min]="0"
+                                    [step]="0.5"/>
+                                <label>Max price</label>
+                            </span>
+                        </div>
+                    </div>
+            
+                    <div class="margin-left: auto;">
+                        <p-button  type="submit" label="Search" icon="pi pi-search" (click)="this.getFilteredBooks()"></p-button>
+                    </div>                
             </form>
         </div>
         <div class="right">

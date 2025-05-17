@@ -27,11 +27,11 @@ export class BooksFilterComponent {
     authorName: new FormControl(null),
     publisherId: new FormControl(null),
     isDescending: new FormControl(false),
-    minPrice: new FormControl(null),
-    maxPrice: new FormControl(null),
+    minPrice: new FormControl(0),
+    maxPrice: new FormControl(9999),
     page: new FormControl(1),
     itemsOnPage: new FormControl(10),
-    genres: new FormArray([])
+    genreIds: new FormControl(null)
   });
 
   constructor(
@@ -54,18 +54,18 @@ export class BooksFilterComponent {
     });
   }
 
-  protected onGenresChange(event: any, genreId: number): void {
-    const genresArray: FormArray = this.getFilteredBooksRequest.get('genres') as FormArray;
+  // protected onGenresChange(event: any, genreId: number): void {
+  //   const genresArray: FormArray = this.getFilteredBooksRequest.get('genres') as FormArray;
   
-    if (event.target.checked) {
-      genresArray.push(new FormControl(genreId));
-    } else {
-      let index = genresArray.controls.findIndex(ctrl => ctrl.value === genreId);
-      if (index !== -1) {
-        genresArray.removeAt(index);
-      }
-    }
-  }
+  //   if (event.target.checked) {
+  //     genresArray.push(new FormControl(genreId));
+  //   } else {
+  //     let index = genresArray.controls.findIndex(ctrl => ctrl.value === genreId);
+  //     if (index !== -1) {
+  //       genresArray.removeAt(index);
+  //     }
+  //   }
+  // }
 
   private getAllGenres() {
     this.genresService.getAllGenres()
@@ -81,13 +81,13 @@ export class BooksFilterComponent {
     return {
       name: formValue.name,
       authorName: formValue.authorName,
-      publisherId: formValue.publisherId,
+      publisherId: formValue.publisherId?.id,
       isDescending: formValue.isDescending || false,
       minPrice: formValue.minPrice,
       maxPrice: formValue.maxPrice,
       page: formValue.page || 1,
       itemsOnPage: formValue.itemsOnPage || 10,
-      genres: formValue.genres
+      genres: formValue.genreIds?.map((g: { id: any; }) => g.id)
     };
   }
 }

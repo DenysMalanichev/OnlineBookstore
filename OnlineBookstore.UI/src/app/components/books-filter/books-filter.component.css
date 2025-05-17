@@ -108,8 +108,26 @@ label {
     width: 30%;
 }
 
+.form-input {
+    position: inherit;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
 @media (max-width: 768px) {
     .book-search-form {
         padding: 1rem;
     }
+}
+
+:host ::ng-deep .p-multiselect {
+    width: 100%;
+}
+
+:host ::ng-deep .p-dropdown {
+    width: 100%;
+}
+
+:host ::ng-deep input {
+    width: 100%;
 }

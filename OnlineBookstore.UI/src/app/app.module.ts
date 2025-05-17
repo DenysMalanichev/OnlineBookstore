@@ -23,6 +23,7 @@ import { DividerModule } from 'primeng/divider';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -112,6 +113,7 @@ import { PublisherFormComponent } from './components/publisher-components/publis
     InputSwitchModule,
     DropdownModule,
     InputTextareaModule,
+    InputNumberModule,
     StarRatingModule.forRoot(),
     JwtModule.forRoot({
       config: {
