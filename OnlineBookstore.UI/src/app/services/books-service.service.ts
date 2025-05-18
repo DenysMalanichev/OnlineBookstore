@@ -37,6 +37,15 @@ export class BooksService {
     return this.http.get<PageableResponse<BriefBookModel>>(apiUrl, { params });
   }
 
+  getRecommendedBooks(page: number, itemsOnPage: number): Observable<PageableResponse<BriefBookModel>> {
+    const apiUrl = environment.apiBaseUrl + environment.endpoints.books.booksBasePath + environment.endpoints.books.recommendedBooks;
+    let param = new HttpParams()
+      .set('page', page.toString())
+      .set('itemsOnPage', itemsOnPage.toString());
+
+    return this.http.get<PageableResponse<BriefBookModel>>(apiUrl, { params: param });
+  }
+
   getBookById(id: number): Observable<FullBookModel> {
     const apiUrl = environment.apiBaseUrl + environment.endpoints.books.booksBasePath;
     let param = new HttpParams().set('bookId', id.toString());

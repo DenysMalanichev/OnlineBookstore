@@ -25,6 +25,7 @@ export const environment = {
         },
         books: {
             booksBasePath: 'books/',
+            recommendedBooks: 'recommendations',
             getFilteredBooks: 'get-filtered-books/',
             getBookByAuthor: 'by-author/',
             getBookByPublisher: 'by-publisher/',

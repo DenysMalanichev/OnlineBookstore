@@ -24,6 +24,8 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { CarouselModule } from 'primeng/carousel';
+import { CardModule } from 'primeng/card';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -114,6 +116,8 @@ import { PublisherFormComponent } from './components/publisher-components/publis
     DropdownModule,
     InputTextareaModule,
     InputNumberModule,
+    CarouselModule,
+    CardModule,
     StarRatingModule.forRoot(),
     JwtModule.forRoot({
       config: {

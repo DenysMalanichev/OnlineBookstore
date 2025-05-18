@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { Component, ViewChild } from '@angular/core';
+import { FormArray, FormControl, FormGroup } from '@angular/forms'
 
 import { BriefBookModel } from 'src/app/models/book-models/briefBookModel';
 import { GetFilteredBooksRequest } from 'src/app/models/book-models/getFilteredBooksRequest';
@@ -15,9 +15,13 @@ import { PublishersService } from 'src/app/services/publishers-service.service';
   styleUrls: ['./books-filter.component.css']
 })
 export class BooksFilterComponent {
+  @ViewChild('carouselRef') carouselComponent: any;
+
+  personalInfoLabel: string = 'Personal Recommendations \u24D8';
   genres: BriefGenreModel[] = [];
   publishers: BriefPublisherModel[] = [];
   books: BriefBookModel[] = [];
+  recommendedBooks: BriefBookModel[] = [];
 
   cols = 3;
   totalPages: number = 0;
@@ -34,6 +38,8 @@ export class BooksFilterComponent {
     genreIds: new FormControl(null)
   });
 
+  responsiveOptions: any[] | undefined;
+
   constructor(
     private booksService: BooksService,
     private genresService: GenresService,
@@ -44,28 +50,43 @@ export class BooksFilterComponent {
     this.getFilteredBooks();
     this.getAllGenres();
     this.getAllPublishers();
+    this.getRecommendedBooks();
+
+    this.responsiveOptions = [
+      {
+        breakpoint: '1199px',
+        numVisible: 1,
+        numScroll: 1
+      },
+      {
+        breakpoint: '991px',
+        numVisible: 2,
+        numScroll: 1
+      },
+      {
+        breakpoint: '767px',
+        numVisible: 1,
+        numScroll: 1
+      }
+    ];
   }
 
   protected getFilteredBooks() {
     this.booksService.getFilteredBooks(this.prepareFilteredBooksRequest(this.getFilteredBooksRequest.value))
-    .subscribe(x => {
-      this.books = x.entities;
-      this.totalPages = x.totalPages;
-    });
+      .subscribe(x => {
+        this.books = x.entities;
+        this.totalPages = x.totalPages;
+      });
   }
 
-  // protected onGenresChange(event: any, genreId: number): void {
-  //   const genresArray: FormArray = this.getFilteredBooksRequest.get('genres') as FormArray;
-  
-  //   if (event.target.checked) {
-  //     genresArray.push(new FormControl(genreId));
-  //   } else {
-  //     let index = genresArray.controls.findIndex(ctrl => ctrl.value === genreId);
-  //     if (index !== -1) {
-  //       genresArray.removeAt(index);
-  //     }
-  //   }
-  // }
+  protected getRecommendedBooks(event?: any) {
+    if(!event || event.page > this.carouselComponent?.page) {
+    this.booksService.getRecommendedBooks(this.carouselComponent?.page ?? 1, (this.carouselComponent?.numVisible ?? 4) + 1)
+      .subscribe(x => {
+          this.recommendedBooks = this.recommendedBooks.concat(x.entities);
+      });
+    }
+  }
 
   private getAllGenres() {
     this.genresService.getAllGenres()

@@ -4,7 +4,7 @@
     </div>
     <div *ngIf="isAdmin && isAddBook" class="add-book-container">
         <button mat-flat-button color="warn" (click)="isAddBook = false">Cance</button>
-        <book-form></book-form>               
+        <book-form></book-form>
     </div>
     <mat-grid-list [cols]="cols" style=" width: 100%; height: 100%;">
         <mat-grid-tile *ngFor='let book of books'>
@@ -12,14 +12,8 @@
         </mat-grid-tile>
     </mat-grid-list>
 
-    <mat-paginator #paginator
-               class="paginator"
-               (page)="handlePageEvent($event)"
-               [length]="totalPages * pageSize"
-               [pageSize]="pageSize"
-               [showFirstLastButtons]="true"
-               [pageSizeOptions]="pageSizeOptions"
-               [pageIndex]="currentPage"
-               aria-label="Select page">
+    <mat-paginator #paginator class="paginator" (page)="handlePageEvent($event)" [length]="totalPages * pageSize"
+        [pageSize]="pageSize" [showFirstLastButtons]="true" [pageSizeOptions]="pageSizeOptions"
+        [pageIndex]="currentPage" aria-label="Select page">
     </mat-paginator>
 </div>
