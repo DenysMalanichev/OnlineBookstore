@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FileUploadEvent } from 'primeng/fileupload';
 import { Observable } from 'rxjs';
 import { AuthorModel } from 'src/app/models/author-models/authorModel';
 import { BriefBookModel } from 'src/app/models/book-models/briefBookModel';
@@ -11,6 +13,8 @@ import { AuthorService } from 'src/app/services/author-service.service';
 import { BooksService } from 'src/app/services/books-service.service';
 import { GenresService } from 'src/app/services/genres-service.service';
 import { PublishersService } from 'src/app/services/publishers-service.service';
+import { environment } from '../../../environments/environment.development';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-book-full-info',
@@ -21,6 +25,7 @@ export class BookFullInfoComponent implements OnInit {
   bookId!: number;
 
   book?: FullBookModel;
+  bookImageUrl!: SafeUrl;
   author!: AuthorModel;
   publisher!: BriefPublisherModel;
   genres!: BriefGenreModel[];
@@ -39,7 +44,8 @@ export class BookFullInfoComponent implements OnInit {
     private genresService: GenresService,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private router: Router) {}
+    private router: Router,
+    private sanitizer: DomSanitizer) {}
 
   ngOnInit(): void {    
     this.route.params.subscribe((params) => {
@@ -52,7 +58,16 @@ export class BookFullInfoComponent implements OnInit {
           this.getGenresByBook(this.bookId);
           this.getBooksAvgRating(this.bookId);
         });
+        this.booksService.getBookImage(this.bookId).subscribe(i => {
+          const imageObjectUrl = URL.createObjectURL(i);
+          this.bookImageUrl = URL.createObjectURL(i);
+          console.log('Generated Blob URL:', this.bookImageUrl);
+          // this.bookImageUrl = this.sanitizer.bypassSecurityTrustUrl(imageObjectUrl);
+        });
       }
+      // if (this.bookImageUrl == null || this.bookImageUrl == undefined) {
+      //   this.bookImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/660px-No-Image-Placeholder.svg.png?20200912122019';
+      // }
 
       this.isAdminCheck();
     });    
@@ -92,5 +107,11 @@ export class BookFullInfoComponent implements OnInit {
 
   isAdminCheck(): void {    
     this.authService.isAdmin().subscribe(x => this.isAdmin = x);
+  }
+
+  getImageUploadUrl(): string {
+    const defaultEndpointUri = environment.apiBaseUrl + environment.endpoints.books.booksBasePath + environment.endpoints.books.bookImage;
+    let url = defaultEndpointUri + '?bookId=' + this.bookId.toString();
+    return url;
   }
 }

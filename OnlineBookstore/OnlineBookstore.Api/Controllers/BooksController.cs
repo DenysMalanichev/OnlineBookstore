@@ -28,7 +28,24 @@ public class BooksController : ControllerBase
 
         return Ok();
     }
-    
+
+    [HttpPost("image")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
+    public async Task<IActionResult> UploadBookImageAsync([FromQuery] int bookId, IFormFile image)
+    {       
+        await _bookService.SetBookImageAsync(image, bookId);
+
+        return Ok();
+    }
+
+    [HttpGet("image")]
+    public async Task<IActionResult> GetBookImageAsync([FromQuery] int bookId)
+    {
+        var image = await _bookService.GetBookImageAsync(bookId);
+
+        return File(image!, "image/jpeg", "book-image");
+    }
+
     [HttpPut]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
     public async Task<IActionResult> UpdateBookAsync(UpdateBookDto updateBookDto)

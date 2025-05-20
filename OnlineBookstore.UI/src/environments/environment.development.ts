@@ -29,7 +29,8 @@ export const environment = {
             getFilteredBooks: 'get-filtered-books/',
             getBookByAuthor: 'by-author/',
             getBookByPublisher: 'by-publisher/',
-            getBooksAvgRating: 'avg-rating/'
+            getBooksAvgRating: 'avg-rating/',
+            bookImage: 'image'
         },        
         genres: {
             genresBasePath: 'genres/',

@@ -1,5 +1,9 @@
 <div class="book-container">
-    <div class="img-placeholder"></div>
+    <p-image
+        [src]="this.bookImageUrl" 
+        alt="Image" 
+        width="250"
+        height="350" />
     <div class="book-info">
         <div>
             <h1>{{ book?.name }}</h1>
@@ -12,7 +16,7 @@
         <star-rating [showHalfStars]="true" [rating]="avgRating || 0" [readOnly]="true" [size]="'medium'"></star-rating>
         <div class="busket-link" >
             <a *ngIf="!isToOrder" class="busket-btn" (click)="isToOrder = true">Order</a>
-            <div style="margin-top: 40px">
+            <div style="margin-top: 40px;">
                 <div *ngIf="isAdmin && !isUpdateBook" class="add-book-btn" (click)="isUpdateBook = true">
                     <button mat-flat-button color="accent">Update book</button>
                 </div>
@@ -23,7 +27,11 @@
                 <div *ngIf="isAdmin">
                     <button mat-flat-button color="warn" style="margin-top: 40px" (click)="deleteBook()">Delete</button>
                 </div>
-            </div>
+                <div *ngIf="isAdmin" style="margin-top: 40px">
+                    <p-fileUpload mode="basic" name="image" chooseIcon="pi pi-upload"
+                        [url]="this.getImageUploadUrl()" accept="image/*" [maxFileSize]="1000000" [auto]="true" chooseLabel="Browse" />
+                </div>
+                </div>
             <make-order *ngIf="isToOrder" [bookId]="bookId"></make-order>
         </div>
        

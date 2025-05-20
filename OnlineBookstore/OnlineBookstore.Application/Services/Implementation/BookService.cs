@@ -1,5 +1,6 @@
 using AutoMapper;
 using LinqKit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -257,4 +258,35 @@ public class BookService : IBookService
             PurchaseNumber = purchases,
             IsPaperback = book.IsPaperback,
         };
+
+    public async Task SetBookImageAsync(IFormFile image, int bookId)
+    {
+        if (image == null || image.Length == 0)
+        {
+            throw new ArgumentException("No image provided or image is empty");
+        }
+
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+        var extension = Path.GetExtension(image.FileName).ToLowerInvariant();
+
+        if (!allowedExtensions.Contains(extension))
+        {
+            throw new ArgumentException("Unsupported file type");
+        }
+
+        byte[] imageData;
+        using (var memoryStream = new MemoryStream())
+        {
+            await image.CopyToAsync(memoryStream);
+            imageData = memoryStream.ToArray();
+        }
+
+        await _unitOfWork.BookRepository.SetBookImageAsync(imageData, bookId);
+        await _unitOfWork.CommitAsync();
+    }
+
+    public async Task<byte[]?> GetBookImageAsync(int bookId)
+    {
+        return await _unitOfWork.BookRepository.GetBookImageAsync(bookId);
+    }
 }

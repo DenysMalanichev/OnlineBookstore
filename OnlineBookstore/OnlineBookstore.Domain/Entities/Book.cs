@@ -38,4 +38,6 @@ public class Book : IBaseEntity
     public IList<Genre> Genres { get; set; } = null!;
     
     public int Id { get; set; }
+
+    public byte[]? Image { get; set; } = [];
 }

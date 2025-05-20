@@ -68,4 +68,28 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
             .AsNoTracking()
             .ToList());            
     }
+
+    public async Task SetBookImageAsync(byte[] bytes, int bookId)
+    {
+        var book = await Task.FromResult(_dataContext.Books.FirstOrDefault(b => b.Id == bookId));
+
+        if (book is null)
+        {
+            throw new ArgumentException("No book with Id bookId found");
+        }
+
+        book.Image = bytes;
+    }
+
+    public async Task<byte[]> GetBookImageAsync(int bookId)
+    {
+        var book = await Task.FromResult(_dataContext.Books.FirstOrDefault(b => b.Id == bookId));
+
+        if (book is null)
+        {
+            throw new ArgumentException("No book with Id bookId found");
+        }
+
+        return book.Image!;
+    }
 }

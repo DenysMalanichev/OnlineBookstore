@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using OnlineBookstore.Features.BookFeatures;
 using OnlineBookstore.Features.Paging;
 
@@ -22,4 +23,8 @@ public interface IBookService
     Task DeleteBookAsync(int bookId);
 
     double? CountAvgRatingOfBook(int bookId);
+
+    Task SetBookImageAsync(IFormFile image, int bookId);
+
+    Task<byte[]?> GetBookImageAsync(int bookId);
 }

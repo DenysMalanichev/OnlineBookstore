@@ -11,4 +11,8 @@ public interface IBookRepository : IGenericRepository<Book>, IQueryingRepository
     Task<IEnumerable<Book>>? GetByIdAsync(int[] ids, int? page, int itemsOnPage = 10);
 
     double? CountAvgRatingForBook(int bookId);
+
+    Task SetBookImageAsync(byte[] bytes, int bookId);
+
+    Task<byte[]> GetBookImageAsync(int bookId);
 }

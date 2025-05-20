@@ -26,6 +26,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CarouselModule } from 'primeng/carousel';
 import { CardModule } from 'primeng/card';
+import { ImageModule } from 'primeng/image';
+import { FileUploadModule } from 'primeng/fileupload';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -118,6 +120,8 @@ import { PublisherFormComponent } from './components/publisher-components/publis
     InputNumberModule,
     CarouselModule,
     CardModule,
+    ImageModule,
+    FileUploadModule,
     StarRatingModule.forRoot(),
     JwtModule.forRoot({
       config: {
