@@ -3,7 +3,7 @@
         <h2>Orders History:</h2>
     </div>
     <div class="order-details" *ngFor="let order of orders">
-        <h3>Order (ID {{ order.id }}, Status - {{ order.status }})</h3>
+        <h3>Order (ID {{ order.id }}, Status - {{ order.status }}) - {{ order.orderClosed | date:'short' }}</h3>
         <table>
             <thead>
                 <tr>

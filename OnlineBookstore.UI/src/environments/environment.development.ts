@@ -7,7 +7,7 @@ export const environment = {
             getUserOpenOrderPath: 'users-active-order',
             shipUserOrderPath: 'ship-users-order',
             getUserHistoryPath: 'user-orders-history',
-            
+            getBooksStatisticsPath: 'get-books-order-statistics/'
         },
         users: {
             usersBasePath: 'users/',

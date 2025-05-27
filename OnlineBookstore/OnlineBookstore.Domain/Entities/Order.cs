@@ -18,6 +18,8 @@ public class Order : IBaseEntity
     public string UserId { get; set; } = null!;
 
     public virtual IList<OrderDetail> OrderDetails { get; set; } = null!;
-    
+
+    public DateTime? OrderClosed { get; set; } = null!;
+
     public int Id { get; set; }
 }

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { GetOrderModel } from '../models/order-models/GetOrderModel';
+import { BookStatisticsModel } from '../models/book-models/BookStatisticsModel';
 
 @Injectable({
   providedIn: 'root'
@@ -34,5 +35,11 @@ export class OrdersService {
     const shipOrderPath = this.baseOrdersPath + environment.endpoints.orders.getUserHistoryPath;
 
     return this.http.get<GetOrderModel[]>(shipOrderPath);
+  }
+
+  getBooksOrderStatistics(bookId: number): Observable<BookStatisticsModel[]> {
+    const getStatisticsPath = this.baseOrdersPath + environment.endpoints.orders.getBooksStatisticsPath + bookId;
+
+    return this.http.get<BookStatisticsModel[]>(getStatisticsPath);
   }
 }

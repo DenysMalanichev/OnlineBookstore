@@ -1,4 +1,5 @@
 using AutoMapper;
+using LinqKit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OnlineBookstore.Application.Exceptions;
@@ -8,6 +9,7 @@ using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Features.OrderFeatures;
 using OnlineBookstore.Persistence.Repositories.Interfaces;
+using OnlineBookstore.Persistence.Repositories.RepoImplementations;
 
 namespace OnlineBookstore.Application.Services.Implementation;
 
@@ -61,6 +63,7 @@ public class OrderService : IOrderService
         order.ShipAddress = createOrderDto.ShipAddress;
         order.ShipCity = createOrderDto.ShipCity;
         order.OrderStatus = OrderStatus.Closed;
+        order.OrderClosed = DateTime.UtcNow;
 
         await _unitOfWork.CommitAsync();
 
@@ -88,5 +91,24 @@ public class OrderService : IOrderService
         await _unitOfWork.CommitAsync();
 
         return newOrder;
+    }
+
+    public async Task<IEnumerable<BooksOrdersStatisticsDto>> GetBooksOrderStatisticsAsync(int bookId)
+    {
+        var yearOfInterest = DateTime.UtcNow.Year;
+
+        var booksOrderDetails = (await _unitOfWork.OrderDetailRepository.GetAllAsync())
+            .Where(od => od.BookId == bookId);
+
+        var statisticsArray = (await _unitOfWork.OrderRepository.GetOrdersByYearAsync(
+            booksOrderDetails.Select(od => od.OrderId).ToArray(), yearOfInterest))
+            .GroupBy(o => o.OrderClosed!.Value.Month);
+
+        return statisticsArray.Select(orderGroup => 
+            new BooksOrdersStatisticsDto
+            {
+                Quantity = orderGroup.Sum(o => o.OrderDetails.Where(od => od.BookId == bookId).Sum(od => od.Quantity)),
+                Month = orderGroup.First().OrderClosed!.Value.Month,
+            });
     }
 }

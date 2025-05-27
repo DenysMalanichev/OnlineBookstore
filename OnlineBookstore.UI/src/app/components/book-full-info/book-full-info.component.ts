@@ -14,7 +14,7 @@ import { BooksService } from 'src/app/services/books-service.service';
 import { GenresService } from 'src/app/services/genres-service.service';
 import { PublishersService } from 'src/app/services/publishers-service.service';
 import { environment } from '../../../environments/environment.development';
-import { HttpParams } from '@angular/common/http';
+import { OrdersService } from 'src/app/services/orders.service';
 
 @Component({
   selector: 'app-book-full-info',
@@ -22,6 +22,11 @@ import { HttpParams } from '@angular/common/http';
   styleUrls: ['./book-full-info.component.css']
 })
 export class BookFullInfoComponent implements OnInit {
+  chartData: any;
+  chartOptions: any;
+  annualPurchases: number = 0;
+  annualIncome: string = '';
+
   bookId!: number;
 
   book?: FullBookModel;
@@ -39,6 +44,7 @@ export class BookFullInfoComponent implements OnInit {
 
   constructor(
     private booksService: BooksService,
+    private ordersService: OrdersService,
     private authorService: AuthorService,
     private publisherService: PublishersService,
     private genresService: GenresService,
@@ -66,7 +72,39 @@ export class BookFullInfoComponent implements OnInit {
             this.bookImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/660px-No-Image-Placeholder.svg.png?20200912122019';
           }
         });
+
+        this.ordersService.getBooksOrderStatistics(this.bookId).subscribe(stats => {
+          let data = [];
+          for (let month = 1; month <= 12; month++) {
+            if(stats.find(s => s.month == month)) {
+              data.push(stats.find(s => s.month == month)!.quantity);
+              this.annualPurchases += data[month-1];
+            }
+            else {
+              data.push(0);
+            }
+          }
+
+          this.annualIncome = (this.annualPurchases * this.book!.price).toFixed(2);
+
+          this.chartData = {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [
+                {
+                    label: 'Monthly purchases',
+                    data: data,
+                    fill: false,
+                    tension: 0.5
+                }
+            ]
+          };
+          this.chartOptions = {
+              maintainAspectRatio: false,
+              aspectRatio: 1
+          };
+        });        
       }
+
       this.isAdminCheck();
     });    
   }

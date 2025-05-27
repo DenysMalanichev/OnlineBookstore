@@ -33,10 +33,19 @@
                 </div>
                 </div>
             <make-order *ngIf="isToOrder" [bookId]="bookId"></make-order>
-        </div>
-       
-    </div>
-
-    
+        </div>       
+    </div>    
 </div>
+<div *ngIf="isAdmin" class="w-auto p-3 flex flex-column md:flex-row">
+    <p-chart type="line" [data]="chartData" [options]="chartOptions" class="flex-auto" /> 
+    <div class="flex-auto md:flex-4 mt-4 sm:p-4 md:p-0 md:pl-4 text-color-secondary font-medium sm:border-left-none md:border-left-1 border-dashed border-right-none md:border-top-none border-bottom-none">
+        <h2 class="underline font-italic">More statistics:</h2>
+        <p>Annual purchases: {{ this.annualPurchases }}</p>
+        <div class="flex">
+            <p>Annual income: </p>
+            <p class="font-italic text-black-alpha-70"> ${{ this.annualIncome }}</p>
+        </div>
+    </div>
+</div>
+
 <comments-container [bookId]="bookId"></comments-container>

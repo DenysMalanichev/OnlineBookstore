@@ -23,4 +23,14 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
             .Where(o => o.User.Id == userId)
             .ToListAsync();
     }
+
+    public async Task<IEnumerable<Order>> GetOrdersByYearAsync(int[] orderIds, int yearOfInterest)
+    {
+        return await _dataContext.Orders
+            .Where(o => orderIds.Contains(o.Id) &&
+                        o.OrderStatus == Domain.Constants.OrderStatus.Closed &&
+                        o.OrderClosed.HasValue &&
+                        o.OrderClosed!.Value.Year == yearOfInterest)
+            .ToListAsync();
+    }
 }
