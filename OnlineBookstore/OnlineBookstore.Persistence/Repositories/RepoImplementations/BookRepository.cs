@@ -1,5 +1,6 @@
 using System.Data.Entity;
 using System.Linq;
+using Azure;
 using LinqKit;
 using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Persistence.Context;
@@ -91,5 +92,13 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
         }
 
         return book.Image!;
+    }
+
+    public async Task<IEnumerable<Book>>? GetByIdsAsync(int[] ids)
+    {
+        return await Task.FromResult(_dataContext.Books
+            .Where(b => ids.Contains(b.Id))
+            .AsNoTracking()
+            .ToList());
     }
 }

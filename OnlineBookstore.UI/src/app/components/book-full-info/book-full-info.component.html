@@ -7,7 +7,7 @@
     <div class="book-info">
         <div>
             <h1>{{ book?.name }}</h1>
-            <p><strong>Author:</strong> {{ author.firstName + author.lastName }}</p>
+            <p><strong>Author:</strong> {{ author.firstName + ' ' + author.lastName }}</p>
             <p><strong>Price:</strong> ${{ book?.price }}</p>
             <p><strong>Description:</strong> {{ book?.description || 'No description available.' }}</p>
             <p><strong>Publisher:</strong> {{ publisher.companyName }}</p>
@@ -28,7 +28,7 @@
                     <button mat-flat-button color="warn" style="margin-top: 40px" (click)="deleteBook()">Delete</button>
                 </div>
                 <div *ngIf="isAdmin" style="margin-top: 40px">
-                    <p-fileUpload mode="basic" name="image" chooseIcon="pi pi-upload"
+                    <p-fileUpload mode="basic" name="image" chooseIcon="pi pi-upload" (onUpload)="this.router.navigate(['/book-details/' + this.bookId])"
                         [url]="this.getImageUploadUrl()" accept="image/*" [maxFileSize]="1000000" [auto]="true" chooseLabel="Browse" />
                 </div>
                 </div>

@@ -25,6 +25,7 @@ export class BooksFilterComponent {
 
   cols = 3;
   totalPages: number = 0;
+  currentRecommendationsPage = 1;
   
   getFilteredBooksRequest = new FormGroup({
     name: new FormControl(null),
@@ -34,7 +35,7 @@ export class BooksFilterComponent {
     minPrice: new FormControl(0),
     maxPrice: new FormControl(9999),
     page: new FormControl(1),
-    itemsOnPage: new FormControl(10),
+    itemsOnPage: new FormControl(9),
     genreIds: new FormControl(null)
   });
 
@@ -80,11 +81,13 @@ export class BooksFilterComponent {
   }
 
   protected getRecommendedBooks(event?: any) {
-    if(!event || event.page > this.carouselComponent?.page) {
-    this.booksService.getRecommendedBooks(this.carouselComponent?.page ?? 1, (this.carouselComponent?.numVisible ?? 4) + 1)
-      .subscribe(x => {
-          this.recommendedBooks = this.recommendedBooks.concat(x.entities);
-      });
+    if(!event || event.page >= this.currentRecommendationsPage) {
+      this.booksService.getRecommendedBooks(this.carouselComponent?.page ?? 1, (this.carouselComponent?.numVisible ?? 4) + 1)
+        .subscribe(x => {
+            this.recommendedBooks = this.recommendedBooks.concat(x.entities);
+        });
+
+      this.currentRecommendationsPage++;  
     }
   }
 
@@ -107,7 +110,7 @@ export class BooksFilterComponent {
       minPrice: formValue.minPrice,
       maxPrice: formValue.maxPrice,
       page: formValue.page || 1,
-      itemsOnPage: formValue.itemsOnPage || 10,
+      itemsOnPage: formValue.itemsOnPage || 9,
       genres: formValue.genreIds?.map((g: { id: any; }) => g.id)
     };
   }

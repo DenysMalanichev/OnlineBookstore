@@ -1,6 +1,11 @@
 <div class="book-card">
     <a class="card-link" [routerLink]="['/book-details', book.id]">
-        <div class="img-placeholder"></div>
+        <!-- <div class="img-placeholder"></div> -->
+        <p-image
+            [src]="this.bookImageUrl" 
+            alt="Image" 
+            width="240"
+            height="336" />
         <strong class="book-name">{{ this.book.name }}</strong>
         <p class="book-author">{{ this.book.authorName }}</p>
         <p class="price">{{ this.book.price }}$</p>

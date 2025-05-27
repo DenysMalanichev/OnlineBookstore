@@ -29,6 +29,9 @@ public class BookPortraitRepository : IBookPortraitRepository
         var maxPopularity = _bookPortraits.AsQueryable()
             .Max(b => b.PurchaseNumber);
 
+        if (maxPopularity == 0)
+            maxPopularity = 1;
+
         // Build the aggregation pipeline using the fluent API
         var pipeline = _bookPortraits.Aggregate()
             // Stage 1: Match books the user hasn't purchased yet

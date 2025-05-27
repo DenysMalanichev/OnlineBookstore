@@ -59,7 +59,7 @@
         </form>
     </div>
     <div class="right">
-            <p-carousel #carouselRef [value]="recommendedBooks" [numVisible]="3" [numScroll]="1" [circular]="false" [responsiveOptions]="responsiveOptions" (onPage)="getRecommendedBooks($event)">
+            <p-carousel #carouselRef [value]="recommendedBooks" [numVisible]="3" [numScroll]="1" [circular]="false" [responsiveOptions]="responsiveOptions" (onPage)="getRecommendedBooks($event)" [showIndicators]="false">
                 <ng-template pTemplate="header">
                     <p-button
                         [text]="true"

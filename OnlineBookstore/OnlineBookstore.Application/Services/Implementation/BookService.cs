@@ -99,7 +99,7 @@ public class BookService : IBookService
         {
             var recommendationData = await new StreamReader(result.Content.ReadAsStream()).ReadToEndAsync();
             var recommendedBookIds = JsonConvert.DeserializeObject<int[]>(recommendationData)!;
-            var books = await _unitOfWork.BookRepository.GetByIdAsync(recommendedBookIds, page, itemsOnPage)!;
+            var books = await _unitOfWork.BookRepository.GetByIdsAsync(recommendedBookIds)!;
 
             var briefBookDtos = _mapper.Map<IEnumerable<GetBriefBookDto>>(books);
             return new GenericPagingDto<GetBriefBookDto>

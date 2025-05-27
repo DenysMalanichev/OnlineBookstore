@@ -44,7 +44,7 @@ export class BookFullInfoComponent implements OnInit {
     private genresService: GenresService,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private router: Router,
+    protected router: Router,
     private sanitizer: DomSanitizer) {}
 
   ngOnInit(): void {    
@@ -59,16 +59,14 @@ export class BookFullInfoComponent implements OnInit {
           this.getBooksAvgRating(this.bookId);
         });
         this.booksService.getBookImage(this.bookId).subscribe(i => {
-          const imageObjectUrl = URL.createObjectURL(i);
-          this.bookImageUrl = URL.createObjectURL(i);
-          console.log('Generated Blob URL:', this.bookImageUrl);
-          // this.bookImageUrl = this.sanitizer.bypassSecurityTrustUrl(imageObjectUrl);
+          if(i && i.size > 0) {
+            const imageObjectUrl = URL.createObjectURL(i);
+            this.bookImageUrl = this.sanitizer.bypassSecurityTrustUrl(imageObjectUrl);
+          }else {
+            this.bookImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/660px-No-Image-Placeholder.svg.png?20200912122019';
+          }
         });
       }
-      // if (this.bookImageUrl == null || this.bookImageUrl == undefined) {
-      //   this.bookImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/660px-No-Image-Placeholder.svg.png?20200912122019';
-      // }
-
       this.isAdminCheck();
     });    
   }
