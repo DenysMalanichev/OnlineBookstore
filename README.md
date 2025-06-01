@@ -9,6 +9,7 @@ Online Bookstore is written using the following **technologies**:
 - ASP.NET Core
 - EF Core
 - MS SQL Server
+- MongoDB
 - xUnit (along with Moq, NBuilder, Bogus, FluentAssertion, InMemory)
 - ASP.NET Core Identity for auth
 ### Front-end
@@ -43,7 +44,7 @@ Finally Presentaions consists of Api project, that contains Program.cs entrypoin
 
 ## Database schema:
 This SQL diagram is simplyfied and aims to show only main idea of DB. It is not including tables provided by ASP.NET Core Identity, like ASP.NET Users, Roles, etc.
-![image](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/ab8fd9bc-5e7a-4860-99e9-1db7a5bc30b6)
+![image](https://github.com/user-attachments/assets/0d26cac5-179f-46be-a78c-d097bff7c57b)
 
 ## Aplication Features
 - Except of CRUD operations for Bussiness Entities (Author, Book, Comment, Genre, Order, Order Detail, Publisher, User) 
