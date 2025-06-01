@@ -1,4 +1,4 @@
-# Online Bookstore
+  # Online Bookstore
 Online Bookstore is a learning project. Its purpose is to create marketplace for books, that users would be able to buy and order shipping right to their homes.
 Every order may have more than 1 book and every book may have its own quantity. To order book customer would need to register in this system.
 Users can write reviews to books and give marks (1-5 stars).
@@ -21,7 +21,7 @@ Back-end part constitutes a public API that every one can use.
 In our case front-end web-application, written on Angular, 
 use this public API to get data from DB and execute business operations.
 
-![layers-diagram](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/9c86dac1-bc87-43fa-9b46-4d9dd7f3796a)
+![layers-diagram](https://github.com/user-attachments/assets/4d7a060b-46ea-448f-99d6-a41b5904c3df)
 
 ## Back-end part of the project is written using N-layerd architecture:
 Here we have 3 main layers:
