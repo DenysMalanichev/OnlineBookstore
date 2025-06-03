@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using OnlineBookstore.Features.BookFeatures;
 using OnlineBookstore.Features.Paging;
 
@@ -8,6 +9,8 @@ public interface IBookService
     Task AddBookAsync(CreateBookDto createBookDto);
     
     Task UpdateBookAsync(UpdateBookDto updateBookDto);
+
+    Task<GenericPagingDto<GetBriefBookDto>> GetRecommendationsAsync(Guid userId, int? page, int itemsOnPage = 10);
 
     Task<GetBookDto> GetBookByIdAsync(int bookId);
 
@@ -20,4 +23,8 @@ public interface IBookService
     Task DeleteBookAsync(int bookId);
 
     double? CountAvgRatingOfBook(int bookId);
+
+    Task SetBookImageAsync(IFormFile image, int bookId);
+
+    Task<byte[]?> GetBookImageAsync(int bookId);
 }

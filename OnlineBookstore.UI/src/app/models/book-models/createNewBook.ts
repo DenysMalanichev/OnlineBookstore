@@ -5,4 +5,6 @@ export interface CreateNewBook {
     authorId: number;
     publisherId: number;
     genreIds: number[];
+    isPaperback: boolean;
+    language: string;
 }

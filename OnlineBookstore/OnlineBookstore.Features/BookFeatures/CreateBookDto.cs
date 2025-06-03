@@ -16,4 +16,8 @@ public class CreateBookDto
     public int PublisherId { get; set; }
 
     public IList<int> GenreIds { get; set; } = null!;
+
+    public string Language { get; set; }
+
+    public bool IsPaperback { get; set; }
 }

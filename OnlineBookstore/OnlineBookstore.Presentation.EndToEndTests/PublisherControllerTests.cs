@@ -8,10 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using OnlineBookstore.Application.Publishers.Create;
-using OnlineBookstore.Application.Publishers.Update;
 using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Domain.Entities;
+using OnlineBookstore.Features.OrderFeatures;
 using OnlineBookstore.Features.PublisherFeatures;
 using OnlineBookstore.Persistence.Context;
 
@@ -114,7 +113,7 @@ public class PublisherControllerTests : IClassFixture<CustomWebApplicationFactor
     public async Task CreatePublisherAsync_CreatesNewPublisherAndReturnsDto()
     {
         // Arrange
-        var createPublisherDto = Builder<CreatePublisherCommand>
+        var createPublisherDto = Builder<CreatePublisherDto>
             .CreateNew()
             .With(p => p.Phone = _faker.Phone.PhoneNumber())
             .Build();
@@ -158,7 +157,7 @@ public class PublisherControllerTests : IClassFixture<CustomWebApplicationFactor
 
         dbContext.Entry(publisher).State = EntityState.Detached;
 
-        var updatePublisherDto = Builder<UpdatePublisherCommand>
+        var updatePublisherDto = Builder<UpdatePublisherDto>
             .CreateNew()
             .With(p => p.Phone = _faker.Phone.PhoneNumber())
             .Build();

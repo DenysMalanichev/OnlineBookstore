@@ -7,26 +7,37 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using OnlineBookstore.Application.Messages;
 using OnlineBookstore.Application.Services.Interfaces;
 using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Features.UserFeatures;
 using OnlineBookstore.Features.UserFeatures.Options;
+using OnlineBookstore.Persistence.Repositories.Interfaces;
 
 namespace OnlineBookstore.Application.Services.Implementation;
 
 public class UserService : IUserService
 {
+    private readonly IKafkaProducerService _kafkaProducerService;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<User> _userManager;
     private readonly IMapper _mapper;
 
     private readonly JwtOptions _jwtOptions;
 
-    public UserService(UserManager<User> userManager, IMapper mapper, IOptions<JwtOptions> jwtOptions)
+    public UserService(
+        IKafkaProducerService kafkaProducer,
+        UserManager<User> userManager,
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        IOptions<JwtOptions> jwtOptions)
     {
         _userManager = userManager;
         _mapper = mapper;
         _jwtOptions = jwtOptions.Value;
+        _kafkaProducerService = kafkaProducer;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task RegisterUserAsync(RegisterUserDto registerUserDto)
@@ -34,6 +45,31 @@ public class UserService : IUserService
         var user = await CreateUserAsync(registerUserDto);
 
         await _userManager.AddToRoleAsync(user, RoleName.User.ToString());
+
+        foreach(var authorId in registerUserDto.PreferedAuthoreIds)
+        {
+           var _ = await _unitOfWork.AuthorRepository.GetByIdAsync(authorId)!
+                ?? throw new ArgumentException($"Author with Id {authorId}");
+        }
+        foreach (var genreId in registerUserDto.PreferedGenreIds)
+        {
+            var _ = await _unitOfWork.GenreRepository.GetByIdAsync(genreId)!
+                 ?? throw new ArgumentException($"Genre with Id {genreId}");
+        }
+
+        var userCreatedMessage = new UserUpsertMessage
+        {
+            UserId = user.Id,
+            PreferedAuthoreIds = registerUserDto.PreferedAuthoreIds,
+            PreferedGenreIds = registerUserDto.PreferedGenreIds,
+            PreferedLanguages = registerUserDto.PreferedLanguages,
+            IsPaperbackPrefered = registerUserDto.IsPaperbackPrefered,
+        };
+
+        await _kafkaProducerService.ProduceAsync<string, UserUpsertMessage>(
+            "recommendations.user-upserted",
+            user.Id.ToString(),
+            userCreatedMessage);
     }
 
     public async Task RegisterAdminAsync(RegisterUserDto registerUserDto)

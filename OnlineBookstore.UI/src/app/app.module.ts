@@ -14,6 +14,21 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { TooltipModule } from 'primeng/tooltip';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { MenubarModule } from 'primeng/menubar';
+import { DividerModule } from 'primeng/divider';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { CarouselModule } from 'primeng/carousel';
+import { CardModule } from 'primeng/card';
+import { ImageModule } from 'primeng/image';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ChartModule } from 'primeng/chart';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -47,10 +62,6 @@ import { GenreInfoComponent } from './components/genre-components/genre-info/gen
 import { AuthorFormComponent } from './components/author-components/author-form/author-form.component';
 import { PublisherFormComponent } from './components/publisher-components/publisher-form/publisher-form.component';
 
-import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
-import { InputNumberModule } from 'primeng/inputnumber';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -82,6 +93,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
     PublisherFormComponent,
   ],
   imports: [
+    ButtonModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
@@ -89,6 +101,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
+    MultiSelectModule,
     FormsModule,
     MatCardModule,
     ReactiveFormsModule,
@@ -98,9 +111,19 @@ import { InputNumberModule } from 'primeng/inputnumber';
     MatButtonModule,
     MatDialogModule,
     MatIconModule,
+    TooltipModule,
     InputTextModule,
+    MenubarModule,
+    DividerModule,
+    InputSwitchModule,
     DropdownModule,
+    InputTextareaModule,
     InputNumberModule,
+    CarouselModule,
+    CardModule,
+    ImageModule,
+    FileUploadModule,
+    ChartModule,
     StarRatingModule.forRoot(),
     JwtModule.forRoot({
       config: {
@@ -112,9 +135,9 @@ import { InputNumberModule } from 'primeng/inputnumber';
   ],
   providers: [
     {
-    provide: HTTP_INTERCEPTORS,
-    useClass: AuthInterceptor,
-    multi: true
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
     },
     {
       provide: HTTP_INTERCEPTORS,

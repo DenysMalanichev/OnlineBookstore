@@ -1,18 +1,22 @@
 <div class="book-container">
-    <div class="img-placeholder"></div>
+    <p-image
+        [src]="this.bookImageUrl" 
+        alt="Image" 
+        width="250"
+        height="350" />
     <div class="book-info">
         <div>
             <h1>{{ book?.name }}</h1>
-            <p><strong>Author:</strong> {{ author.firstName + author.lastName }}</p>
+            <p><strong>Author:</strong> {{ author.firstName + ' ' + author.lastName }}</p>
             <p><strong>Price:</strong> ${{ book?.price }}</p>
             <p><strong>Description:</strong> {{ book?.description || 'No description available.' }}</p>
-            <p><strong>Publisher ID:</strong> {{ publisher.companyName }}</p>
+            <p><strong>Publisher:</strong> {{ publisher.companyName }}</p>
             <p><strong>Genres: </strong> <span *ngIf="genres">{{ genreNames }}</span><span *ngIf="!genres">No genres listed.</span></p>
         </div>
         <star-rating [showHalfStars]="true" [rating]="avgRating || 0" [readOnly]="true" [size]="'medium'"></star-rating>
         <div class="busket-link" >
             <a *ngIf="!isToOrder" class="busket-btn" (click)="isToOrder = true">Order</a>
-            <div style="margin-top: 40px">
+            <div style="margin-top: 40px;">
                 <div *ngIf="isAdmin && !isUpdateBook" class="add-book-btn" (click)="isUpdateBook = true">
                     <button mat-flat-button color="accent">Update book</button>
                 </div>
@@ -23,12 +27,25 @@
                 <div *ngIf="isAdmin">
                     <button mat-flat-button color="warn" style="margin-top: 40px" (click)="deleteBook()">Delete</button>
                 </div>
-            </div>
+                <div *ngIf="isAdmin" style="margin-top: 40px">
+                    <p-fileUpload mode="basic" name="image" chooseIcon="pi pi-upload" (onUpload)="this.router.navigate(['/book-details/' + this.bookId])"
+                        [url]="this.getImageUploadUrl()" accept="image/*" [maxFileSize]="1000000" [auto]="true" chooseLabel="Browse" />
+                </div>
+                </div>
             <make-order *ngIf="isToOrder" [bookId]="bookId"></make-order>
-        </div>
-       
-    </div>
-
-    
+        </div>       
+    </div>    
 </div>
+<div *ngIf="isAdmin" class="w-auto p-3 flex flex-column md:flex-row">
+    <p-chart type="line" [data]="chartData" [options]="chartOptions" class="flex-auto" /> 
+    <div class="flex-auto md:flex-4 mt-4 sm:p-4 md:p-0 md:pl-4 text-color-secondary font-medium sm:border-left-none md:border-left-1 border-dashed border-right-none md:border-top-none border-bottom-none">
+        <h2 class="underline font-italic">More statistics:</h2>
+        <p>Annual purchases: {{ this.annualPurchases }}</p>
+        <div class="flex">
+            <p>Annual income: </p>
+            <p class="font-italic text-black-alpha-70"> ${{ this.annualIncome }}</p>
+        </div>
+    </div>
+</div>
+
 <comments-container [bookId]="bookId"></comments-container>

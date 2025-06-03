@@ -38,7 +38,7 @@ public class OrderRepositoryTests
         await context.Orders.AddRangeAsync(orders);
         await context.SaveChangesAsync();
 
-        var orderRepository = new OrderQueryRepository(context);
+        var orderRepository = new OrderRepository(context);
 
         // Act
         var result = await orderRepository.GetUserOrdersAsync(userId);

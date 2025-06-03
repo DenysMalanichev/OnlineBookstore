@@ -19,4 +19,16 @@ public class RegisterUserDto
 
     [Required]
     public string ConfirmPassword { get; set; } = null!;
+
+    [Required]
+    public IList<string> PreferedLanguages { get; set; } = default!;
+
+    [Required]
+    public bool IsPaperbackPrefered { get; set; }
+
+    [Required]
+    public IList<int> PreferedGenreIds { get; set; } = [];
+
+    [Required]
+    public IList<int> PreferedAuthoreIds { get; set; } = [];
 }

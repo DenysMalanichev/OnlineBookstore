@@ -11,13 +11,6 @@ div {
     margin-bottom: 15px;
 }
 
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 16px;
-    color: #333;
-}
-
 input[type="text"],
 input[type="number"],
 textarea,
@@ -55,4 +48,39 @@ button {
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+.error small {
+    color: red;
+}
+
+.form-input {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.form-input input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-input input:focus {
+    outline: none;
+    border-color: #405cf5;
+}
+
+:host ::ng-deep .p-multiselect {
+    width: 100%;
+}
+
+:host ::ng-deep .p-dropdown {
+    width: 100%;
 }

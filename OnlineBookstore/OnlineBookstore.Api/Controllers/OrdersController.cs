@@ -95,6 +95,15 @@ public class OrdersController : ControllerBase
         return Ok(orderDetailDto);
     }
 
+    [HttpGet("get-books-order-statistics/{bookId:int}")]
+    public async Task<IActionResult> GetBooksOrderStatisticsAsync(int bookId)
+    {
+        var orderDetailDto = await _orderService.GetBooksOrderStatisticsAsync(bookId);
+
+        return Ok(orderDetailDto);
+    }
+
+
     [HttpPut("update-order-detail")]
     public async Task<IActionResult> UpdateOrderDetailAsync(UpdateOrderDetailCommand updateOrderDetailCommand)
     {

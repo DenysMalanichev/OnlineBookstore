@@ -1,40 +1,93 @@
 <form [formGroup]="bookForm">
-    <div>
-      <label for="name">Book Name:</label>
-      <input type="text" formControlName="name" id="name" placeholder="name">
+  <h2 class="text-black-alpha-60 align-center">Create Book</h2>
+    <div class="p-field mb-4">
+      <span class="p-float-label">
+        <input pInputText type="text" required formControlName="name" id="name" />
+        <label>Book Name*</label>
+      </span>
+      <div *ngIf="bookForm.get('name')?.invalid && (bookForm.get('name')?.dirty || bookForm.get('name')?.touched)" class="error">
+        <small>Book name is required.</small>
+        <small>Please enter a valid name.</small>
+      </div>
     </div>
-    <div>
-      <label for="description">Description:</label>
-      <textarea formControlName="description" id="description"></textarea>
+
+    <div class="p-field mb-4">
+      <span class="p-float-label">        
+        <textarea pInputTextarea formControlName="description" id="description" rows="5" cols="30"></textarea>
+        <label for="description">Description:</label>
+      </span>
     </div>
-    <div>
-      <label for="price">Price:</label>
-      <input type="number" formControlName="price" id="price" required>
+
+    <div class="p-field mb-4">
+      <span class="p-float-label">
+        <input pInputText type="number" required formControlName="price" id="price" />
+        <label>Price*</label>
+      </span>
+      <div *ngIf="bookForm.get('price')?.invalid && (bookForm.get('price')?.dirty || bookForm.get('price')?.touched)" class="error">
+        <small>Price is required.</small>
+        <small>Please enter a price.</small>
+      </div>
     </div>
-    <div>
-      <label for="authorId">Author:</label>
-      <select id="fauthor" name="fauthor" class="form-control" formControlName="authorId">
-        <option *ngFor="let author of authors" [value]="author.id" [attr.id]="'author' + author.id" >
-            {{ author.firstName + author.lastName }}
-        </option>
-      </select>
+
+    <div class="form-input mb-4">
+      <span class="p-float-label">
+        <p-dropdown 
+          [options]="authors" 
+          formControlName="authorId" 
+          optionLabel="name" />
+        <label>Author*</label>
+      </span>
+      <div *ngIf="bookForm.get('authorId')?.invalid && (bookForm.get('authorId')?.dirty || bookForm.get('authorId')?.touched)" class="error">
+          <small>Please select an author.</small>
+      </div>
     </div>
-    <div>
-      <label for="publisherId">Publishers:</label>
-      <select id="fpublisher" name="fpublishers" class="form-control" formControlName="publisherId">
-        <option *ngFor="let publisher of publishers" [value]="publisher.id" [attr.id]="'publisher' + publisher.id" >
-            {{publisher.companyName}}
-        </option>
-      </select>
+
+    <div class="form-input mb-4">
+      <span class="p-float-label">
+        <p-dropdown 
+          [options]="publishers" 
+          formControlName="publisherId" 
+          optionLabel="companyName" />
+        <label>Publisher*</label>
+      </span>
+      <div *ngIf="bookForm.get('publisherId')?.invalid && (bookForm.get('publisherId')?.dirty || bookForm.get('publisherId')?.touched)" class="error">
+          <small>Please select a publisher.</small>
+      </div>
     </div>
-      <ng-container formArrayName="genreIds">
-        <label for="genreIds">Genres:</label>
-        <div *ngFor="let genre of genreControls.controls; let i = index" class="checkbox-wrapper">
-          <input *ngIf="isInBooksGenres(genre.value)" type="checkbox" [id]="'book-genre-' + i" class="checkbox-input" (change)="onGenresChange($event, genres.at(i)?.id!)" checked>
-          <input *ngIf="!isInBooksGenres(genre.value)" type="checkbox" [id]="'book-genre-' + i" class="checkbox-input" (change)="onGenresChange($event, genres.at(i)?.id!)">
-          <label  for="{{ 'book-genre-' + i }}">{{ genres.at(i)?.name }}</label>
-        </div><br>
-      </ng-container>
+
+    <div class="form-input mb-4">
+      <span class="p-float-label">
+        <p-multiSelect
+          optionLabel="name"
+          [options]="genres"
+          display="chip"
+          formControlName="genreIds"
+          placeholder="Select Genres*"
+          [showClear]="true" />
+        <label>Genres*</label>
+      </span>
+      <div *ngIf="bookForm.get('genreIds')?.invalid && (bookForm.get('genreIds')?.dirty || bookForm.get('genreIds')?.touched)" class="error">
+          <small>Please select genres.</small>
+      </div>
+    </div>
+
+    <div class="form-input">
+      <span class="p-float-label">
+        <p-dropdown [options]="languages" formControlName="language" optionLabel="name" />
+        <label>Language*</label>
+      </span>
+      <div
+        *ngIf="bookForm.get('language')?.invalid && (bookForm.get('language')?.dirty || bookForm.get('language')?.touched)"
+        class="error">
+        <small>Please select at least a language.</small>
+      </div>
+    </div>
+
+    <div class="form-input flex flex-row justify-content-center align-items-center">
+      <label for="switch1" class="text-color-secondary font-normal text-base mr-3">Paperback</label>
+      <p-inputSwitch id="switch1" formControlName="isPaperback" />
+    </div>
+
     <button *ngIf="!this.book" mat-flat-button color="accent" type="submit" (click)="this.addNewBook()">Submit</button>
     <button *ngIf="this.book" mat-flat-button color="accent" type="submit" (click)="this.updateBook()">Submit</button>
 </form>

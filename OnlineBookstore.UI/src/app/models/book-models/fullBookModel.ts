@@ -5,4 +5,6 @@ export interface FullBookModel {
     authorId: number;    
     publisherId: number;
     genreIds?: number[];
+    language: string;
+    isPaperback: boolean;
 }

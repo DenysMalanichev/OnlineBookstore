@@ -22,7 +22,7 @@ public class AutoMapperProfile : Profile
         CreateMap<Book, GetBriefBookDto>()
             .ForMember(gb => gb.AuthorName, 
                 opt =>
-                opt.MapFrom(src => src.Author.FirstName + src.Author.LastName))
+                opt.MapFrom(src => src.Author.FirstName + " " + src.Author.LastName))
             .ReverseMap();
         CreateMap<Book, GetBookDto>()
             .ForMember(gb => gb.GenreIds, 

@@ -20,8 +20,8 @@ export class BooksListComponent implements OnInit{
   cols = 3;
   totalPages: number = 0;
   currentPage = 0;
-  pageSize = 12;
-  pageSizeOptions = [8, 12, 16];
+  pageSize = 9;
+  pageSizeOptions = [9, 12, 15];
   
   isAdmin: boolean = false;
   isAddBook: boolean = false;

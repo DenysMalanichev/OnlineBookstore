@@ -3,11 +3,7 @@
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 300px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
 }
 
 h2 {
@@ -33,18 +29,10 @@ h2 {
     border-color: #405cf5;
 }
 
-.login-button {
+:host ::ng-deep login-button {
     width: 100%;
-    padding: 10px;
-    border: none;
-    background-color: #405cf5;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.login-button:hover {
-    background-color: #004494;
+    margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 .register-link {
@@ -53,4 +41,16 @@ h2 {
 
 .error small {
     color: red;
+}
+
+:host ::ng-deep .p-multiselect {
+    width: 100%;
+}
+
+:host ::ng-deep .p-button {
+    width: 100%;
+}
+
+:host ::ng-deep .login-link-text .p-button-label {
+    font-weight: 300;
 }

@@ -1,16 +1,10 @@
-using MediatR;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OnlineBookstore.Application.Books.Create;
-using OnlineBookstore.Application.Books.Delete;
-using OnlineBookstore.Application.Books.GetAvgBookRating;
-using OnlineBookstore.Application.Books.GetBooksByAuthor;
-using OnlineBookstore.Application.Books.GetBooksByPublisher;
-using OnlineBookstore.Application.Books.GetBooksUsingFilters;
-using OnlineBookstore.Application.Books.GetById;
-using OnlineBookstore.Application.Books.Update;
+using OnlineBookstore.Application.Services.Interfaces;
 using OnlineBookstore.Domain.Constants;
+using OnlineBookstore.Features.BookFeatures;
 
 namespace OnlineBookstore.Controllers;
 
@@ -18,77 +12,101 @@ namespace OnlineBookstore.Controllers;
 [Route("api/[controller]")]
 public class BooksController : ControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly IBookService _bookService;
 
-    public BooksController(IMediator mediator)
+    public BooksController(IBookService bookService)
     {
-        _mediator = mediator;
+        _bookService = bookService;
     }
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
-    public async Task<IActionResult> CreateBookAsync(CreateBookCommand createBookCommand)
+    public async Task<IActionResult> CreateBookAsync(CreateBookDto createBookDto)
     {
-        await _mediator.Send(createBookCommand);
+        await _bookService.AddBookAsync(createBookDto);
 
         return Ok();
     }
-    
+
+    [HttpPost("image")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
+    public async Task<IActionResult> UploadBookImageAsync([FromQuery] int bookId, IFormFile image)
+    {       
+        await _bookService.SetBookImageAsync(image, bookId);
+
+        return Ok();
+    }
+
+    [HttpGet("image")]
+    public async Task<IActionResult> GetBookImageAsync([FromQuery] int bookId)
+    {
+        var image = await _bookService.GetBookImageAsync(bookId);
+
+        return File(image!, "image/jpeg", "book-image");
+    }
+
     [HttpPut]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
-    public async Task<IActionResult> UpdateBookAsync(UpdateBookCommand updateBookCommand)
+    public async Task<IActionResult> UpdateBookAsync(UpdateBookDto updateBookDto)
     {
-        await _mediator.Send(updateBookCommand);
+        await _bookService.UpdateBookAsync(updateBookDto);
 
         return Ok();
     }
-    
+
+    [HttpGet("recommendations")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> GetRecommendationsAsync(int? page, int itemsOnPage = 10)
+    {
+        var identifier = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        
+        if(identifier is null)
+        {
+            return Unauthorized();
+        }
+
+        var userId = Guid.Parse(identifier);
+        var result = await _bookService.GetRecommendationsAsync(userId, page, itemsOnPage);
+
+        return Ok(result);
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetBookAsync(int bookId)
     {
-        var bookDto = await _mediator.Send(new GetBookByIdQuery { BookId = bookId });
+        var bookDto = await _bookService.GetBookByIdAsync(bookId);
 
         return Ok(bookDto);
     }
     
     [HttpGet("get-filtered-books")]
-    public async Task<IActionResult> GetFilteredBooksAsync([FromQuery] GetFilteredBooksQuery filteredBooksQuery)
+    public async Task<IActionResult> GetFilteredBooksAsync([FromQuery] GetFilteredBooksDto filteredBooksDto)
     {
-        var pagedBooksResult = await _mediator.Send(filteredBooksQuery);
+        var pagedBooksResult = await _bookService.GetBooksUsingFiltersAsync(filteredBooksDto);
 
         return Ok(pagedBooksResult);
     }
     
     [HttpGet("by-author")]
-    public async Task<IActionResult> GetBooksByAuthor(int authorId, int? page, int itemsOnPage = 10)
+    public IActionResult GetBooksByAuthor(int authorId, int? page, int itemsOnPage = 10)
     {
-        var pagedBooksResult = await _mediator.Send(new GetBooksByAuthorQuery
-        {
-            AuthorId = authorId,
-            Page = page,
-            ItemsOnPage = itemsOnPage
-        });
+        var pagedBooksResult = _bookService.GetBooksByAuthor(authorId, page, itemsOnPage);
 
         return Ok(pagedBooksResult);
     }
     
     [HttpGet("by-publisher")]
-    public async Task<IActionResult> GetBooksBuPublisher(int publisherId, int? page, int itemsOnPage = 10)
+    public IActionResult GetBooksBuPublisher(int publisherId, int? page, int itemsOnPage = 10)
     {
-        var pagedBooksResult = await _mediator.Send(new GetBooksByPublisherQuery
-        {
-            PublisherId = publisherId,
-            Page = page,
-            ItemsOnPage = itemsOnPage
-        });
+        var pagedBooksResult = _bookService.GetBooksByPublisher(publisherId, page, itemsOnPage);
 
         return Ok(pagedBooksResult);
     }
 
     [HttpGet("avg-rating/{bookId:int}")]
-    public async Task<IActionResult> GetAvgBookRating(int bookId)
+    public IActionResult GetAvgBookRating(int bookId)
     {
-        var avgRating = await _mediator.Send(new GetAvgBookRatingQuery { BookId = bookId });
+        var avgRating = _bookService.CountAvgRatingOfBook(bookId);
 
         return Ok(avgRating);
     }
@@ -97,7 +115,7 @@ public class BooksController : ControllerBase
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
     public async Task<IActionResult> DeleteBookAsync(int bookId)
     {
-        await _mediator.Send(new DeleteBookCommand { BookId = bookId });
+        await _bookService.DeleteBookAsync(bookId);
 
         return Ok();
     }

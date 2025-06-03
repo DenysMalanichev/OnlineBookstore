@@ -5,5 +5,6 @@ export interface GetOrderModel {
     shipCity?: string;
     shipAddress?: string;
     status: string;
+    orderClosed: Date;
     orderDetails: GetOrderDetailModel[];
 }

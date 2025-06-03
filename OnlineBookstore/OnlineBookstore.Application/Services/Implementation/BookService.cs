@@ -1,8 +1,11 @@
 using AutoMapper;
 using LinqKit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using OnlineBookstore.Application.Exceptions;
+using OnlineBookstore.Application.Messages;
 using OnlineBookstore.Application.Services.Interfaces;
 using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Features.BookFeatures;
@@ -17,15 +20,16 @@ public class BookService : IBookService
 {
     private const int DefaultBooksOnPage = 10;
 
+    private readonly IKafkaProducerService _kafkaProducer;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public BookService(IUnitOfWork unitOfWork, IMapper mapper)
+    public BookService(IKafkaProducerService kafkaProducer, IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _kafkaProducer = kafkaProducer;
     }
-
 
     public async Task AddBookAsync(CreateBookDto createBookDto)
     {
@@ -48,35 +52,65 @@ public class BookService : IBookService
 
         await _unitOfWork.BookRepository.AddAsync(book);
         await _unitOfWork.CommitAsync();
+
+        await _kafkaProducer.ProduceAsync<string, BookUpsertedMessage>(
+            "recommendations.book-upserted",
+            book.Id.ToString(),
+            CreateBookUpsertedMessage(book, purchases: 0));
     }
 
     public async Task UpdateBookAsync(UpdateBookDto updateBookDto)
     {
-        if (await _unitOfWork.BookRepository.GetByIdAsync(updateBookDto.Id, true)! is null)
-        {
-            throw new EntityNotFoundException($"No Book with Id '{updateBookDto.Id}'");
-        }
+        var book = await _unitOfWork.BookRepository.GetByIdAsync(updateBookDto.Id, false)!
+            ?? throw new EntityNotFoundException($"No Book with Id '{updateBookDto.Id}'");
+        _mapper.Map(updateBookDto, book);
 
-        var bookToUpdate = _mapper.Map<Book>(updateBookDto);
-
-        bookToUpdate.Genres = new List<Genre>();
+        book.Genres.Clear();
         foreach (var genreId in updateBookDto.GenreIds)
         {
             var genre = await _unitOfWork.GenreRepository.GetByIdAsync(genreId)!
                         ?? throw new EntityNotFoundException($"No Genre with Id '{genreId}'");
 
-            bookToUpdate.Genres.Add(genre);
+            book.Genres.Add(genre);
         }
 
-        bookToUpdate.Publisher = await _unitOfWork.PublisherRepository.GetByIdAsync(updateBookDto.PublisherId)!
+        book.Publisher = await _unitOfWork.PublisherRepository.GetByIdAsync(updateBookDto.PublisherId)!
                                  ?? throw new EntityNotFoundException(
                                      $"No Publisher with Id '{updateBookDto.PublisherId}'");
 
-        bookToUpdate.Author = await _unitOfWork.AuthorRepository.GetByIdAsync(updateBookDto.AuthorId)!
+        book.Author = await _unitOfWork.AuthorRepository.GetByIdAsync(updateBookDto.AuthorId)!
                               ?? throw new EntityNotFoundException($"No Author with Id '{updateBookDto.AuthorId}'");
 
-        await _unitOfWork.BookRepository.UpdateAsync(bookToUpdate);
         await _unitOfWork.CommitAsync();
+
+        await _kafkaProducer.ProduceAsync<string, BookUpsertedMessage>(
+            "recommendations.book-upserted",
+            book.Id.ToString(),
+            CreateBookUpsertedMessage(book, purchases: 0));
+    }
+
+    public async Task<GenericPagingDto<GetBriefBookDto>> GetRecommendationsAsync(Guid userId, int? page, int itemsOnPage = 10)
+    {
+        var httpClient = new HttpClient();
+        var path = $"https://localhost:7235/api/recommendations?userId={userId}&pageNumber={page ?? 1}&pageSize={itemsOnPage}";
+        var result = await httpClient.GetAsync(new Uri(path));
+
+        if(result is not null && result.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            var recommendationData = await new StreamReader(result.Content.ReadAsStream()).ReadToEndAsync();
+            var recommendedBookIds = JsonConvert.DeserializeObject<int[]>(recommendationData)!;
+            var books = await _unitOfWork.BookRepository.GetByIdsAsync(recommendedBookIds)!;
+
+            var briefBookDtos = _mapper.Map<IEnumerable<GetBriefBookDto>>(books);
+            return new GenericPagingDto<GetBriefBookDto>
+            {
+                CurrentPage = page ?? 1,
+                Entities = briefBookDtos,
+                TotalPages = (await _unitOfWork.BookRepository.GetAllAsync()).Count(),
+            };
+        }
+
+        throw new HttpRequestException("Error requesting reccomendations");
     }
 
     public async Task<GetBookDto> GetBookByIdAsync(int bookId)
@@ -147,6 +181,11 @@ public class BookService : IBookService
 
         await _unitOfWork.BookRepository.DeleteAsync(bookToDelete);
         await _unitOfWork.CommitAsync();
+
+        await _kafkaProducer.ProduceAsync<string, BookDeletedMessage>(
+            "recommendations.book-purchased",
+            bookId.ToString(),
+            new BookDeletedMessage { BookId = bookId });
     }
 
     public double? CountAvgRatingOfBook(int bookId)
@@ -205,5 +244,49 @@ public class BookService : IBookService
         return specifications.Aggregate(
             predicate,
             (current, specification) => current.And(specification.Criteria));
+    }
+
+    private BookUpsertedMessage CreateBookUpsertedMessage(Book book, int purchases) =>
+        new()
+        {
+            BookId = book.Id,
+            Title = book.Name,
+            Language = book.Language,
+            AuthorId = book.AuthorId,
+            GenreIds = book.GenreIds.ToList(),
+            Rating = CountAvgRatingOfBook(book.Id) ?? 0.0,
+            PurchaseNumber = purchases,
+            IsPaperback = book.IsPaperback,
+        };
+
+    public async Task SetBookImageAsync(IFormFile image, int bookId)
+    {
+        if (image == null || image.Length == 0)
+        {
+            throw new ArgumentException("No image provided or image is empty");
+        }
+
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+        var extension = Path.GetExtension(image.FileName).ToLowerInvariant();
+
+        if (!allowedExtensions.Contains(extension))
+        {
+            throw new ArgumentException("Unsupported file type");
+        }
+
+        byte[] imageData;
+        using (var memoryStream = new MemoryStream())
+        {
+            await image.CopyToAsync(memoryStream);
+            imageData = memoryStream.ToArray();
+        }
+
+        await _unitOfWork.BookRepository.SetBookImageAsync(imageData, bookId);
+        await _unitOfWork.CommitAsync();
+    }
+
+    public async Task<byte[]?> GetBookImageAsync(int bookId)
+    {
+        return await _unitOfWork.BookRepository.GetBookImageAsync(bookId);
     }
 }

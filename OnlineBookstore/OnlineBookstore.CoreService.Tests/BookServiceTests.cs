@@ -1,30 +1,288 @@
 using System.Linq.Expressions;
 using LinqKit;
 using Microsoft.EntityFrameworkCore.Query;
-using OnlineBookstore.Application.Books;
-using OnlineBookstore.Application.Books.Dtos;
-using OnlineBookstore.Application.Books.GetAvgBookRating;
-using OnlineBookstore.Application.Books.GetBooksByAuthor;
-using OnlineBookstore.Application.Books.GetBooksByPublisher;
-using OnlineBookstore.Application.Books.GetBooksUsingFilters;
-using OnlineBookstore.Application.Books.GetById;
+using OnlineBookstore.Features.BookFeatures;
 
 namespace OnlineBookstore.CoreService.Tests;
 
 public class BookServiceTests
 {
     private readonly Mock<IMapper> _mapperMock = new();
-    private readonly Mock<IBookQueryRepository> _bookRepoMock = new();
+    private readonly Mock<IBookRepository> _bookRepoMock = new();
+    private readonly Mock<IGenreRepository> _genreRepoMock = new();
+    private readonly Mock<IPublisherRepository> _publisherRepoMock = new();
+    private readonly Mock<IAuthorRepository> _authorRepoMock = new();
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
+    private readonly Mock<IKafkaProducerService> _kafkaProducer = new();
+    private readonly Faker _faker = new();
     private readonly IMapper _mapper;
 
     public BookServiceTests()
     {
+        _unitOfWorkMock.Setup(uow => uow.BookRepository)
+            .Returns(_bookRepoMock.Object);
+        _unitOfWorkMock.Setup(uow => uow.GenreRepository)
+            .Returns(_genreRepoMock.Object);
+        _unitOfWorkMock.Setup(uow => uow.PublisherRepository)
+            .Returns(_publisherRepoMock.Object);
+        _unitOfWorkMock.Setup(uow => uow.AuthorRepository)
+            .Returns(_authorRepoMock.Object);
+        _unitOfWorkMock.Setup(uow => uow.CommitAsync())
+            .Returns(Task.CompletedTask);
+
         var config = new MapperConfiguration(cfg =>
         {
+            cfg.CreateMap<CreateBookDto, Book>().ReverseMap();
+            cfg.CreateMap<UpdateBookDto, Book>();
             cfg.CreateMap<GetBookDto, Book>().ReverseMap();
             cfg.CreateMap<GetBriefBookDto, Book>().ReverseMap();
         });
         _mapper = config.CreateMapper();
+    }
+
+    [Fact]
+    public async Task AddBookAsync_ShouldCallAddAndSaveRepoMethods()
+    {
+        // Arrange
+        var createBookDto = Builder<CreateBookDto>.CreateNew()
+            .With(b => b.GenreIds = _faker.Make(10, () => _faker.Random.Int(1, 100000)))
+            .Build();
+        var expectedBook = _mapper.Map<Book>(createBookDto);
+
+        _mapperMock.Setup(m => m.Map<Book>(createBookDto))
+            .Returns(expectedBook);
+        _bookRepoMock.Setup(br => br.AddAsync(expectedBook))
+            .Returns(Task.CompletedTask);
+        foreach (var genreId in createBookDto.GenreIds)
+        {
+            _genreRepoMock.Setup(gr => gr.GetByIdAsync(genreId, false))!
+                .ReturnsAsync(new Genre());
+        }
+
+        _publisherRepoMock.Setup(pr => pr.GetByIdAsync(createBookDto.PublisherId, false))!
+            .ReturnsAsync(new Publisher());
+        _authorRepoMock.Setup(ar => ar.GetByIdAsync(createBookDto.AuthorId, false))!
+            .ReturnsAsync(new Author());
+
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
+
+        // Act
+        await bookService.AddBookAsync(createBookDto);
+
+        // Assert
+        _bookRepoMock.Verify(br => br.AddAsync(expectedBook), Times.Once);
+        _unitOfWorkMock.Verify(uow => uow.CommitAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task AddBookAsync_ThrowEntityNotFoundException_IfOneOfGenresDoesntExist()
+    {
+        // Arrange
+        var createBookDto = Builder<CreateBookDto>.CreateNew()
+            .With(b => b.GenreIds = _faker.Make(10, () => _faker.Random.Int(1, 100000)))
+            .Build();
+        var book = _mapper.Map<Book>(createBookDto);
+
+        _mapperMock.Setup(m => m.Map<Book>(createBookDto))
+            .Returns(book);
+        _genreRepoMock.Setup(gr => gr.GetByIdAsync(It.IsAny<int>(), false))!
+            .ReturnsAsync(new Genre());
+
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<EntityNotFoundException>(async () => await bookService.AddBookAsync(createBookDto));
+    }
+
+    [Fact]
+    public async Task AddBookAsync_ThrowEntityNotFoundException_IfPublisherDoesntExist()
+    {
+        // Arrange
+        var createBookDto = Builder<CreateBookDto>.CreateNew()
+            .With(b => b.GenreIds = _faker.Make(10, () => _faker.Random.Int(1, 100000)))
+            .Build();
+        var expectedBook = _mapper.Map<Book>(createBookDto);
+
+        _mapperMock.Setup(m => m.Map<Book>(createBookDto))
+            .Returns(expectedBook);
+        _bookRepoMock.Setup(br => br.AddAsync(expectedBook))
+            .Returns(Task.CompletedTask);
+        foreach (var genreId in createBookDto.GenreIds)
+        {
+            _genreRepoMock.Setup(gr => gr.GetByIdAsync(genreId, false))!
+                .ReturnsAsync(new Genre());
+        }
+
+        _publisherRepoMock.Setup(pr => pr.GetByIdAsync(It.IsAny<int>(), false))!
+            .ReturnsAsync((Publisher)null!);
+
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<EntityNotFoundException>(async () => await bookService.AddBookAsync(createBookDto));
+    }
+
+    [Fact]
+    public async Task AddBookAsync_ThrowEntityNotFoundException_IfAuthorDoesntExist()
+    {
+        // Arrange
+        var createBookDto = Builder<CreateBookDto>.CreateNew()
+            .With(b => b.GenreIds = _faker.Make(10, () => _faker.Random.Int(1, 100000)))
+            .Build();
+        var expectedBook = _mapper.Map<Book>(createBookDto);
+
+        _mapperMock.Setup(m => m.Map<Book>(createBookDto))
+            .Returns(expectedBook);
+        _bookRepoMock.Setup(br => br.AddAsync(expectedBook))
+            .Returns(Task.CompletedTask);
+        foreach (var genreId in createBookDto.GenreIds)
+        {
+            _genreRepoMock.Setup(gr => gr.GetByIdAsync(genreId, false))!
+                .ReturnsAsync(new Genre());
+        }
+
+        _publisherRepoMock.Setup(pr => pr.GetByIdAsync(It.IsAny<int>(), false))!
+            .ReturnsAsync(new Publisher());
+        _authorRepoMock.Setup(ar => ar.GetByIdAsync(createBookDto.AuthorId, false))!
+            .ReturnsAsync((Author)null!);
+
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<EntityNotFoundException>(async () => await bookService.AddBookAsync(createBookDto));
+    }
+
+    [Fact]
+    public async Task UpdateBookAsync_ShouldCallUpdateAndSaveRepoMethods()
+    {
+        // Arrange
+        var updateBookDto = Builder<UpdateBookDto>.CreateNew()
+            .With(b => b.GenreIds = _faker.Make(10, () => _faker.Random.Int(1, 100000)))
+            .Build();
+        var expectedBook = _mapper.Map<Book>(updateBookDto);
+
+        _mapperMock.Setup(m => m.Map<Book>(updateBookDto))
+            .Returns(expectedBook);
+        _bookRepoMock.Setup(br => br.GetByIdAsync(updateBookDto.Id, true))!
+            .ReturnsAsync(expectedBook);
+        _bookRepoMock.Setup(br => br.UpdateAsync(expectedBook))
+            .Returns(Task.CompletedTask);
+        foreach (var genreId in updateBookDto.GenreIds)
+        {
+            _genreRepoMock.Setup(gr => gr.GetByIdAsync(genreId, false))!
+                .ReturnsAsync(new Genre());
+        }
+
+        _publisherRepoMock.Setup(pr => pr.GetByIdAsync(updateBookDto.PublisherId, false))!
+            .ReturnsAsync(new Publisher());
+        _authorRepoMock.Setup(ar => ar.GetByIdAsync(updateBookDto.AuthorId, false))!
+            .ReturnsAsync(new Author());
+
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
+
+        // Act
+        await bookService.UpdateBookAsync(updateBookDto);
+
+        // Assert
+        _bookRepoMock.Verify(br => br.UpdateAsync(expectedBook), Times.Once);
+        _unitOfWorkMock.Verify(uow => uow.CommitAsync(), Times.Once);
+    }
+    
+    [Fact]
+    public async Task UpdateBookAsync_ThrowEntityNotFoundException_IfBookDoesntExist()
+    {
+        // Arrange
+        var updateBookDto = Builder<UpdateBookDto>.CreateNew()
+            .With(b => b.GenreIds = _faker.Make(10, () => _faker.Random.Int(1, 100000)))
+            .Build();
+
+        _bookRepoMock.Setup(br => br.GetByIdAsync(updateBookDto.Id, true))!
+            .ReturnsAsync((Book)null!);
+
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<EntityNotFoundException>(async () => await bookService.UpdateBookAsync(updateBookDto));
+    }
+
+    [Fact]
+    public async Task UpdateBookAsync_ThrowEntityNotFoundException_IfOneOfGenresDoesntExist()
+    {
+        // Arrange
+        var updateBookDto = Builder<UpdateBookDto>.CreateNew()
+            .With(b => b.GenreIds = _faker.Make(10, () => _faker.Random.Int(1, 100000)))
+            .Build();
+        var expectedBook = _mapper.Map<Book>(updateBookDto);
+
+        _mapperMock.Setup(m => m.Map<Book>(updateBookDto))
+            .Returns(expectedBook);
+        _bookRepoMock.Setup(br => br.GetByIdAsync(updateBookDto.Id, true))!
+            .ReturnsAsync(expectedBook);
+        _genreRepoMock.Setup(gr => gr.GetByIdAsync(It.IsAny<int>(), false))!
+            .ReturnsAsync((Genre)null!);
+
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<EntityNotFoundException>(async () => await bookService.UpdateBookAsync(updateBookDto));
+    }
+
+    [Fact]
+    public async Task UpdateBookAsync_ThrowEntityNotFoundException_IfPublisherDoesntExist()
+    {
+        // Arrange
+        var updateBookDto = Builder<UpdateBookDto>.CreateNew()
+            .With(b => b.GenreIds = _faker.Make(10, () => _faker.Random.Int(1, 100000)))
+            .Build();
+        var expectedBook = _mapper.Map<Book>(updateBookDto);
+
+        _mapperMock.Setup(m => m.Map<Book>(updateBookDto))
+            .Returns(expectedBook);
+        _bookRepoMock.Setup(br => br.GetByIdAsync(updateBookDto.Id, true))!
+            .ReturnsAsync(expectedBook);
+        foreach (var genreId in updateBookDto.GenreIds)
+        {
+            _genreRepoMock.Setup(gr => gr.GetByIdAsync(genreId, false))!
+                .ReturnsAsync(new Genre());
+        }
+
+        _publisherRepoMock.Setup(pr => pr.GetByIdAsync(updateBookDto.PublisherId, false))!
+            .ReturnsAsync((Publisher)null!);
+
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<EntityNotFoundException>(async () => await bookService.UpdateBookAsync(updateBookDto));
+    }
+
+    [Fact]
+    public async Task UpdateBookAsync_ThrowEntityNotFoundException_IfAuthorDoesntExist()
+    {
+        // Arrange
+        var updateBookDto = Builder<UpdateBookDto>.CreateNew()
+            .With(b => b.GenreIds = _faker.Make(10, () => _faker.Random.Int(1, 100000)))
+            .Build();
+        var expectedBook = _mapper.Map<Book>(updateBookDto);
+
+        _mapperMock.Setup(m => m.Map<Book>(updateBookDto))
+            .Returns(expectedBook);
+        _bookRepoMock.Setup(br => br.GetByIdAsync(updateBookDto.Id, true))!
+            .ReturnsAsync(expectedBook);
+        foreach (var genreId in updateBookDto.GenreIds)
+        {
+            _genreRepoMock.Setup(gr => gr.GetByIdAsync(genreId, false))!
+                .ReturnsAsync(new Genre());
+        }
+
+        _publisherRepoMock.Setup(pr => pr.GetByIdAsync(updateBookDto.PublisherId, false))!
+            .ReturnsAsync(new Publisher());
+        _authorRepoMock.Setup(ar => ar.GetByIdAsync(updateBookDto.AuthorId, false))!
+            .ReturnsAsync((Author)null!);
+
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<EntityNotFoundException>(async () => await bookService.UpdateBookAsync(updateBookDto));
     }
 
     [Fact]
@@ -39,18 +297,17 @@ public class BookServiceTests
             .ReturnsAsync(book);
         _mapperMock.Setup(m => m.Map<GetBookDto>(book)).Returns(expectedBookDto);
 
-        var bookService = new GetBookByIdQueryHandler(_bookRepoMock.Object, _mapperMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act
-        var returnedBook = await bookService.Handle(new GetBookByIdQuery {BookId = existingBookId },
-            CancellationToken.None);
+        var returnedBook = await bookService.GetBookByIdAsync(existingBookId);
 
         // Assert
         returnedBook.Should().BeEquivalentTo(expectedBookDto);
     }
     
     [Fact]
-    public async Task GetBooksByAuthor_ShouldReturnCorrectPagesResultByAuthor()
+    public void GetBooksByAuthor_ShouldReturnCorrectPagesResultByAuthor()
     {
         // Arrange
         const int authorId = 100;
@@ -64,17 +321,10 @@ public class BookServiceTests
         _mapperMock.Setup(m => m.Map<IEnumerable<GetBriefBookDto>>(books))
             .Returns(getBriefBookDto);
 
-        var bookService = new GetBooksByAuthorQueryHandler(_bookRepoMock.Object, _mapperMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act
-        var returnedBook = await bookService.Handle(
-            new GetBooksByAuthorQuery
-            {
-                AuthorId = authorId, 
-                Page = page, 
-                ItemsOnPage = 10
-            }, 
-            CancellationToken.None);
+        var returnedBook = bookService.GetBooksByAuthor(authorId, page);
 
         // Assert
         returnedBook.Entities.Should().BeEquivalentTo(getBriefBookDto);
@@ -83,7 +333,7 @@ public class BookServiceTests
     }
     
     [Fact]
-    public async Task GetBooksByPublisher_ShouldReturnCorrectPagesResultByPublisher()
+    public void GetBooksByPublisher_ShouldReturnCorrectPagesResultByPublisher()
     {
         // Arrange
         const int publisherId = 100;
@@ -97,26 +347,58 @@ public class BookServiceTests
         _mapperMock.Setup(m => m.Map<IEnumerable<GetBriefBookDto>>(books))
             .Returns(getBriefBookDto);
 
-        var bookService = new GetBooksByPublisherQueryHandler(_bookRepoMock.Object, _mapperMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act
-        var returnedBook = await bookService.Handle(
-            new GetBooksByPublisherQuery
-            {
-                PublisherId = publisherId, 
-                Page = page, 
-                ItemsOnPage = 10
-            }, 
-            CancellationToken.None);
+        var returnedBook = bookService.GetBooksByPublisher(publisherId, page);
 
         // Assert
         returnedBook.Entities.Should().BeEquivalentTo(getBriefBookDto);
         Assert.Equal(2, returnedBook.CurrentPage);
         Assert.Equal(21, returnedBook.TotalPages);
     }
+    
+    [Fact]
+    public async Task DeleteBookAsync_ShouldCallAddAndSaveRepoMethods()
+    {
+        // Arrange
+        const int bookId = 100;
+        var book = Builder<Book>.CreateNew()
+            .With(b => b.Id = bookId)
+            .Build();
+
+        _bookRepoMock.Setup(br => br.GetByIdAsync(bookId, false))!
+            .ReturnsAsync(book);
+
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
+
+        // Act
+        await bookService.DeleteBookAsync(bookId);
+
+        // Assert
+        _bookRepoMock.Verify(br => br.DeleteAsync(book), Times.Once);
+        _unitOfWorkMock.Verify(uow => uow.CommitAsync(), Times.Once);
+    }
+    
+    [Fact]
+    public async Task DeleteBookAsync_ThrowEntityNotFoundException_IfBookDoesntExist()
+    {
+        // Arrange
+        const int notExistingBookId = 100;
+
+        _bookRepoMock.Setup(br => br.GetByIdAsync(notExistingBookId, false))!
+            .ReturnsAsync((Book)null!);
+
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<EntityNotFoundException>(async () =>
+            await bookService.DeleteBookAsync(notExistingBookId));
+    }
+
 
     [Fact]
-    public async Task CountAvgRatingOfBook_ShouldReturnCountAsInDb()
+    public void CountAvgRatingOfBook_ShouldReturnCountAsInDb()
     {
         // Arrange
         const int bookId = 100;
@@ -125,11 +407,10 @@ public class BookServiceTests
         _bookRepoMock.Setup(br => br.CountAvgRatingForBook(bookId))
             .Returns(expectedCount);
 
-        var bookService = new GetAvgBookRatingQueryHandler(_bookRepoMock.Object);
+        var bookService = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act
-        var returnedCount = await bookService.Handle(
-            new GetAvgBookRatingQuery { BookId = bookId }, CancellationToken.None);
+        var returnedCount = bookService.CountAvgRatingOfBook(bookId);
         
         // Assert
         Assert.Equal(expectedCount, returnedCount);
@@ -140,7 +421,7 @@ public class BookServiceTests
     [MemberData(nameof(ValidNullPriceBoundsData))]
     [MemberData(nameof(ValidMaxPriceNullData))]
     [MemberData(nameof(ValidMinPriceNullData))]
-    public async Task GetBooksUsingFiltersAsync_ReturnsCorrectPagingInfo(GetFilteredBooksQuery filteredBooksQuery)
+    public async Task GetBooksUsingFiltersAsync_ReturnsCorrectPagingInfo(GetFilteredBooksDto filteredBooksDto)
     {
         // Arrange
         var books = Enumerable.Range(1, 21).Select(n => new Book { Id = n }).AsQueryable();
@@ -151,10 +432,10 @@ public class BookServiceTests
         _mapperMock.Setup(m => m.Map<IEnumerable<GetBriefBookDto>>(It.IsAny<IList<Book>>()))
             .Returns(pagedBooks.Select(b => new GetBriefBookDto { Id = b.Id }).ToList());
 
-        var service = new GetFilteredBooksQueryHandler(_bookRepoMock.Object, _mapperMock.Object);
+        var service = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act
-        var result = await service.Handle(filteredBooksQuery, CancellationToken.None);
+        var result = await service.GetBooksUsingFiltersAsync(filteredBooksDto);
 
         // Assert
         Assert.Equal(2, result.CurrentPage);
@@ -164,7 +445,7 @@ public class BookServiceTests
     [Theory]
     [MemberData(nameof(InvalidPriceBoundsData))]
     public async Task GetBooksUsingFiltersAsync_ThrowArgumentException_IfMinPriceIsGraterThanMaxPrice(
-        GetFilteredBooksQuery filteredBooksQuery)
+        GetFilteredBooksDto filteredBooksDto)
     {
         // Arrange
         var books = Enumerable.Range(1, 21).Select(n => new Book { Id = n }).AsQueryable();
@@ -175,18 +456,18 @@ public class BookServiceTests
         _mapperMock.Setup(m => m.Map<IEnumerable<GetBriefBookDto>>(It.IsAny<IList<Book>>()))
             .Returns(pagedBooks.Select(b => new GetBriefBookDto { Id = b.Id }).ToList());
 
-        var service = new GetFilteredBooksQueryHandler(_bookRepoMock.Object, _mapperMock.Object);
+        var service = new BookService(_kafkaProducer.Object, _unitOfWorkMock.Object, _mapperMock.Object);
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentException>(async () =>
-            await service.Handle(filteredBooksQuery, CancellationToken.None));
+            await service.GetBooksUsingFiltersAsync(filteredBooksDto));
     }
 
     public static IEnumerable<object[]> ValidNotNullPriceBoundsData()
     {
         yield return new object[]
         {
-            new GetFilteredBooksQuery
+            new GetFilteredBooksDto
             {
                 Page = 2,
                 ItemsOnPage = 10,
@@ -205,7 +486,7 @@ public class BookServiceTests
     {
         yield return new object[]
         {
-            new GetFilteredBooksQuery
+            new GetFilteredBooksDto
             {
                 Page = 2,
                 ItemsOnPage = 10,
@@ -224,7 +505,7 @@ public class BookServiceTests
     {
         yield return new object[]
         {
-            new GetFilteredBooksQuery
+            new GetFilteredBooksDto
             {
                 Page = 2,
                 ItemsOnPage = 10,
@@ -243,7 +524,7 @@ public class BookServiceTests
     {
         yield return new object[]
         {
-            new GetFilteredBooksQuery
+            new GetFilteredBooksDto
             {
                 Page = 2,
                 ItemsOnPage = 10,
@@ -262,7 +543,7 @@ public class BookServiceTests
         {
             yield return new object[]
             {
-                new GetFilteredBooksQuery
+                new GetFilteredBooksDto
                 {
                     Page = 2,
                     ItemsOnPage = 10,

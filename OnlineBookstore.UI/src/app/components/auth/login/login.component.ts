@@ -24,6 +24,8 @@ export class LoginComponent {
 
   login() {
     if(!this.email.valid || !this.password.valid) {
+      this.email.markAsTouched();
+      this.password.markAsTouched();
       return;
     }
     

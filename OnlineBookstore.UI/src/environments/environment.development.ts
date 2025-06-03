@@ -7,7 +7,7 @@ export const environment = {
             getUserOpenOrderPath: 'users-active-order',
             shipUserOrderPath: 'ship-users-order',
             getUserHistoryPath: 'user-orders-history',
-            
+            getBooksStatisticsPath: 'get-books-order-statistics/'
         },
         users: {
             usersBasePath: 'users/',
@@ -25,10 +25,12 @@ export const environment = {
         },
         books: {
             booksBasePath: 'books/',
+            recommendedBooks: 'recommendations',
             getFilteredBooks: 'get-filtered-books/',
             getBookByAuthor: 'by-author/',
             getBookByPublisher: 'by-publisher/',
-            getBooksAvgRating: 'avg-rating/'
+            getBooksAvgRating: 'avg-rating/',
+            bookImage: 'image'
         },        
         genres: {
             genresBasePath: 'genres/',

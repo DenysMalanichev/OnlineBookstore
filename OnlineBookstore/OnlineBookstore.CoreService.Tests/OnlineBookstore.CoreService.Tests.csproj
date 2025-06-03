@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
 
@@ -28,6 +28,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\OnlineBookstore.Application\OnlineBookstore.Application.csproj" />
+      <ProjectReference Include="..\OnlineBookstore.Features\OnlineBookstore.Features.csproj" />
       <ProjectReference Include="..\OnlineBookstore.Persistence\OnlineBookstore.Persistence.csproj" />
     </ItemGroup>
 

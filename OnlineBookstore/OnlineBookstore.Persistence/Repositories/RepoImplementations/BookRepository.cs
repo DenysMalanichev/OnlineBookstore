@@ -1,4 +1,6 @@
 using System.Data.Entity;
+using System.Linq;
+using Azure;
 using LinqKit;
 using OnlineBookstore.Domain.Entities;
 using OnlineBookstore.Persistence.Context;
@@ -56,5 +58,47 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
         {
             return null!;
         }
+    }
+
+    public async Task<IEnumerable<Book>>? GetByIdAsync(int[] ids, int? page, int itemsOnPage = 10)
+    {
+        return await Task.FromResult(_dataContext.Books
+            .Where(b => ids.Contains(b.Id))
+            .Skip(((page ?? 1) - 1) * itemsOnPage)
+            .Take(itemsOnPage)
+            .AsNoTracking()
+            .ToList());            
+    }
+
+    public async Task SetBookImageAsync(byte[] bytes, int bookId)
+    {
+        var book = await Task.FromResult(_dataContext.Books.FirstOrDefault(b => b.Id == bookId));
+
+        if (book is null)
+        {
+            throw new ArgumentException("No book with Id bookId found");
+        }
+
+        book.Image = bytes;
+    }
+
+    public async Task<byte[]> GetBookImageAsync(int bookId)
+    {
+        var book = await Task.FromResult(_dataContext.Books.FirstOrDefault(b => b.Id == bookId));
+
+        if (book is null)
+        {
+            throw new ArgumentException("No book with Id bookId found");
+        }
+
+        return book.Image!;
+    }
+
+    public async Task<IEnumerable<Book>>? GetByIdsAsync(int[] ids)
+    {
+        return await Task.FromResult(_dataContext.Books
+            .Where(b => ids.Contains(b.Id))
+            .AsNoTracking()
+            .ToList());
     }
 }

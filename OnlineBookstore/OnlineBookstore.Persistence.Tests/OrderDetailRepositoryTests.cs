@@ -30,7 +30,7 @@ public class OrderDetailRepositoryTests
         await context.OrderDetails.AddAsync(orderDetail);
         await context.SaveChangesAsync();
 
-        var orderDetailRepository = new OrderDetailQueryRepository(context);
+        var orderDetailRepository = new OrderDetailRepository(context);
 
         // Act
         var result = await orderDetailRepository.GetByIdAsync(orderDetailId);
