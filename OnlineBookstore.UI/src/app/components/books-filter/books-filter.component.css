@@ -118,6 +118,12 @@ label {
     width: 100%;
 }
 
+.form-input {
+    position: inherit;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
 @media (max-width: 768px) {
     .book-search-form {
         padding: 1rem;
