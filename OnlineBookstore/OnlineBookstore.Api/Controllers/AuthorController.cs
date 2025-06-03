@@ -1,9 +1,13 @@
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OnlineBookstore.Application.Services.Interfaces;
+using OnlineBookstore.Application.Author.Create;
+using OnlineBookstore.Application.Author.Delete;
+using OnlineBookstore.Application.Author.GetAll;
+using OnlineBookstore.Application.Author.GetAuthorById;
+using OnlineBookstore.Application.Author.Update;
 using OnlineBookstore.Domain.Constants;
-using OnlineBookstore.Features.AuthorFeatures;
 
 namespace OnlineBookstore.Controllers;
 
@@ -11,27 +15,27 @@ namespace OnlineBookstore.Controllers;
 [Route("api/[controller]")]
 public class AuthorController : ControllerBase
 {
-    private readonly IAuthorService _authorService;
+    private readonly IMediator _mediator;
 
-    public AuthorController(IAuthorService authorService)
+    public AuthorController(IMediator mediator)
     {
-        _authorService = authorService;
+        _mediator = mediator;
     }
     
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
-    public async Task<IActionResult> CreateAuthorAsync(CreateAuthorDto createAuthorDto)
+    public async Task<IActionResult> CreateAuthorAsync(CreateAuthorCommand createAuthorCommand)
     {
-        await _authorService.AddAuthorAsync(createAuthorDto);
+        await _mediator.Send(createAuthorCommand);
 
         return Ok();
     }
     
     [HttpPut]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
-    public async Task<IActionResult> UpdateAuthorAsync(UpdateAuthorDto updateAuthorDto)
+    public async Task<IActionResult> UpdateAuthorAsync(UpdateAuthorCommand updateAuthorCommand)
     {
-        await _authorService.UpdateAuthorAsync(updateAuthorDto);
+        await _mediator.Send(updateAuthorCommand);
 
         return Ok();
     }
@@ -39,7 +43,7 @@ public class AuthorController : ControllerBase
     [HttpGet("{authorId:int}")]
     public async Task<IActionResult> GetAuthorAsync(int authorId)
     {
-        var authorDto = await _authorService.GetAuthorByIdAsync(authorId);
+        var authorDto = await _mediator.Send(new GetAuthorByIdQuery { AuthorId = authorId });
 
         return Ok(authorDto);
     }
@@ -47,7 +51,7 @@ public class AuthorController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllAuthorsAsync()
     {
-        var authorDto = await _authorService.GetAllAuthorsAsync();
+        var authorDto = await _mediator.Send(new GetAllAuthorsQuery());
 
         return Ok(authorDto);
     }
@@ -56,7 +60,7 @@ public class AuthorController : ControllerBase
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
     public async Task<IActionResult> DeleteAuthorAsync(int authorId)
     {
-        await _authorService.DeleteAuthorAsync(authorId);
+        await _mediator.Send(new DeleteAuthorCommand { AuthorId = authorId});
 
         return Ok();
     }
