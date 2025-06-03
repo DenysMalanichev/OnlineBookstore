@@ -8,7 +8,7 @@ namespace Recommendations.Api.Controllers
     public class RecommendationsController : ControllerBase
     {
         [HttpGet]
-        //[ResponseCache(Duration = 1000, VaryByQueryKeys = new[] { "userId", "pageNumber", "pageSize" })]
+        [ResponseCache(Duration = 1000, VaryByQueryKeys = new[] { "userId", "pageNumber", "pageSize" })]
         public async Task<IActionResult> GeneratePersonalRecommendationsAsync(
             [FromServices] IBookService bookService,
             [FromQuery] string userId,
