@@ -52,7 +52,14 @@ label {
 }
 
 .form-control {
-    max-width: 250px;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid black;
+    border-radius: 0.25rem;
+    margin-top: 0.5rem;
+    margin-right: 20px;
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
 .checkbox-wrapper {
@@ -102,7 +109,7 @@ label {
 }
 
 .price-control {
-    width: 200px;
+    width: 30%;
 }
 
 .form-input {

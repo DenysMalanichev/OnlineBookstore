@@ -1,12 +1,9 @@
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OnlineBookstore.Application.Comments.Create;
-using OnlineBookstore.Application.Comments.Dtos;
-using OnlineBookstore.Application.Comments.GetByBook;
-using OnlineBookstore.Application.Comments.GetById;
+using OnlineBookstore.Application.Services.Interfaces;
 using OnlineBookstore.Extentions;
+using OnlineBookstore.Features.CommentFeatures;
 
 namespace OnlineBookstore.Controllers;
 
@@ -14,11 +11,11 @@ namespace OnlineBookstore.Controllers;
 [Route("api/[controller]")]
 public class CommentsController : ControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly ICommentService _commentService;
 
-    public CommentsController(IMediator mediator)
+    public CommentsController(ICommentService commentService)
     {
-        _mediator = mediator;
+        _commentService = commentService;
     }
 
     [HttpPost]
@@ -31,14 +28,7 @@ public class CommentsController : ControllerBase
             return Unauthorized();
         }
         
-        await _mediator.Send(new CreateCommentCommand
-        {
-            Body = createCommentDto.Body,
-            BookId = createCommentDto.BookId,
-            BookRating = createCommentDto.BookRating,
-            Title = createCommentDto.Title,
-            UserId = userId
-        });
+        await _commentService.AddCommentAsync(createCommentDto, userId);
 
         return Ok();
     }
@@ -46,7 +36,7 @@ public class CommentsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetCommentByIdAsync(int commentId)
     {
-        var comment = await _mediator.Send(new GetCommentByIdQuery { CommentId = commentId});
+        var comment = await _commentService.GetCommentByIdAsync(commentId);
 
         return Ok(comment);
     }
@@ -54,7 +44,7 @@ public class CommentsController : ControllerBase
     [HttpGet("comments-by-book")]
     public async Task<IActionResult> GetCommentsByBookIdAsync(int bookId)
     {
-        var comments = await _mediator.Send(new GetCommentsByBookQuery {BookId = bookId});
+        var comments = await _commentService.GetCommentsByBookIdAsync(bookId);
 
         return Ok(comments);
     }

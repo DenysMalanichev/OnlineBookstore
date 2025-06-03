@@ -12,7 +12,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\OnlineBookstore.Application\OnlineBookstore.Application.csproj" />
+      <ProjectReference Include="..\OnlineBookstore.Domain\OnlineBookstore.Domain.csproj" />
+      <ProjectReference Include="..\OnlineBookstore.Features\OnlineBookstore.Features.csproj" />
     </ItemGroup>
 
 </Project>
