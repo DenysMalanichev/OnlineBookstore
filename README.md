@@ -1,4 +1,4 @@
-# Online Bookstore
+  # Online Bookstore
 Online Bookstore is a learning project. Its purpose is to create marketplace for books, that users would be able to buy and order shipping right to their homes.
 Every order may have more than 1 book and every book may have its own quantity. To order book customer would need to register in this system.
 Users can write reviews to books and give marks (1-5 stars).
@@ -9,6 +9,7 @@ Online Bookstore is written using the following **technologies**:
 - ASP.NET Core
 - EF Core
 - MS SQL Server
+- MongoDB
 - xUnit (along with Moq, NBuilder, Bogus, FluentAssertion, InMemory)
 - ASP.NET Core Identity for auth
 ### Front-end
@@ -21,7 +22,7 @@ Back-end part constitutes a public API that every one can use.
 In our case front-end web-application, written on Angular, 
 use this public API to get data from DB and execute business operations.
 
-![layers-diagram](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/9c86dac1-bc87-43fa-9b46-4d9dd7f3796a)
+![layers-diagram](https://github.com/user-attachments/assets/4d7a060b-46ea-448f-99d6-a41b5904c3df)
 
 ## Back-end part of the project is written using N-layerd architecture:
 Here we have 3 main layers:
@@ -43,7 +44,7 @@ Finally Presentaions consists of Api project, that contains Program.cs entrypoin
 
 ## Database schema:
 This SQL diagram is simplyfied and aims to show only main idea of DB. It is not including tables provided by ASP.NET Core Identity, like ASP.NET Users, Roles, etc.
-![image](https://github.com/DenysMalanichev/OnlineBookstore/assets/58270142/ab8fd9bc-5e7a-4860-99e9-1db7a5bc30b6)
+![image](https://github.com/user-attachments/assets/0d26cac5-179f-46be-a78c-d097bff7c57b)
 
 ## Aplication Features
 - Except of CRUD operations for Bussiness Entities (Author, Book, Comment, Genre, Order, Order Detail, Publisher, User) 
