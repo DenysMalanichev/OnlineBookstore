@@ -21,7 +21,8 @@ export const environment = {
         },
         comments: {
             commentsBasePath: 'comments/',
-            getCommentsByBookPath: 'comments-by-book/'
+            getCommentsByBookPath: 'comments-by-book/',
+            deleteCommentById: 'comments/'
         },
         books: {
             booksBasePath: 'books/',

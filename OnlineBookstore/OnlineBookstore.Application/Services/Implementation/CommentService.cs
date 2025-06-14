@@ -32,6 +32,14 @@ public class CommentService : ICommentService
         await _unitOfWork.CommitAsync();
     }
 
+    public async Task DeleteCommentAsync(int commentId)
+    {
+        var comment = await _unitOfWork.CommentRepository.GetByIdAsync(commentId)!
+            ?? throw new EntityNotFoundException($"No Comment with Id '{commentId}'");
+
+        await _unitOfWork.CommentRepository.DeleteAsync(comment);
+    }
+
     public async Task<GetCommentDto> GetCommentByIdAsync(int commentId)
     {
         var comment = await _unitOfWork.CommentRepository.GetByIdAsync(commentId)!

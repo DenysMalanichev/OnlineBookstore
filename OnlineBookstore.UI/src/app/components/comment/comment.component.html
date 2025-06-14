@@ -1,6 +1,9 @@
 <div class="comment-display">
     <div class="comment-header">
-        <h3 class="comment-title">{{ comment.title }}</h3>
+        <div class="flex flex-row align-items-start">
+            <h3 class="comment-title">{{ comment.title }}</h3>
+            <button *ngIf="isAdmin" mat-flat-button color="warn" class="crud-btn ml-4" (click)="this.deleteComment()">Delete</button>
+        </div>
         <div class="comment-rating">
             <star-rating [rating]="comment.bookRating" [readOnly]="true"></star-rating>
         </div>

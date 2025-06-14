@@ -4,6 +4,8 @@ namespace OnlineBookstore.Features.CommentFeatures;
 
 public class GetCommentDto
 {
+    public int Id { get; set; }
+
     public string Title { get; set; } = null!;
 
     public string Body { get; set; } = null!;

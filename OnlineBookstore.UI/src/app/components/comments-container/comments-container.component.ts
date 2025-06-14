@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { CommentModel } from 'src/app/models/comments-models/commentModel';
+import { GetCommentModel } from 'src/app/models/comments-models/getCommentModel';
 import { CommentsService } from 'src/app/services/comments.service';
 import Swal from 'sweetalert2';
 
@@ -19,7 +20,7 @@ export class CommentsContainerComponent implements OnInit {
     bookRating: new FormControl(0)
   });
 
-  comments!: CommentModel[];
+  comments!: GetCommentModel[];
 
   constructor(private commentsService: CommentsService) {}
 

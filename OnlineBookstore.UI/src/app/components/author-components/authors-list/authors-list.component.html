@@ -1,5 +1,5 @@
 <generic-list title="Authors">
-    <button mat-flat-button *ngIf="!isAdd" color="accent" style="margin-bottom: 10px;" (click)="isAdd = true;">Add</button>
+    <button mat-flat-button *ngIf="!isAdd && isAdmin" color="accent" style="margin-bottom: 10px;" (click)="isAdd = true;">Add</button>
     <author-form *ngIf="isAdd">
         <button mat-flat-button *ngIf="isAdd" color="warn" (click)="isAdd = false;">Cancel</button>
     </author-form>

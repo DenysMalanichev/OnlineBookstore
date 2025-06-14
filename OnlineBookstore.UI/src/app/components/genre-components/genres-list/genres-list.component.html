@@ -1,5 +1,5 @@
 <generic-list title="Genres">
-    <button mat-flat-button color="accent" *ngIf="!isCreate" (click)="isCreate = true" style="margin-bottom: 20px;">Add</button>
+    <button mat-flat-button color="accent" *ngIf="!isCreate && isAdmin" (click)="isCreate = true" style="margin-bottom: 20px;">Add</button>
     <genre-form *ngIf="isCreate">
         <button mat-flat-button color="warn" *ngIf="isCreate" (click)="isCreate = false" >Cancel</button>
     </genre-form>

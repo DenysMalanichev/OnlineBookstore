@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OnlineBookstore.Application.Services.Implementation;
 using OnlineBookstore.Application.Services.Interfaces;
+using OnlineBookstore.Domain.Constants;
 using OnlineBookstore.Extentions;
 using OnlineBookstore.Features.CommentFeatures;
 
@@ -47,5 +49,14 @@ public class CommentsController : ControllerBase
         var comments = await _commentService.GetCommentsByBookIdAsync(bookId);
 
         return Ok(comments);
+    }
+
+    [HttpDelete]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(RoleName.Admin))]
+    public async Task<IActionResult> DeleteCommentAsync(int commentId)
+    {
+        await _commentService.DeleteCommentAsync(commentId);
+
+        return Ok();
     }
 }
